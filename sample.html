@@ -1,0 +1,339 @@
+<!doctype html>
+<html ng-app="phidias-angular">
+    <head>
+        <title>Phi UI</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+        <link rel="stylesheet" type="text/css" media="all" href="sass/phidias-sass.min.css" />
+        <link rel="stylesheet" type="text/css" media="all" href="angular/phidias-angular.min.css" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.1/angular.min.js" type="text/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.1/angular-aria.min.js" type="text/javascript"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.1/angular-sanitize.min.js" type="text/javascript"></script>
+        <script src="angular/phidias-angular.min.js" type="text/javascript"></script>
+
+    </head>
+
+    <body>
+
+        <div id="cover" class="phi-color-background-600">
+            <div phi-boundary>
+                <h1>Phi UI</h1>
+                <h2>A CSS toolkit</h2>
+
+                <h3 phi-if-screen="small">Your screen is small</h3>
+                <h3 phi-if-screen="medium">Your screen is medium</h3>
+                <h3 phi-if-screen="large gt-large">Your screen is large <span phi-if-screen="gt-large">+</span></h3>
+            </div>
+        </div>
+
+        <div id="contents" phi-boundary phi-layout="row">
+
+            <div style="max-width: 200px" phi-if-screen="gt-small">
+
+                <phi-menu class="phi-menu-colored phi-cutout" style="width: 200px"
+                          phi-viewport-leave="foo.style = {position: 'fixed', top: 0}"
+                          phi-viewport-enter-end="foo.style = {}"
+                          ng-style="foo.style">
+
+                    <a href="#" active="{{$location.url() == '/'}}">Introduction</a>
+
+                    <phi-submenu label="Classes">
+                        <a phi-menu-item href="#classes" active="{{$location.url() == '/classes'}}">Overview</a>
+                        <a phi-menu-item href="#classes-spacing" active="{{$location.url() == '/classes-spacing'}}">Spacing</a>
+                        <a phi-menu-item href="#classes-color" active="{{$location.url() == '/classes-color'}}">Color</a>
+                        <a phi-menu-item href="#classes-texture" active="{{$location.url() == '/classes-texture'}}">Texture</a>
+                    </phi-submenu>
+
+                    <phi-submenu label="Attributes">
+                        <a phi-menu-item href="#attributes">Overview</a>
+                        <a phi-menu-item href="#attributes-layout">Layout</a>
+                        <a phi-menu-item href="#attributes-position">Position</a>
+                        <a phi-menu-item href="#attributes-tooltip">Tooltip</a>
+                    </phi-submenu>
+
+                    <phi-submenu label="Elements">
+                        <a href="#elements-form">Forms</a>
+                    </phi-submenu>
+
+                </phi-menu>
+
+            </div>
+
+
+            <div class="phi-padded">
+
+                <section id="foo">
+                    <h1>Inbox buttons</h1>
+
+
+                    <div>
+
+                        <button 
+                          id="control-selection"
+                          phi-icon-right="fa-chevron-down"
+                          phi-texture="emboss"
+                          ng-click="selection.expanded = !selection.expanded"
+                        >
+                            <span ng-show="!selection.count" phi-icon-left="fa-square-o"></span>
+                            <span ng-show="0 < selection.count && selection.count < 20" phi-icon-left="fa-minus-square-o" ng-bind="selection.count"></span>
+                            <span ng-show="selection.count == 20" phi-icon-left="fa-check-square-o" ng-bind="selection.count"></span>
+                        </button>
+
+                        <button phi-icon="fa-repeat" phi-texture="emboss"></button>
+
+                        <span class="phi-group">
+                               <button phi-texture="emboss">archivar</button><!--
+                            --><button phi-texture="emboss">eliminar</button><!--
+                            --><button id="control-actions" phi-texture="emboss" phi-icon-right="fa-chevron-down" ng-click="actions.expanded = !actions.expanded">acciones</button>
+                        </span>
+
+                        <phi-menu 
+                            phi-texture="paper" 
+                            phi-tooltip-for="control-selection"
+                            phi-visible="{{selection.expanded}}"
+                            phi-visible-animation="slide-top">
+
+                            <a ng-click="selection.count = 20">todos</a>
+                            <a ng-click="selection.count = 0">ninguno</a>
+                            <a ng-click="selection.count = 15">leídos</a>
+                            <a ng-click="selection.count = 5">no leídos</a>
+                        </phi-menu>
+
+                        <phi-menu 
+                            phi-texture="paper" 
+                            phi-tooltip-for="control-actions"
+                            phi-tooltip-align="bottom right"
+                            phi-tooltip-origin="top right"
+                            phi-visible="{{actions.expanded}}"
+                            phi-visible-animation="slide-top">
+
+                            <a ng-click="restore()">mover al inbox</a>
+                            <a ng-click="markAsRead()">marcar como leído</a>
+                            <a ng-click="markAsUnread()">marcar como no leído</a>
+                            <a ng-click="archive()">archivar</a>
+                            <a ng-click="trash()">eliminar</a>
+                        </phi-menu>
+
+
+                    </div>
+
+                </section>
+
+
+                <section id="themes">
+                    <h1>Color themes</h1>
+                    <p>Change the document's color theme</p>
+                    <phi-select ng-model="theme">
+                        <phi-option value="default"><span phi-color-theme="default" class="phi-color-background-500"></span> <span>default</span></phi-option>
+                        <phi-option value="amber"><span phi-color-theme="amber" class="phi-color-background-500"></span> <span>amber</span></phi-option>
+                        <phi-option value="blue-grey"><span phi-color-theme="grey" class="phi-color-background-500"></span> <span>blue-grey</span></phi-option>
+                        <phi-option value="blue"><span phi-color-theme="blue" class="phi-color-background-500"></span> <span>blue</span></phi-option>
+                        <phi-option value="brown"><span phi-color-theme="brown" class="phi-color-background-500"></span> <span>brown</span></phi-option>
+                        <phi-option value="cyan"><span phi-color-theme="cyan" class="phi-color-background-500"></span> <span>cyan</span></phi-option>
+                        <phi-option value="deep-orange"><span phi-color-theme="orange" class="phi-color-background-500"></span> <span>deep-orange</span></phi-option>
+                        <phi-option value="deep-purple"><span phi-color-theme="purple" class="phi-color-background-500"></span> <span>deep-purple</span></phi-option>
+                        <phi-option value="green"><span phi-color-theme="green" class="phi-color-background-500"></span> <span>green</span></phi-option>
+                        <phi-option value="grey"><span phi-color-theme="grey" class="phi-color-background-500"></span> <span>grey</span></phi-option>
+                        <phi-option value="indigo"><span phi-color-theme="indigo" class="phi-color-background-500"></span> <span>indigo</span></phi-option>
+                        <phi-option value="light-blue"><span phi-color-theme="blue" class="phi-color-background-500"></span> <span>light-blue</span></phi-option>
+                        <phi-option value="light-green"><span phi-color-theme="green" class="phi-color-background-500"></span> <span>light-green</span></phi-option>
+                        <phi-option value="lime"><span phi-color-theme="lime" class="phi-color-background-500"></span> <span>lime</span></phi-option>
+                        <phi-option value="orange"><span phi-color-theme="orange" class="phi-color-background-500"></span> <span>orange</span></phi-option>
+                        <phi-option value="pink"><span phi-color-theme="pink" class="phi-color-background-500"></span> <span>pink</span></phi-option>
+                        <phi-option value="purple"><span phi-color-theme="purple" class="phi-color-background-500"></span> <span>purple</span></phi-option>
+                        <phi-option value="red"><span phi-color-theme="red" class="phi-color-background-500"></span> <span>red</span></phi-option>
+                        <phi-option value="teal"><span phi-color-theme="teal" class="phi-color-background-500"></span> <span>teal</span></phi-option>
+                        <phi-option value="yellow"><span phi-color-theme="yellow" class="phi-color-background-500"></span> <span>yellow</span></phi-option>
+                    </phi-select>
+                </section>
+
+
+                <section id="classes" phi-waypoint="$location.url('classes')">
+                    <h1>Classes</h1>
+                    <p>So, classes and stuff.  Classes declare <em>styling</em> of the element.  That is, how the element <em>looks</em>.  They are independent from position and behaviour</p>
+
+                    <section id="classes-spacing" phi-waypoint="$location.url('classes-spacing')">
+                        <h2>Spacing</h2>
+
+                        <p class="phi-padded">.phi-padded</p>
+                        <p class="phi-rounded">.phi-rounded</p>
+                    </section>
+
+                    <section id="classes-color" phi-waypoint="$location.url('classes-color')">
+                        <h2>Color</h2>
+
+                        <p class="phi-color-font-500">.phi-color-font-500</p>
+                        <p class="phi-color-font-600">.phi-color-font-600</p>
+                        <p class="phi-color-font-700">.phi-color-font-700</p>
+                        <p class="phi-color-font-800">.phi-color-font-800</p>
+                        <p class="phi-color-font-900">.phi-color-font-900</p>
+
+                        <p class="phi-color-background-500">.phi-color-background-500</p>
+                        <p class="phi-color-background-600">.phi-color-background-600</p>
+                        <p class="phi-color-background-700">.phi-color-background-700</p>
+                        <p class="phi-color-background-800">.phi-color-background-800</p>
+                        <p class="phi-color-background-900">.phi-color-background-900</p>
+                    </section>
+
+                    <section id="classes-texture" phi-waypoint="$location.url('classes-texture')">
+                        <h2>Texture</h2>
+
+                        <p phi-texture="paper">.phi-texture-paper</p>
+                        <p phi-texture="emboss">.phi-texture-emboss</p>
+                        <p phi-texture="xray">.phi-texture-xray</p>
+
+                    </section>
+
+                </section>
+
+
+
+
+                <section id="attributes-layout">
+                    <h1>Layout</h1>
+
+                    <div class="blocks" phi-layout="row" phi-layout-for-small="column" phi-color-theme="teal">
+                        <div phi-color-theme="pink" class="phi-color-background-600">[phi-flex]</div>
+                        <div phi-color-theme="orange" class="phi-color-background-600">[phi-flex]</div>
+                        <div class="phi-color-background-600">[phi-flex]</div>
+                    </div>
+
+                    <div class="blocks" phi-layout="row" phi-layout-for-small="column">
+                        <div phi-flex="50" phi-flex-for-small="100" class="phi-color-background-600">[phi-flex=50]</div>
+                        <div class="phi-color-background-400">[phi-flex]</div>
+                        <div class="phi-color-background-200">[phi-flex]</div>
+                    </div>
+                </section>
+
+
+
+                <section id="attributes-position" ng-init="position.value = 'top left'">
+
+                    <h1>Position</h1>
+
+                    <div phi-texture="paper" style="height: 200px">
+                        <div phi-position="{{position.value}}" class="phi-color-background-500 phi-rounded" style="text-align: center; color: #fff">
+                            <h1 phi-icon="fa-heart"></h1>
+                            <p>[phi-position="{{position.value}}"]</p>
+                        </div>
+                    </div>
+
+                    <phi-select label="position" ng-model="position.value">
+                        <phi-option value="top left">top left</phi-option>
+                        <phi-option value="top center">top center</phi-option>
+                        <phi-option value="top right">top right</phi-option>
+                        <phi-option value="center left">center left</phi-option>
+                        <phi-option value="center">center</phi-option>
+                        <phi-option value="center right">center right</phi-option>
+                        <phi-option value="bottom left">bottom left</phi-option>
+                        <phi-option value="bottom center">bottom center</phi-option>
+                        <phi-option value="bottom right">bottom right</phi-option>
+                    </phi-select>
+
+                </section>
+
+
+
+                <section id="attributes-tooltip" ng-init="tooltip = {shown: false, classname: 'default', align: 'bottom center', origin: 'top center'}">
+                    <h1>Tooltip</h1>
+
+                    <div style="height: 200px">
+
+                        <h1 id="anchor" phi-position="center" phi-icon="fa-heart" class="phi-color-font-500"></h1>
+
+                        <div phi-texture="xray"
+                             phi-visible="{{!!tooltip.shown}}"
+                             ng-class="tooltip.classname"
+                             phi-tooltip-for="anchor"
+                             phi-tooltip-align="{{tooltip.align}}"
+                             phi-tooltip-origin="{{tooltip.origin}}">
+
+                            Hi there!
+                        </div>
+
+                    </div>
+
+                    <div phi-layout="row" phi-layout-for-small="column">
+
+                        <phi-select label="effect" ng-model="tooltip.classname">
+                            <phi-option value="">default</phi-option>
+                            <phi-option value="phi-visible-zoom-in">zoom-in</phi-option>
+                            <phi-option value="phi-visible-zoom-out">zoom-out</phi-option>
+                            <phi-option value="phi-visible-slide-top">slide-top</phi-option>
+                            <phi-option value="phi-visible-slide-bottom">slide-bottom</phi-option>
+                            <phi-option value="phi-visible-slide-left">slide-left</phi-option>
+                            <phi-option value="phi-visible-slide-right">slide-right</phi-option>
+                            <phi-option value="phi-visible-scale">scale</phi-option>
+                        </phi-select>
+
+                        <phi-select label="align" ng-model="tooltip.align">
+                            <phi-option value="top left">top left</phi-option>
+                            <phi-option value="top center">top center</phi-option>
+                            <phi-option value="top right">top right</phi-option>
+                            <phi-option value="center left">center left</phi-option>
+                            <phi-option value="center">center</phi-option>
+                            <phi-option value="center right">center right</phi-option>
+                            <phi-option value="bottom left">bottom left</phi-option>
+                            <phi-option value="bottom center">bottom center</phi-option>
+                            <phi-option value="bottom right">bottom right</phi-option>
+                        </phi-select>
+
+                        <phi-select label="origin" ng-model="tooltip.origin">
+                            <phi-option value="top left">top left</phi-option>
+                            <phi-option value="top center">top center</phi-option>
+                            <phi-option value="top right">top right</phi-option>
+                            <phi-option value="center left">center left</phi-option>
+                            <phi-option value="center">center</phi-option>
+                            <phi-option value="center right">center right</phi-option>
+                            <phi-option value="bottom left">bottom left</phi-option>
+                            <phi-option value="bottom center">bottom center</phi-option>
+                            <phi-option value="bottom right">bottom right</phi-option>
+                        </phi-select>
+
+                        <phi-checkbox ng-model="tooltip.shown">shown</phi-checkbox>
+
+                    </div>
+
+                </section>
+
+
+
+                <section id="elements-form" ng-init="form = {}">
+
+                    <h1>Form elements</h1>
+
+                    <div phi-layout="row">
+
+                        <phi-select ng-model="form.title" label="title" style="max-width: 90px">
+                            <phi-option value="Mr.">Mr.</phi-option>
+                            <phi-option value="Ms.">Ms.</phi-option>
+                            <phi-option value="Mrs.">Mrs.</phi-option>
+                        </phi-select>
+
+                        <phi-input phi-icon-left="fa-user" label="First name" ng-model="form.firstName" placeholder="use unicamente su primer nombre"></phi-input>
+                        <phi-input label="Last name" ng-model="form.lastName" placeholder="nombre de pila, o batería"></phi-input>
+                    </div>
+
+                    <div phi-layout="row">
+                        <phi-input label="Address" name="name" multiline ng-model="form.address"></phi-input>
+                    </div>
+
+                    <phi-checkbox ng-model="form.accept" ng-true-value="'acepto'" ng-false-value="'no acepto'">I accept everything</phi-checkbox>
+
+                    <button phi-button >go</button>
+                    <button phi-button phi-color-theme="pink">a pink button</button>
+
+
+                    <code>{{form}}</code>
+
+                </section>
+
+            </div>
+
+
+        </div> <!-- /#contents -->
+
+    </body>
+</html>

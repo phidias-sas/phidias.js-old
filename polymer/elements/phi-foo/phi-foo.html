@@ -1,0 +1,177 @@
+<link rel="import" href="../../../polymer/polymer.html">
+
+<link rel="import" href="../phi-block-youtube/phi-block-youtube.html">
+
+<link rel="import" href="../../../iron-icons/iron-icons.html">
+<link rel="import" href="../../../iron-icons/av-icons.html">
+<link rel="import" href="../../../iron-image/iron-image.html">
+<link rel="import" href="../../../iron-selector/iron-selector.html">
+<link rel="import" href="../../../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../paper-input/paper-input.html">
+<link rel="import" href="../../../paper-item/paper-icon-item.html">
+<link rel="import" href="../../../paper-item/paper-item.html">
+<link rel="import" href="../../../paper-menu/paper-menu.html">
+<link rel="import" href="../../../paper-menu-button/paper-menu-button.html">
+
+<dom-module id="phi-foo">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            .phi-person {
+                display: block;
+                padding: 16px;
+                border-bottom: 1px solid #ccc;
+
+                position: relative;
+            }
+
+            .phi-person .index {
+
+                color: #fff;
+                font-weight: bold;
+                font-size: 3em;
+                opacity: 0.3;
+
+                width: 56px;
+                height: 56px;
+                line-height: 56px;
+
+                text-align: center;
+
+                position: absolute;
+                top: 18px;
+                left: 18px;
+
+                z-index: 2;
+            }
+
+            .phi-avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                overflow: hidden;
+
+                /* prevent border clipping during transition */
+                position: relative;
+                z-index: 1;
+            }
+
+            .phi-avatar iron-image {
+                width: 56px;
+                height: 56px;
+                background-color: #999;
+
+                z-index: 0;
+            }
+
+            .phi-avatar,
+            paper-input {
+                display: inline-block;
+                margin-right: 1em;
+                vertical-align: middle;
+            }
+
+        </style>
+
+        <h1><content></content></h1>
+
+        <template is="dom-repeat" items="{{people}}">
+            <div class="phi-person">
+                <span class="index">{{index}}</span>
+                <div class="phi-avatar">
+                    <iron-image preload src="{{item.avatar}}" sizing="cover"></iron-image>
+                </div>
+                <paper-input label="first name" value="{{item.firstName}}"></paper-input>
+                <paper-input label="last name" value="{{item.lastName}}"></paper-input>
+            </div>
+        </template>
+
+        <button on-click="created">Load data {{test}}</button>
+
+        <div>
+            <h2>{{post.title}}</h2>
+
+            <template is="dom-repeat" items="{{post.blocks}}" as="block">
+
+                <paper-menu-button horizontal-align="right">
+                    <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+                    <paper-menu class="dropdown-content">
+
+                        <iron-selector attr-for-selected="target-state" selected="{{currentState}}">
+                            <template is="dom-repeat" items="{{getAvailableStates()}}">
+                                <paper-icon-item target-state$="{{item.state}}">
+                                    <iron-icon icon="{{item.icon}}" item-icon></iron-icon>
+                                    <span>{{item.label}}</span>
+                                </paper-icon-item>
+                            </template>
+                        </iron-selector>
+
+                    </paper-menu>
+                </paper-menu-button>
+
+                <template is="dom-if" if="{{isType(block, 'youtube')}}">
+                    <phi-block-youtube block="{{block}}" current-state="{{currentState}}"></phi-block-youtube>
+                </template>
+            </template>
+
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'phi-foo',
+
+            getAvailableStates: function(e) {
+                //return this.$$('phi-block-youtube').getAvailableStates();
+                return [
+                    {
+                        state: 'play',
+                        label: 'ver',
+                        icon: 'av:play-arrow'
+                    },
+
+                    {
+                        state: 'edit',
+                        label: 'editar',
+                        icon: 'icons:create'
+                    }
+                ];
+            },
+
+            isType: function(block, type) {
+                return block.type == type;
+            },
+
+            ready: function() {
+                var vm = this;
+            },
+
+            created: function() {
+
+                /* Retrieve the phiApp service from angularjs !!!
+                     (to be replaced with a vanilla phiApp service)
+                */
+                var $injector = angular.element(document.body).injector();
+                var phiApi = $injector.get('phiApi');
+
+                if (phiApi) {
+                    phiApi.get('/people', {limit: 2})
+                        .then(function(response) {
+                            this.people = response.data;
+                        }.bind(this));
+
+                    phiApi.get('/people/45cru3p8/threads/all/56d79fb1efe7c')
+                        .then(function(response) {
+                            this.thread = response.data;
+                            this.post     = this.thread[0];
+                        }.bind(this));
+                }
+            }
+
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,91 @@
+<link rel="import" href="../../../polymer/polymer.html">
+
+<dom-module id="phi-block-youtube">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <!-- la function isState(currentState) solo se actualiza cuando se detecta un cambio en alguno de sus argumentos -->
+        <!-- asi que isState('play') no se actualiza nunca -->
+        <template is="dom-if" if="{{isState(currentState, 'play')}}" xxxxxx-restamp="true">
+            <iframe width="100%" height="420" src$="https://www.youtube.com/embed/{{videoId}}" frameborder="0" allowfullscreen></iframe>
+        </template>
+
+        <template is="dom-if" if="{{isState(currentState, 'edit')}}" xxxxxx-restamp="true">
+            <form>
+                <fieldset>
+                    <input type="text" value="{{block.url::input}}" />
+                    <input type="text" value="{{block.title::input}}" />
+                    <input type="text" value="{{block.description::input}}" />
+                </fieldset>
+
+                <footer>
+                    <button on-click="save" type="button">ok</button>
+                </footer>
+            </form>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'phi-block-youtube',
+
+            properties: {
+                block: Object,
+                currentState: {
+                    type: String,
+                    value: 'play'
+                },
+                videoId: {
+                    type: String,
+                    computed: 'computeYoutubeId(block.url)'
+                }
+            },
+
+            getAvailableStates: function() {
+                return {
+                    play: {
+                        label: 'ver',
+                        icon: 'home'
+                    },
+
+                    edit: {
+                        label: 'editar',
+                        icon: 'home'
+                    }
+                };
+            },
+
+            save: function() {
+                console.log("saving", this.block);
+            },
+
+            isState: function (currentState, targetState) {
+                return currentState == targetState;
+            },
+
+            setState: function(state) {
+                this.currentState = state;
+            },
+
+            computeYoutubeId: function(url) {
+                if (!url.trim().length) {
+                    return null;
+                }
+                var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                var match  = url.match(regExp);
+                if (match && match[2].length == 11) {
+                    return match[2];
+                } else {
+                    return null;
+                }
+            }
+
+        });
+
+    </script>
+</dom-module>

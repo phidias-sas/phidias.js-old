@@ -1,0 +1,25 @@
+phi-event-repeat {
+
+    .week ul,
+    .month ul {
+        display: inline-block;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: inline-block;
+            margin-right: 1em;
+        }
+    }
+
+    div > label {
+        display: inline-block;
+        min-width: 120px;
+    }
+
+    .summary {
+        margin: 16px 0;
+    }
+
+}

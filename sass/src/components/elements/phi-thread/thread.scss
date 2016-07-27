@@ -1,0 +1,195 @@
+/*
+Full thread markup reference:
+
+<phi-thread class="read|unread|selected">
+    <phi-thread-header>
+        <phi-thread-icon>
+            <iron-image ng-src="{{thread.author.avatar|trustAsResourceUrl}}" sizing="cover" class="avatar"></iron-image>
+            <iron-icon icon="check|unchecked"></iron-icon>
+        </phi-thread-icon>
+
+        <phi-thread-preview>
+            <phi-thread-title></phi-thread-title>
+            <phi-thread-author></phi-thread-author>
+            <phi-thread-description></phi-thread-description>
+            <phi-thread-date></phi-thread-date>
+        </phi-thread-preview>
+    </phi-thread-header>
+
+    <phi-thread-body>
+
+        <phi-post>
+
+            <phi-post-header>
+                <phi-post-icon>
+                    <iron-image ng-src="{{post.author.avatar|trustAsResourceUrl}}" sizing="cover" class="avatar"></iron-image>
+                </phi-post-icon>
+
+                <phi-post-preview>
+                    <phi-post-author></phi-post-author>
+                    <phi-post-title></phi-post-title>
+                    <phi-post-date></phi-post-date>
+                </phi-post-preview>
+            </phi-post-header>
+
+            <phi-post-body>
+
+                <phi-post-description></phi-post-description>
+
+                <phi-post-blocks>
+                    <phi-object></phi-object>
+                    ...
+                </phi-post-blocks>
+            </phi-post-body>
+        </phi-post>
+        ...
+
+
+
+
+        <phi-thread-reply>
+
+            <div class="face" ng-click="thread.isReplying = true" ng-show="!thread.isReplying && thread.type.singular == 'mensaje'">Responder</div>
+
+            <phi-post ng-show="!!thread.isReplying">
+                <phi-post-header>
+                    <phi-post-icon>
+                        <iron-image src ="{/literal}{$person->getPictureUrl(true)}{literal}" sizing="cover" class="avatar"></iron-image>
+                    </phi-post-icon>
+
+                    <phi-post-preview>
+                        <phi-post-author>{/literal}{$person->firstname} {$person->lastname}{literal}</phi-post-author>
+                    </phi-post-preview>
+                </phi-post-header>
+
+                <phi-post-body>
+                    <textarea ng-model="thread.replyBody"></textarea>
+                    <footer>
+                        <phi-button class="submit" ng-click="folder.sendReply(thread)">enviar</phi-button>
+                        <phi-button class="cancel" ng-click="thread.isReplying = false">cancelar</phi-button>
+                    </footer>
+                </phi-post-body>
+            </phi-post>
+
+        </phi-thread-reply>
+
+
+
+    </phi-thread-body>
+
+</phi-thread>
+
+*/
+
+
+/* !!! <paper-checkbox> is causing bugs inside ng-repeats. ugly hack to "fix":  */
+#checkboxLabel > #checkboxContainer {
+    display: none;
+}
+
+phi-thread {
+    display: block;
+}
+
+phi-thread-header {
+
+    cursor: pointer;
+    display: flex;
+
+    phi-thread-icon {
+
+        outline: none;
+
+        display: block;
+        flex: 0 0 38px;
+        box-sizing: content-box;
+        padding: 16px;
+
+        z-index: 1; // previene que la imagen pierda su border-radius mientras se muestra un paper-ripple (!!!)
+
+        iron-image {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+        }
+
+        iron-icon {
+            display: block !important;
+            margin: auto;
+            margin-top: 6px;
+        }
+
+    }
+
+    phi-thread-preview {
+
+        outline: none;
+
+        display: block;
+        flex: 1;
+        padding: 16px;
+        padding-left: 0;
+
+        phi-thread-title {
+            display: block;
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: normal;
+
+            max-width: 100%;
+            word-break: break-word;
+        }
+
+        phi-thread-author,
+        phi-thread-description {
+            display: inline-block;
+            color: #444;
+        }
+
+        phi-thread-description {
+            max-width: 100%;
+            word-break: break-word;
+        }
+
+        phi-thread-author:after {
+            content: ' - ';
+        }
+
+        phi-thread-date {
+            display: none;
+        }
+
+    }
+
+}
+
+
+
+/* States */
+phi-thread {
+
+    &.selected {
+        phi-thread-header {
+            background-color: rgba(255, 255, 136, 0.35);
+        }
+    }
+
+    &.unread {
+
+        phi-thread-title {
+            font-weight: bold;
+        }
+
+        phi-thread-title,
+        phi-thread-author,
+        phi-thread-description {
+            color: #111;
+        }
+
+    }
+
+}
+
+phi-thread-body {
+    display: block;
+}

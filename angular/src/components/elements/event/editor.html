@@ -1,0 +1,26 @@
+<div class="bootstrap">
+    <div class="form-inline date-range">
+        <div class="form-group">
+            <input bs-datepicker autoclose="true" type="text" name="startDate" ng-model="vm.event.startDate" class="form-control" size="10" placeholder="fecha inicial" ng-change="vm.sanitize()" />
+            <input bs-timepicker autoclose="false" type="text" name="startTime" ng-model="vm.event.startDate" class="form-control" size="8" placeholder="hora" ng-show="!vm.event.allDay" />
+        </div>
+        a
+        <div class="form-group">
+            <input bs-datepicker autoclose="true" type="text" name="endDate" ng-model="vm.event.endDate" class="form-control" size="10" placeholder="fecha final" data-min-date="{{vm.minDate}}" ng-change="vm.sanitize()" />
+            <input bs-timepicker autoclose="false" type="text" name="endTime" ng-model="vm.event.endDate" class="form-control" size="8" placeholder="hora" ng-show="!vm.event.allDay" />
+        </div>
+    </div>
+    <div class="form-inline date-options">
+        <div class="form-group">
+            <input type="checkbox" id="allDayChbox" ng-model="vm.event.allDay" />
+            <label for="allDayChbox">Todo el dia</label>
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="repeatsChbox" ng-checked="!!vm.event.repeat" ng-click="vm.event.repeat = !!vm.event.repeat ? null : vm.defaultRepeat" />
+            <label for="repeatsChbox">Repetir ...</label>
+        </div>
+    </div>
+    <div class="repeat" ng-if="!!vm.event.repeat">
+        <phi-event-repeat ng-model="vm.event.repeat"></phi-event-repeat>
+    </div>
+</div>

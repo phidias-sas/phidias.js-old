@@ -1,0 +1,60 @@
+$phi-post-editor-block-toolbar-height: 42px;
+
+phi-post-editor {
+
+    display: block;
+
+    .phi-post-editor-block {
+
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 12px;
+        padding: 4px;
+
+        &-toolbar {
+            position: relative;
+            height: $phi-post-editor-block-toolbar-height;
+            border-radius: 4px;
+            background-color: rgba(0, 0, 0, 0.065);
+            cursor: move;
+
+
+            &-menu {
+                position: absolute;
+                top: 0;
+                right: 0;
+
+                button {
+                    background: transparent;
+                    border: 0;
+                    padding: 6px 22px;
+                    height: $phi-post-editor-block-toolbar-height;
+                }
+            }
+
+        }
+
+    }
+
+    iron-collapse {
+        transition-duration: 190ms;
+    }
+
+    paper-card {
+        display: block !important;
+    }
+
+}
+
+
+/* !!! Editor Hacks */
+
+/* "Disable" form block submit's button when inside an editor */
+phi-post-editor phi-object[type="post-block-form"] footer > button {
+
+    cursor: default;
+    pointer-events: none;
+
+    color: #c0c0c0;
+    background-color: #ffffff;
+}

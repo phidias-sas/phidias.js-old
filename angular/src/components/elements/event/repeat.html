@@ -1,0 +1,108 @@
+<div>
+
+    <div class="every">
+        <label>se repite</label>
+        <select ng-model="vm.repeat.every">
+            <option value="day">Cada día</option>
+            <option value="week">Cada semana</option>
+            <option value="month">Cada mes</option>
+            <option value="year">Cada año</option>
+        </select>
+    </div>
+
+    <div ng-show="vm.repeat.every" class="interval">
+        <label>Repetir cada</label>
+        <select ng-model="vm.repeat.interval">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+        </select>
+
+        <span ng-switch="vm.repeat.every">
+            <span ng-switch-when="day">días</span>
+            <span ng-switch-when="week">semanas</span>
+            <span ng-switch-when="month">meses</span>
+            <span ng-switch-when="year">años</span>
+        </span>
+    </div>
+
+    <div ng-show="vm.repeat.every == 'week'" class="week">
+        <label>Día</label>
+        <ul>
+            <li>
+                <input type="checkbox" id="event-repeat-day-mo" ng-model="vm.checkedDays[1]" ng-change="vm.toggleDay(1, vm.checkedDays[1])" />
+                <label for="event-repeat-day-mo">L</label>
+            </li>
+            <li>
+                <input type="checkbox" id="event-repeat-day-tu" ng-model="vm.checkedDays[2]" ng-change="vm.toggleDay(2, vm.checkedDays[2])" />
+                <label for="event-repeat-day-tu">M</label>
+            </li>
+            <li>
+                <input type="checkbox" id="event-repeat-day-we" ng-model="vm.checkedDays[3]" ng-change="vm.toggleDay(3, vm.checkedDays[3])" />
+                <label for="event-repeat-day-we">X</label>
+            </li>
+            <li>
+                <input type="checkbox" id="event-repeat-day-th" ng-model="vm.checkedDays[4]" ng-change="vm.toggleDay(4, vm.checkedDays[4])" />
+                <label for="event-repeat-day-th">J</label>
+            </li>
+            <li>
+                <input type="checkbox" id="event-repeat-day-fr" ng-model="vm.checkedDays[5]" ng-change="vm.toggleDay(5, vm.checkedDays[5])" />
+                <label for="event-repeat-day-fr">V</label>
+            </li>
+            <li>
+                <input type="checkbox" id="event-repeat-day-sa" ng-model="vm.checkedDays[6]" ng-change="vm.toggleDay(6, vm.checkedDays[6])" />
+                <label for="event-repeat-day-sa">S</label>
+            </li>
+            <li>
+                <input type="checkbox" id="event-repeat-day-su" ng-model="vm.checkedDays[7]" ng-change="vm.toggleDay(7, vm.checkedDays[7])" />
+                <label for="event-repeat-day-su">D</label>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-show="vm.repeat.every == 'month'" class="month">
+        <label>Repetir cada</label>
+        <ul>
+            <li>
+                <input id="event-repeat-month-day" type="radio" value="" ng-model="vm.repeat.on" />
+                <label for="event-repeat-month-day">día del mes</label>
+            </li>
+            <li>
+                <input id="event-repeat-month-weekday" type="radio" value="weekday" ng-model="vm.repeat.on" />
+                <label for="event-repeat-month-weekday">día de la semana</label>
+            </li>
+        </ul>
+    </div>
+
+    <p ng-show="vm.repeat.every" class="summary">
+        <span>Este evento se repetirá </span><span ng-bind="vm.getSummary()"></span>
+    </p>
+
+</div>

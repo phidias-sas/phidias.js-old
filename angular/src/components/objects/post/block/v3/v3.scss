@@ -1,0 +1,63 @@
+[type=post-block-v3] {
+
+    /* Entities */
+    .entity
+    {
+        margin-bottom: 5px;
+        padding: 0 0 10px 0;
+    }
+
+    .entity .field
+    {
+        margin-bottom: 5px;
+    }
+
+    .entity .label
+    {
+        display: block;
+        float: left;
+        width: 280px;
+        font-weight: bold;
+        padding: 0;
+        margin: 0;
+    }
+
+    .entity .label.wide
+    {
+        width: 250px;
+        padding-right: 20px;
+    }
+
+    .entity .text
+    {
+        font-size: 1.2em;
+        margin-top: 10px;
+    }
+
+    .entity .description
+    {
+        margin: -10px 0 15px 0;
+        font-size: 11px;
+        color: #666;
+    }
+
+    .entity .title
+    {
+        margin-bottom: 20px;
+    }
+
+    .entity h2
+    {
+        margin: -20px 0 0 0;
+        font-size: 16px;
+    }
+
+    .small
+    {
+        font-size: 10px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+    }
+
+
+}

@@ -1,0 +1,9 @@
+{
+  "name": "phidias-js",
+  "description": "Phidias Web App Toolkit",
+  "main": [],
+  "ignore": [],
+  "dependencies": {
+    "angular": "*"
+  }
+}

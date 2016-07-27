@@ -1,0 +1,87 @@
+<div>
+
+    <div sv-root sv-part="vm.post.blocks" sv-on-sort="vm.reorder()">
+
+        <div ng-repeat="(key, block) in vm.post.blocks" ng-init="block.ctrl = {}" class="phi-post-editor-block" sv-element>
+
+            <div class="phi-post-editor-block-toolbar" sv-handle>
+
+                <div class="phi-post-editor-block-toolbar-menu">
+                    <phi-button
+                        class="cancel"
+                        ng-blur="block.menuShown = false"
+                        id="menu_toggler_{{post.id}}_{{key}}"
+                        ng-show="block.ctrl.currentState == 'default'"
+                        ng-click="block.menuShown = !block.menuShown">
+
+                        <phi-icon icon="fa-ellipsis-v"></phi-icon>
+                    </phi-button>
+
+                    <phi-button
+                        class="cancel"
+                        ng-blur="block.menuShown = false"
+                        ng-show="block.ctrl.currentState != 'default'"
+                        ng-click="block.ctrl.go('default')">
+
+                        <phi-icon icon="fa-arrow-left"></phi-icon>
+                    </phi-button>
+
+                    <div
+                        phi-tooltip-for="menu_toggler_{{post.id}}_{{key}}"
+                        phi-tooltip-origin="top right"
+                        phi-tooltip-align="bottom right"
+                        phi-visible="{{block.menuShown}}"
+                        phi-visible-animation="slide-bottom">
+
+                        <paper-card>
+                            <phi-list-item ng-repeat="item in block.menu" ng-click="block.menuShown = false; block.ctrl.go(item.state)">
+                                <phi-icon icon="{{item.icon}}" bind-polymer></phi-icon>
+                                <span ng-bind="item.title"></span>
+                            </phi-list-item>
+                        </paper-card>
+                        <!--
+                        <phi-menu phi-texture="paper">
+                            <phi-menu-item ng-repeat="item in block.menu" ng-click="block.menuShown = false; block.ctrl.go(item.state)">
+                                <phi-icon icon="{{item.icon}}"></phi-icon>
+                                {{item.title}}
+                            </phi-menu-item>
+                        </phi-menu>
+                        -->
+                    </div>
+                </div>
+
+            </div>
+
+            <phi-object
+                type="post-block-{{block.type}}"
+                ng-model="block"
+                controller-as="block.ctrl"
+                on-change="vm.attachBlock(block)"
+                on-destroy="vm.removeBlock(block)"
+            >
+            </phi-object>
+
+        </div>
+
+    </div>
+
+    <paper-card>
+        <iron-collapse ng-attr-opened="{{adderIsOpen ? 'opened' : undefined}}">
+            <div>
+                <div ng-repeat="insertable in vm.insertable">
+                    <phi-list-item ng-click="$parent.adderIsOpen = false; vm.addBlock(insertable);">
+                        <phi-icon icon="{{insertable.icon}}" bind-polymer></phi-icon>
+                        <span ng-bind="insertable.title"></span>
+                    </phi-list-item>
+                </div>
+
+            </div>
+        </iron-collapse>
+
+        <phi-list-item ng-click="adderIsOpen = !adderIsOpen">
+            <iron-icon icon="{{adderIsOpen ? 'close' : 'add'}}"></iron-icon>
+            <span ng-bind="adderIsOpen ? 'cancelar' : 'adjuntar'"></span>
+        </phi-list-item>
+    </paper-card>
+
+</div>

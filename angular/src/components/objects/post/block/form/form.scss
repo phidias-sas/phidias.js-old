@@ -1,0 +1,107 @@
+.phi-form-editor {
+
+    margin-bottom: 32px;
+
+    & > .description {
+        margin: 0;
+        padding: 16px;
+    }
+
+    & > .fields {
+        padding: 16px;
+    }
+
+    &-field {
+
+        border: 2px dotted #999;
+        border-radius: 4px;
+        padding: 16px;
+
+        margin-bottom: 24px;
+
+        &-toolbar {
+            cursor: move;
+            position: relative;
+            height: 30px;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            margin-bottom: 6px;
+
+            & > a {
+                position: absolute;
+                top: 0;
+                right: 0;
+
+                display: block;
+                height: 30px;
+                line-height: 30px;
+                padding: 0 8px;
+            }
+        }
+
+        &-controls,
+        &-preview {
+            display: inline-block;
+            box-sizing: border-box;
+            width: 50%;
+
+            padding: 18px;
+            vertical-align: top;
+        }
+
+        &-preview {
+
+            label {
+                display: block;
+            }
+
+            phi-input,
+            input,
+            textarea,
+            select {
+                margin: 0;
+            }
+
+            input[type="checkbox"] {
+                marign-right: 1em;
+            }
+
+            .description {
+                margin: 0;
+                padding: 6px 0;
+                font-size: 12px;
+                opacity: 0.6;
+            }
+
+        }
+
+        &-controls {
+
+            .notice {
+                font-size: 12px;
+                margin: 0;
+                padding: 0;
+            }
+
+            phi-select,
+            phi-input {
+                display: block;
+                margin-bottom: 12px;
+            }
+
+        }
+
+        &-new {
+
+            border: 2px dotted #999;
+            border-radius: 4px;
+            padding: 16px;
+
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+
+    }
+
+}
