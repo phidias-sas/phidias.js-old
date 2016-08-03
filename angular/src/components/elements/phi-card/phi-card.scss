@@ -1,0 +1,25 @@
+phi-card {
+
+    display: block;
+    background-color: #fff;
+    @extend [phi-z];
+
+    @extend .phi-rounded;
+    overflow: hidden; // correctly show rounded corners when elements are absolutely positioned inside the cover
+
+    phi-card-cover {
+        display: block;
+        background-size: cover;
+        min-height: 120px;
+    }
+
+    phi-card-contents {
+        display: block;
+        @extend .phi-padded;
+
+        & > h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+    }
+}

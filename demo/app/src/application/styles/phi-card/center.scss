@@ -1,0 +1,33 @@
+phi-card.center {
+
+    phi-card-cover {
+        position: relative;
+
+        h1 {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            padding: 10px;
+
+            font-weight: 400;
+            color: #fff;
+
+        }
+    }
+
+    phi-card-contents {
+        padding: 10px;
+
+        .description {
+            font-size: 14px;
+            color: #999;                
+        }
+
+        .address {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #666;                
+        }
+    }
+    
+}

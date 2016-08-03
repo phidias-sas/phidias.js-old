@@ -1,0 +1,13 @@
+$phi-state-navigation-height: 46px;
+
+phi-state {
+    display: block;
+    position: relative;
+    height: 100%;
+
+    phi-state-cover > *,
+    phi-state-navigation > *,
+    phi-state-contents > * {
+        @extend [phi-boundary];
+    }
+}

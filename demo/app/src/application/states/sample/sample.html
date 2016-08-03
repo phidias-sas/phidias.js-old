@@ -1,0 +1,20 @@
+<phi-state>
+    <phi-state-cover style="background-image: url('img/cover.jpg')" phi-color-tint="#01579b" ng-class="{collapsed: $state.current.name != 'default'}">
+        <div>
+            <h1>Page Title</h1>
+            <p>Cover subtext</p>
+        </div>
+    </phi-state-cover>
+
+    <phi-state-navigation>
+        <phi-menu>
+            <phi-menu-item ui-sref="default" ui-sref-active="active">Default</phi-menu-item>
+            <phi-menu-item ui-sref="test({number: 1})" ui-sref-active="active">Sample 1</phi-menu-item>
+            <phi-menu-item ui-sref="test({number: 2})" ui-sref-active="active">Sample 2</phi-menu-item>
+        </phi-menu>
+    </phi-state-navigation>
+
+    <phi-state-contents ui-view>
+        <h1>Contents are loading</h1>
+    </phi-state-contents>
+</phi-state>

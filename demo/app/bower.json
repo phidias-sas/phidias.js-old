@@ -1,0 +1,11 @@
+{
+  "name": "phidias-demo-app",
+  "description": "Phidias.js demo app",
+  "main": [],
+  "ignore": [],
+  "dependencies": {
+    "phidias-js": "*",
+    "angular-ui-router": "*",
+    "angular-animate": "*"
+  }
+}

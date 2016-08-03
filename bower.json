@@ -4,6 +4,9 @@
   "main": [],
   "ignore": [],
   "dependencies": {
-    "angular": "*"
+    "webcomponents.js": "*",
+    "angular": "*",
+    "angular-aria": "*",
+    "angular-strap": "*"
   }
 }

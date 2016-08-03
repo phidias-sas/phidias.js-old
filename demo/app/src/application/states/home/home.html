@@ -1,0 +1,49 @@
+<phi-state id="home">
+    <phi-state-cover style="background-image: url('img/cover.jpg')" phi-color-tint="#01579b" ng-class="{collapsed: searchIsFocused || !!vm.query}">
+        <div class="header">
+            <h1>Encuentra el mejor colegio</h1>
+            <div class="search" phi-icon-left="{{vm.isLoading ? 'fa-spinner' : 'fa-search'}}" phi-icon-animation="{{vm.isLoading ? 'spin' : ''}}">
+                <input type="text"
+                    placeholder="Busca por ciudad o nombre del colegio"
+                    ng-model="vm.query"
+                    ng-model-options="{debounce: 400}"
+                    ng-change="vm.find(vm.query)"
+                    ng-focus="searchIsFocused = true"
+                    ng-blur="searchIsFocused = false" 
+                />
+            </div>
+        </div>
+    </phi-state-cover>
+
+    <phi-state-contents>
+
+        <section id="cities" phi-layout="row" phi-layout-wrap>
+            <phi-card class="phi-card-image" ng-repeat="city in vm.cities" ui-sref="city({city: city.name})">
+                <phi-card-cover style="background-image: url('http://beta.mejorescolegios.es/img/cities/{{city.name}}.jpg')"></phi-card-cover>
+                <phi-card-contents>
+                    <h1 ng-bind="city.name"></h1>
+                    <p><strong ng-bind="city.count"></strong> colegios</p>
+                </phi-card-contents>
+            </phi-card>
+        </section>
+
+        <section id="centers" phi-layout="row" phi-layout-wrap>
+            <phi-card ng-repeat="center in vm.centers" class="center">
+                <phi-card-cover style="background-image: url('{{center.cover}}'), url('img/cover.jpg')">
+                    <h1 class="title" ng-bind="center.name"></h1>
+                </phi-card-cover>
+
+                <phi-card-contents>
+                    <div class="logo" ng-if="center.logo">
+                        <img ng-src="{{center.logo}}" alt="{{center.name}}" />
+                    </div>
+                    <p class="description" ng-bind="center.category"></p>
+                    <p class="address" phi-icon-left="fa-map-marker">{{center.address}}, {{center.city}}, {{center.region}}, {{center.postalCode}}</p>
+                </phi-card-contents>
+
+            </phi-card>
+        </section>
+
+    </phi-state-contents>
+
+</phi-state>

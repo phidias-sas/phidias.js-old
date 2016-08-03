@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <head>
+        <title>phidias.js</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+        <link rel="import" href="build/phidias-demo-app.html">
+
+        <script type="text/javascript">
+            // manual bootstrap after Webcomponents is loaded
+            window.addEventListener('WebComponentsReady', function() {
+                angular.bootstrap(wrap(document), ['phidias-demo-app']);
+            });
+        </script>
+    </head>
+
+    <body ontouchstart="" onmouseover="" ng-class="{'direction-left': stateChangeDirection == 'left', 'direction-right': stateChangeDirection == 'right'}">
+        <div phi-boundary ng-if="false" class="initializer">
+            <h1>cargando</h1>
+        </div>
+        <div class="main-view" ui-view></div>
+    </body>
+</html>

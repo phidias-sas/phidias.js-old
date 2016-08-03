@@ -1,0 +1,32 @@
+phi-state-navigation {
+    display: block;
+    position: relative;
+    white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+
+    background-color: rgba(0, 0, 0, 0.2);
+
+
+    phi-menu {
+
+        phi-menu-item,
+        [phi-menu-item] {
+            display: inline-block;
+            box-sizing: border-box;
+            height: $phi-state-navigation-height;
+            padding: 12px 24px;
+            color: #fff;
+            font-weight: 500;
+
+            &.active {
+                border-bottom: 4px solid #fff;
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+
+        }
+
+    }
+
+}

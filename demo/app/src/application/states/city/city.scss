@@ -1,0 +1,75 @@
+phi-state#city {
+
+    phi-state-cover {
+        background-position-y: 50%;
+
+        .header {
+            padding-bottom: 12px;
+        }
+
+        .search {
+            padding: 0 0 0 42px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 4px;
+            color: #666;
+            text-align: left;
+
+            position: relative;
+
+            &:before {
+                position: absolute;
+                top: 0;
+                left: 0;
+                padding: 12px;
+            }
+
+            input {
+                outline: none;
+                padding: 12px 0;
+                border: 0;
+                background: transparent;
+                width: 100%;
+
+                display: inline-block;
+                text-align: left;
+
+                color: #333;
+                font-weight: bold;
+
+                &::-webkit-input-placeholder {
+                color: #666;
+                font-weight: normal;
+                }
+
+                &:-moz-placeholder { /* Firefox 18- */
+                color: #666;  
+                font-weight: normal;
+                }
+
+                &::-moz-placeholder {  /* Firefox 19+ */
+                color: #666;  
+                font-weight: normal;
+                }
+
+                &:-ms-input-placeholder {  
+                color: #666;  
+                font-weight: normal;
+                }
+
+            }
+        }
+
+
+    }
+
+
+    section#centers {
+        phi-card {
+            min-width: 33%;
+            @media (max-width: 600px) {
+                min-width: 100%;
+            }
+        }
+    }
+
+}

@@ -1,0 +1,75 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,500,500italic,700,700italic);
+
+html, body {
+    font-family: 'Roboto', sans-serif;
+    background: #f3f3f3;
+    color: #444;
+}
+
+* {
+    font-weight: 300;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
+
+section {
+    margin: 0 0 32px 0;
+}
+
+section > h1 {
+    margin-bottom: 8px;
+}
+
+#top-bar {
+    height: 48px;
+}
+
+#top-bar a {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    font-size: 24px;
+    text-align: center;
+
+    text-decoration: none;
+    color: #2676d8;
+}
+
+#cover {
+    padding: 32px 20px;
+    color: #fff;
+}
+
+#contents {
+    margin-top: 20px;
+}
+
+section#classes p {
+    padding: 10px;
+    margin: 5px 0;
+}
+
+
+#attributes-layout .blocks > * {
+    color: #fff;
+    padding: 18px;
+}
+
+#themes > phi-select a {
+    position: relative;
+    padding-left: 30px !important;
+}
+
+#themes > phi-select a > span.phi-color-background-500 {
+
+    display: block;
+
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    bottom: 5px;
+    width: 20px;
+}

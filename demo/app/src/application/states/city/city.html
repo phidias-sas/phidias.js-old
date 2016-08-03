@@ -1,0 +1,43 @@
+<phi-state id="city">
+    <phi-state-cover style="background-image: url('http://beta.mejorescolegios.es/img/cities/madrid.jpg')" phi-color-tint="#000">
+        <div class="header">
+            <div class="search" phi-icon-left="{{vm.isLoading ? 'fa-spinner' : 'fa-search'}}" phi-icon-animation="{{vm.isLoading ? 'spin' : ''}}">
+                <input type="text"
+                    placeholder="Busca colegios en {{vm.city}}"
+                    ng-model="vm.query"
+                    ng-model-options="{debounce: 400}"
+                    ng-change="vm.find(vm.query)"
+                />
+            </div>
+        </div>
+    </phi-state-cover>
+
+    <phi-state-contents>
+
+        <h1>
+            <strong ng-bind="vm.isLoading ? 'buscando' : vm.total"></strong>
+            <span>colegios en</span>
+            <span ng-bind="vm.city"></span>
+        </h1>
+
+        <section id="centers" phi-layout="row" phi-layout-wrap>
+            <phi-card ng-repeat="center in vm.centers" class="center">
+                <phi-card-cover style="background-image: url('{{center.cover}}'), url('img/cover.jpg')">
+                    <h1 class="title" ng-bind="center.name"></h1>
+                </phi-card-cover>
+
+                <phi-card-contents>
+                    <div class="logo" ng-if="center.logo">
+                        <img ng-src="{{center.logo}}" alt="{{center.name}}" />
+                    </div>
+                    <p class="description" ng-bind="center.category"></p>
+                    <p class="address" phi-icon-left="fa-map-marker">{{center.address}}, {{center.city}}, {{center.region}}, {{center.postalCode}}</p>
+                </phi-card-contents>
+
+            </phi-card>
+        </section>
+
+
+    </phi-state-contents>
+
+</phi-state>

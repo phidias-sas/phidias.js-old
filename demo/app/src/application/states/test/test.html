@@ -1,0 +1,28 @@
+<section>
+    <h1>phi-visible</h1>
+
+    <input type="checkbox"" ng-model="vm.isVisible">phi-visible</input>
+
+    <select ng-model="vm.visibleAnimation">
+        <option value="">default</option>
+        <option value="scale">scale</option>
+        <option value="slide-top">slide-top</option>
+        <option value="slide-right">slide-right</option>
+        <option value="slide-bottom">slide-bottom</option>
+        <option value="slide-left">slide-left</option>
+        <option value="zoom-in">zoom-in</option>
+        <option value="zoom-out">zoom-out</option>
+    </select>
+
+    <div>
+        <code>
+            &lt;div phi-visible="{{!!vm.isVisible}}" phi-visible-animation="{{vm.visibleAnimation}}"&gt;
+            &lt;/div&gt;
+        </code>
+
+        <h1 phi-visible="{{!!vm.isVisible}}" phi-visible-animation="{{vm.visibleAnimation}}" phi-texture="paper" class="phi-padded">
+            Hello
+        </h1>
+    </div>
+
+</section>

@@ -1,0 +1,26 @@
+phi-state-cover {
+
+    display: block;
+    overflow: hidden;
+    padding-top: $phi-state-navigation-height;
+
+    color: #fff;
+
+    background-size: cover;
+    background-position-x: 50%;
+    background-position-y: 0;
+
+    transition: all 300ms ease-in-out; /* transition when changing class .collapsed */
+    max-height: 500px;
+
+    &.collapsed {
+        max-height: $phi-state-navigation-height * 2;
+        background-position-y: -30px;
+    }
+
+    &.overlay-navigation {
+        // Make room for <phi-state-navigation>
+        padding-bottom: $phi-spacing-padding-vertical * 3 + $phi-state-navigation-height !important;
+        margin-bottom: -$phi-state-navigation-height;    
+    }
+}

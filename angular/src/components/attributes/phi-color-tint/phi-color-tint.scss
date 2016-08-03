@@ -1,0 +1,21 @@
+[phi-color-tint] {
+    position: relative;
+
+    // Make sure elements inside <foo phi-color-tint="..."> are ABOVE the tint object
+    & > * {
+        position: relative;
+    }
+
+}
+
+.phi-color-tint {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: none;
+
+    opacity: 0.5;
+}
