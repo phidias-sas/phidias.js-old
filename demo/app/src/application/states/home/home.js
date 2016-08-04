@@ -35,7 +35,7 @@
 
             vm.isLoading = true;
 
-            phiApi.get("regions/all/cities", {limit: 4, search: query})
+            phiApi.get("regions/all/cities", {limit: !query ? 3 : 6, search: query})
                 .then(function (response) {
                     vm.cities = response.data;
                     vm.isLoading = false;

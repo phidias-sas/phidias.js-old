@@ -23,26 +23,21 @@
     };
 
 
-    initialize.$inject = ["$rootScope", "$state", "phiApi"];
-    function initialize($rootScope, $state, phiApi) {
+    initialize.$inject = ["$rootScope", "$state", "phiApi", "phiApp"];
+    function initialize($rootScope, $state, phiApi, phiApp) {
 
         $rootScope.$state = $state;
+        $rootScope.phiApp = phiApp;
         $rootScope.phiApi = phiApi;
-
-        phiApi.setHost("http://api.mejorescolegios.es");
 
         /* Determine state transition direction */
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-
             $rootScope.stateChangeDirection = 'right';
-
             if (fromState.data == undefined || fromState.data.order == undefined || toState.data == undefined || toState.data.order == undefined) {
                 return;
             }
-
             $rootScope.stateChangeDirection = fromState.data.order < toState.data.order ? 'right' : 'left'; 
-
-        });        
+        });
     }
 
 

@@ -19,8 +19,8 @@
             provider.host = host;
         }
 
-        service.$inject = ['$http', '$q', 'phiApiToken', 'phiStorage'];
-        function service($http, $q, phiApiToken, phiStorage) {
+        service.$inject = ['$http', '$q', 'phiStorage'];
+        function service($http, $q, phiStorage) {
 
             var service = {
 
@@ -28,10 +28,9 @@
                 host:    provider.host,
                 setHost: setHost,
 
-                /* Authentication functions */
-                tokenString:     null,
-                token:           null, //decoded token payload
-                setToken:        setToken,
+                /* Authentication (bearer token) */
+                token:    null, // string token
+                setToken: setToken,
 
                 /* Main service functions */
                 get:      get,
@@ -193,13 +192,11 @@
                 service.host = host;
             }
 
-            function setToken(tokenString) {
-                if (tokenString) {
-                    service.token           = phiApiToken.decode(tokenString);
-                    service.tokenString     = tokenString;
+            function setToken(strToken) {
+                if (strToken) {
+                    service.token = strToken;
                 } else {
-                    service.token           = null;
-                    service.tokenString     = null;
+                    service.token = null;
                 }
             }
 
@@ -255,10 +252,10 @@
                     data:   data
                 };
 
-                if (service.tokenString) {
+                if (service.token) {
                     angular.extend(request, {
                         headers: {
-                            Authorization: 'Bearer ' + service.tokenString
+                            Authorization: 'Bearer ' + service.token
                         }
                     });
                 }

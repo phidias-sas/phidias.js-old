@@ -16,10 +16,5 @@ phi-card {
     phi-card-contents {
         display: block;
         @extend .phi-padded;
-
-        & > h1 {
-            margin: 0;
-            font-size: 26px;
-        }
     }
 }

@@ -1924,8 +1924,8 @@ someObject = {
             provider.host = host;
         }
 
-        service.$inject = ['$http', '$q', 'phiApiToken', 'phiStorage'];
-        function service($http, $q, phiApiToken, phiStorage) {
+        service.$inject = ['$http', '$q', 'phiStorage'];
+        function service($http, $q, phiStorage) {
 
             var service = {
 
@@ -1933,10 +1933,9 @@ someObject = {
                 host:    provider.host,
                 setHost: setHost,
 
-                /* Authentication functions */
-                tokenString:     null,
-                token:           null, //decoded token payload
-                setToken:        setToken,
+                /* Authentication (bearer token) */
+                token:    null, // string token
+                setToken: setToken,
 
                 /* Main service functions */
                 get:      get,
@@ -2098,13 +2097,11 @@ someObject = {
                 service.host = host;
             }
 
-            function setToken(tokenString) {
-                if (tokenString) {
-                    service.token           = phiApiToken.decode(tokenString);
-                    service.tokenString     = tokenString;
+            function setToken(strToken) {
+                if (strToken) {
+                    service.token = strToken;
                 } else {
-                    service.token           = null;
-                    service.tokenString     = null;
+                    service.token = null;
                 }
             }
 
@@ -2160,10 +2157,10 @@ someObject = {
                     data:   data
                 };
 
-                if (service.tokenString) {
+                if (service.token) {
                     angular.extend(request, {
                         headers: {
-                            Authorization: 'Bearer ' + service.tokenString
+                            Authorization: 'Bearer ' + service.token
                         }
                     });
                 }
@@ -2226,82 +2223,6 @@ someObject = {
     }
 
 })();
-//Borrowed from https://cdn.rawgit.com/auth0/angular-jwt/master/dist/angular-jwt.js
-(function() {
-    'use strict';
-
-    // factory
-    angular
-        .module("phidias-angular")
-        .factory('phiApiToken', phiApiToken);
-
-    function phiApiToken() {
-
-        return {
-            decode:            decode,
-            isExpired:         isExpired,
-            getExpirationDate: getExpirationDate
-        };
-
-        //////////////////
-
-        function decode(token) {
-            var parts = token.split('.');
-
-            if (parts.length !== 3) {
-                throw new Error('JWT must have 3 parts');
-            }
-
-            var decoded = urlBase64Decode(parts[1]);
-            if (!decoded) {
-                throw new Error('Cannot decode the token');
-            }
-
-            return JSON.parse(decoded);
-        };
-
-        function isExpired(token) {
-            var d = getExpirationDate(token);
-
-            if (!d) {
-                return false;
-            }
-
-            // Token expired?
-            return !(d.valueOf() > new Date().valueOf());
-        };
-
-        function getExpirationDate(token) {
-            var decoded;
-            decoded = decode(token);
-
-            if(!decoded.exp) {
-                return null;
-            }
-
-            var d = new Date(0); // The 0 here is the key, which sets the date to the epoch
-            d.setUTCSeconds(decoded.exp);
-
-            return d;
-        };
-
-        function urlBase64Decode(str) {
-            var output = str.replace('-', '+').replace('_', '/');
-            switch (output.length % 4) {
-                case 0: { break; }
-                case 2: { output += '=='; break; }
-                case 3: { output += '='; break; }
-                default: {
-                    throw 'Illegal base64url string!';
-                }
-            }
-            // return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
-            return decodeURIComponent(escape(window.atob(output))); //polifyll https://github.com/davidchambers/Base64.js
-        };
-
-    }
-
-})();
 /*
 
 Notificaciones:
@@ -2354,8 +2275,8 @@ phiApp.broadcast('notification', {
 
         /////////////////////////////////////////////////////
 
-        getService.$inject = ["$document", "$http", "phiStorage", "phiApi", "phiApiToken", "$q", "$httpParamSerializer"];
-        function getService($document, $http, phiStorage, phiApi, phiApiToken, $q, $httpParamSerializer) {
+        getService.$inject = ["$rootScope", "$document", "$http", "phiStorage", "phiApi", "phiJwt", "$q", "$httpParamSerializer"];
+        function getService($rootScope, $document, $http, phiStorage, phiApi, phiJwt, $q, $httpParamSerializer) {
 
             var service = {
 
@@ -2366,29 +2287,19 @@ phiApp.broadcast('notification', {
                 logo:     null,
                 loadCode: loadCode,
 
-                // session
+                // authentication
                 isAuthenticated: false,
-                authentication: null,
                 token: null, // string.  authentication token
-                authenticate: authenticate,
+                user: null,
 
-                googleSignIn: googleSignIn,
-                login: login,
+                setToken: setToken,
                 logout: logout,
+                authenticate: authenticate,
+                googleSignIn: googleSignIn,
 
-                // event handling
-                listeners: {},
-                on: on,
-                off: off,
-                broadcast: broadcast,
 
                 // navigation history
-                previousState: null,
-
-                // type cache (this shouldn't really be here)
-                types:    [],
-                setTypes: setTypes,
-                getType:  getType
+                previousState: null
             }
 
             activate();
@@ -2409,29 +2320,20 @@ phiApp.broadcast('notification', {
 
             }
 
-            function on(eventName, callback) {
-                if (service.listeners[eventName] == undefined) {
-                    service.listeners[eventName] = [];
-                }
-                service.listeners[eventName].push(callback);
+            function loadCode(code) {
+
+                return $http.get("http://phi.io/code/"+code)
+                    .then(function(response) {
+                        load({
+                            title:    response.data.title,
+                            //endpoint: "https://"+response.data.url,
+                            endpoint: "http://"+response.data.url,
+                            logo:     response.data.logo
+                        });
+                    });
+
             }
 
-            function off(eventName, callback) {
-                if (service.listeners[eventName] == undefined) {
-                    return;
-                }                
-                service.listeners[eventName].splice(service.listeners[eventName].indexOf(callback), 1);
-            }
-
-            function broadcast(eventName, eventData) {
-                if (service.listeners[eventName] == undefined) {
-                    return;
-                }
-
-                for (var cont = 0; cont < service.listeners[eventName].length; cont++) {
-                    service.listeners[eventName][cont](eventData);
-                }
-            }
 
             function load(appData) {
 
@@ -2448,11 +2350,95 @@ phiApp.broadcast('notification', {
                 phiApi.setHost(service.endpoint);
 
                 if (service.token) {
-                    service.authenticate(service.token);
+                    service.setToken(service.token);
                 }
 
                 store();
             }
+
+            function store() {
+                phiStorage.local.set('phiApp', {
+                    title:    service.title,
+                    endpoint: service.endpoint,
+                    logo:     service.logo,
+                    token:    service.token
+                });
+            }
+
+
+            function setToken(strToken) {
+                service.token           = strToken;
+                // service.user            = phiJwt.decode(strToken);
+                service.user            = phiJwt.decode(strToken).person;
+                service.isAuthenticated = true;
+
+                phiApi.setToken(strToken);
+                registerPushNotifications();
+
+                store();
+                $rootScope.$broadcast("phiAppLogin");
+            }
+
+            function logout() {
+
+                if (service.user && service.user.id && window.device && window.device.uuid) {
+                    phiApi.delete("people/" + service.authentication.id + "/devices/" + window.device.uuid);
+                }
+
+                service.token = null;
+                service.user  = null;
+                service.isAuthenticated = false;
+                phiApi.setToken(false);
+
+                store();
+                $rootScope.$broadcast("phiAppLogout");
+            }
+
+            function authenticate(username, password) {
+
+                var deferred = $q.defer();
+
+                phiApi.post('oauth/token', 'grant_type=client_credentials',
+                        {
+                            headers: {
+                                'Authorization': 'Basic ' + btoa(username + ':' + password),
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }
+                    )
+                    .then(function(response) {
+                        service.setToken(response.data.access_token);
+                        deferred.resolve(service.authentication);
+                    }, function (error) {
+                        deferred.reject(error);
+                    });
+
+                return deferred.promise;
+            }
+
+            function googleSignIn() {
+
+                var deferred = $q.defer();
+
+                getGoogleAuthorizationCode()
+                    .then(function(authorizationCode) {
+                        phiApi
+                            .post("oauth/token", {
+                                grant_type: "google_authorization_code",
+                                code: authorizationCode
+                            })
+                            .then(function (response) {
+                                service.setToken(response.data.access_token);
+                                deferred.resolve(service.authentication);
+                            }, function(error) {
+                                deferred.reject(error);
+                            });
+                    });
+
+                return deferred.promise;
+
+            }
+
 
             function registerPushNotifications() {
 
@@ -2494,7 +2480,7 @@ phiApp.broadcast('notification', {
                     // data.sound,
                     // data.image,
                     // data.additionalData
-                    broadcast("notification", data);
+                    $rootScope.$broadcast("phiAppNotification", data);
                 });
 
                 push.on('error', function(e) {
@@ -2503,91 +2489,8 @@ phiApp.broadcast('notification', {
 
             }
 
-            function loadCode(code) {
 
-                return $http.get("http://phi.io/code/"+code)
-                    .then(function(response) {
-                        load({
-                            title:    response.data.title,
-                            //endpoint: "https://"+response.data.url,
-                            endpoint: "http://"+response.data.url,
-                            logo:     response.data.logo
-                        });
-                    });
 
-            }
-
-            function logout() {
-
-                if (service.authentication && service.authentication.id && window.device && window.device.uuid) {
-                    phiApi.delete("people/" + service.authentication.id + "/devices/" + window.device.uuid);
-                }
-
-                service.authentication  = null;
-                service.token           = null;
-                service.isAuthenticated = false;
-
-                phiApi.setToken(false);
-
-                broadcast("logout");
-
-                store();
-            }
-
-            function login(username, password) {
-
-                var deferred = $q.defer();
-
-                phiApi.post('oauth/token', 'grant_type=client_credentials',
-                        {
-                            headers: {
-                                'Authorization': 'Basic ' + btoa(username + ':' + password),
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            }
-                        }
-                    )
-                    .then(function(response) {
-                        service.authenticate(response.data.access_token);
-                        deferred.resolve(service.authentication);
-                    }, function (error) {
-                        deferred.reject(error);
-                    });
-
-                return deferred.promise;
-            }
-
-            function googleSignIn() {
-
-                var deferred = $q.defer();
-
-                getGoogleAuthorizationCode()
-                    .then(function(authorizationCode) {
-                        phiApi
-                            .post("oauth/token", {
-                                grant_type: "google_authorization_code",
-                                code: authorizationCode
-                            })
-                            .then(function (response) {
-                                service.authenticate(response.data.access_token);
-                                deferred.resolve(service.authentication);
-                            }, function(error) {
-                                deferred.reject(error);
-                            });
-                    });
-
-                return deferred.promise;
-
-            }
-
-            function authenticate(strToken) {
-                service.token           = strToken;
-                service.authentication  = phiApiToken.decode(strToken);
-                service.isAuthenticated = true;
-
-                phiApi.setToken(strToken);
-                registerPushNotifications();
-                store();
-            }
 
             function getGoogleAuthorizationCode() {
 
@@ -2644,14 +2547,7 @@ phiApp.broadcast('notification', {
                 return deferred.promise;
             }
 
-            function store() {
-                phiStorage.local.set('phiApp', {
-                    title:    service.title,
-                    endpoint: service.endpoint,
-                    logo:     service.logo,
-                    token:    service.token
-                });
-            }
+
 
             function getDataFromMetaTags() {
 
@@ -2679,28 +2575,6 @@ phiApp.broadcast('notification', {
                 }
 
                 return retval;
-            }
-
-            function setTypes(types) {
-                service.types = types;
-                return service;
-            }
-
-            function getType(stringSingular) {
-
-                for ( var cont = 0; cont < service.types.length; cont++ ) {
-                    if (stringSingular == service.types[cont].singular ) {
-                        return service.types[cont];
-                    }
-                }
-
-                /* Type not found, return pseudo-type */
-                return {
-                    singular: stringSingular,
-                    plural:   stringSingular + 's',
-                    gender:   1
-                };
-
             }
 
         }
@@ -2804,6 +2678,91 @@ phiApp.broadcast('notification', {
             }
 
         };
+
+    }
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
+        .provider('phiJwt', phiJwt);
+
+    function phiJwt() {
+
+        var provider  = this;
+        provider.$get = getService;
+
+        /////////////////////////////////////////////////////
+
+        function getService() {
+
+            var service = {
+                decode:            decode,
+                isExpired:         isExpired,
+                getExpirationDate: getExpirationDate                    
+            }
+
+            return service;
+
+            ///////
+
+            function decode(token) {
+                var parts = token.split('.');
+
+                if (parts.length !== 3) {
+                    throw new Error('JWT must have 3 parts');
+                }
+
+                var decoded = urlBase64Decode(parts[1]);
+                if (!decoded) {
+                    throw new Error('Cannot decode the token');
+                }
+
+                return JSON.parse(decoded);
+            };
+
+            function isExpired(token) {
+                var d = getExpirationDate(token);
+
+                if (!d) {
+                    return false;
+                }
+
+                // Token expired?
+                return !(d.valueOf() > new Date().valueOf());
+            };
+
+            function getExpirationDate(token) {
+                var decoded;
+                decoded = decode(token);
+
+                if(!decoded.exp) {
+                    return null;
+                }
+
+                var d = new Date(0); // The 0 here is the key, which sets the date to the epoch
+                d.setUTCSeconds(decoded.exp);
+
+                return d;
+            };
+
+            function urlBase64Decode(str) {
+                var output = str.replace('-', '+').replace('_', '/');
+                switch (output.length % 4) {
+                    case 0: { break; }
+                    case 2: { output += '=='; break; }
+                    case 3: { output += '='; break; }
+                    default: {
+                        throw 'Illegal base64url string!';
+                    }
+                }
+                // return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
+                return decodeURIComponent(escape(window.atob(output))); //polifyll https://github.com/davidchambers/Base64.js
+            };            
+
+        }
 
     }
 

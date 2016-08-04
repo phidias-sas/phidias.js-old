@@ -13,52 +13,105 @@ html, body {
 h1, h2, h3, h4, h5, h6, p {
   margin: 0; }
 
-phi-state#city phi-state-cover {
-  background-position-y: 50%; }
-  phi-state#city phi-state-cover .header {
-    padding-bottom: 12px; }
-  phi-state#city phi-state-cover .search {
-    padding: 0 0 0 42px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 4px;
-    color: #666;
-    text-align: left;
-    position: relative; }
-    phi-state#city phi-state-cover .search:before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: 12px; }
-    phi-state#city phi-state-cover .search input {
-      outline: none;
-      padding: 12px 0;
-      border: 0;
-      background: transparent;
-      width: 100%;
-      display: inline-block;
-      text-align: left;
-      color: #333;
-      font-weight: bold; }
-      phi-state#city phi-state-cover .search input::-webkit-input-placeholder {
-        color: #666;
-        font-weight: normal; }
-      phi-state#city phi-state-cover .search input:-moz-placeholder {
-        /* Firefox 18- */
-        color: #666;
-        font-weight: normal; }
-      phi-state#city phi-state-cover .search input::-moz-placeholder {
-        /* Firefox 19+ */
-        color: #666;
-        font-weight: normal; }
-      phi-state#city phi-state-cover .search input:-ms-input-placeholder {
-        color: #666;
-        font-weight: normal; }
+[ui-sref] {
+  cursor: pointer; }
 
-phi-state#city section#centers phi-card {
-  min-width: 33%; }
-  @media (max-width: 600px) {
-    phi-state#city section#centers phi-card {
-      min-width: 100%; } }
+a {
+  text-decoration: none; }
+
+phi-state-contents[ui-view].ng-enter, phi-state-contents[ui-view].ng-leave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transition: all 280ms ease-in-out; }
+
+.direction-right phi-state-contents[ui-view].ng-enter {
+  opacity: 0;
+  -webkit-transform: translate3d(300px, 0, 0);
+  -ms-transform: translate3d(300px, 0, 0);
+  transform: translate3d(300px, 0, 0); }
+
+.direction-right phi-state-contents[ui-view].ng-enter-active {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0); }
+
+.direction-right phi-state-contents[ui-view].ng-leave {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0); }
+
+.direction-right phi-state-contents[ui-view].ng-leave-active {
+  opacity: 0;
+  -webkit-transform: translate3d(-300px, 0, 0);
+  -ms-transform: translate3d(-300px, 0, 0);
+  transform: translate3d(-300px, 0, 0); }
+
+.direction-left phi-state-contents[ui-view].ng-enter {
+  opacity: 0;
+  -webkit-transform: translate3d(-300px, 0, 0);
+  -ms-transform: translate3d(-300px, 0, 0);
+  transform: translate3d(-300px, 0, 0); }
+
+.direction-left phi-state-contents[ui-view].ng-enter-active {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0); }
+
+.direction-left phi-state-contents[ui-view].ng-leave {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0); }
+
+.direction-left phi-state-contents[ui-view].ng-leave-active {
+  opacity: 0;
+  -webkit-transform: translate3d(300px, 0, 0);
+  -ms-transform: translate3d(300px, 0, 0);
+  transform: translate3d(300px, 0, 0); }
+
+.main-view.ng-enter, .main-view.ng-leave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transition: all 280ms ease-in-out; }
+  .main-view.ng-enter phi-state-cover, .main-view.ng-leave phi-state-cover {
+    transition: all 280ms ease-in-out;
+    max-height: none !important; }
+
+.main-view.ng-enter {
+  opacity: 0; }
+
+.main-view.ng-enter-active {
+  opacity: 1; }
+
+.main-view.ng-leave {
+  opacity: 1; }
+
+.main-view.ng-leave-active {
+  opacity: 0; }
+
+.state-center phi-state-cover .header {
+  padding: 22px 0;
+  transition: all 200ms; }
+  .state-center phi-state-cover .header h1 {
+    transition: all 200ms; }
+
+.state-center phi-state-cover.collapsed .header {
+  padding: 6px 0; }
+  .state-center phi-state-cover.collapsed .header h1 {
+    font-size: 1.4em; }
+  .state-center phi-state-cover.collapsed .header p {
+    display: none; }
+
+.state-center phi-state-navigation {
+  background-color: #01579b; }
+
+.state-center phi-state-contents {
+  padding: 18px 0; }
 
 #home phi-state-cover {
   text-align: center;
@@ -121,20 +174,97 @@ phi-state#city section#centers phi-card {
       max-height: 0;
       opacity: 0; }
 
-#home section[phi-layout] phi-card {
-  border: 1px solid transparent;
-  min-width: 25%; }
-  #home section[phi-layout] phi-card strong {
-    font-weight: 500; }
-  @media (max-width: 600px) {
-    #home section[phi-layout] phi-card {
-      min-width: 50%; } }
+.state-sample phi-state-cover > div {
+  padding: 22px 0;
+  transition: all 200ms; }
+  .state-sample phi-state-cover > div h1 {
+    transition: all 200ms; }
 
-#home section#centers phi-card {
-  min-width: 33%; }
+.state-sample phi-state-cover.collapsed > div {
+  padding: 6px 0; }
+  .state-sample phi-state-cover.collapsed > div h1 {
+    font-size: 1.4em; }
+  .state-sample phi-state-cover.collapsed > div p {
+    display: none; }
+
+.state-sample phi-state-navigation {
+  background-color: #01579b; }
+
+.state-sample phi-state-contents {
+  padding: 18px 0; }
+
+phi-state#city phi-state-cover {
+  background-position-y: 50%; }
+  phi-state#city phi-state-cover .header {
+    padding-bottom: 12px; }
+  phi-state#city phi-state-cover .search {
+    padding: 0 0 0 42px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
+    color: #666;
+    text-align: left;
+    position: relative; }
+    phi-state#city phi-state-cover .search:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 12px; }
+    phi-state#city phi-state-cover .search input {
+      outline: none;
+      padding: 12px 0;
+      border: 0;
+      background: transparent;
+      width: 100%;
+      display: inline-block;
+      text-align: left;
+      color: #333;
+      font-weight: bold; }
+      phi-state#city phi-state-cover .search input::-webkit-input-placeholder {
+        color: #666;
+        font-weight: normal; }
+      phi-state#city phi-state-cover .search input:-moz-placeholder {
+        /* Firefox 18- */
+        color: #666;
+        font-weight: normal; }
+      phi-state#city phi-state-cover .search input::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #666;
+        font-weight: normal; }
+      phi-state#city phi-state-cover .search input:-ms-input-placeholder {
+        color: #666;
+        font-weight: normal; }
+
+phi-state#city .total {
+  font-size: 1.4em;
+  padding: 12px; }
   @media (max-width: 600px) {
-    #home section#centers phi-card {
-      min-width: 100%; } }
+    phi-state#city .total {
+      font-size: 1.2em; } }
+
+phi-app-bar {
+  display: block;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 46px;
+  color: #fff;
+  background: transparent; }
+  phi-app-bar > div {
+    position: relative;
+    padding: 12px 8px; }
+    phi-app-bar > div .authentication {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 12px 8px; }
+      phi-app-bar > div .authentication h1 {
+        font-size: 1em; }
+      phi-app-bar > div .authentication .user > * {
+        color: #fff;
+        display: inline-block;
+        vertical-align: middle; }
 
 phi-card.center phi-card-cover {
   position: relative; }
@@ -143,7 +273,7 @@ phi-card.center phi-card-cover {
     left: 0;
     bottom: 0;
     padding: 10px;
-    font-weight: 400;
+    font-size: 1.4em;
     color: #fff; }
 
 phi-card.center phi-card-contents {
@@ -155,3 +285,23 @@ phi-card.center phi-card-contents {
     margin-top: 6px;
     font-size: 14px;
     color: #666; }
+
+phi-card.city {
+  position: relative; }
+  phi-card.city phi-card-cover {
+    background-position-x: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%; }
+  phi-card.city phi-card-contents {
+    position: relative;
+    padding: 12px;
+    padding-top: 68px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.6); }
+    phi-card.city phi-card-contents h1 {
+      font-size: 2em; }

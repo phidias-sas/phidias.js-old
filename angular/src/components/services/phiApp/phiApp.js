@@ -50,8 +50,8 @@ phiApp.broadcast('notification', {
 
         /////////////////////////////////////////////////////
 
-        getService.$inject = ["$document", "$http", "phiStorage", "phiApi", "phiApiToken", "$q", "$httpParamSerializer"];
-        function getService($document, $http, phiStorage, phiApi, phiApiToken, $q, $httpParamSerializer) {
+        getService.$inject = ["$rootScope", "$document", "$http", "phiStorage", "phiApi", "phiJwt", "$q", "$httpParamSerializer"];
+        function getService($rootScope, $document, $http, phiStorage, phiApi, phiJwt, $q, $httpParamSerializer) {
 
             var service = {
 
@@ -62,29 +62,19 @@ phiApp.broadcast('notification', {
                 logo:     null,
                 loadCode: loadCode,
 
-                // session
+                // authentication
                 isAuthenticated: false,
-                authentication: null,
                 token: null, // string.  authentication token
-                authenticate: authenticate,
+                user: null,
 
-                googleSignIn: googleSignIn,
-                login: login,
+                setToken: setToken,
                 logout: logout,
+                authenticate: authenticate,
+                googleSignIn: googleSignIn,
 
-                // event handling
-                listeners: {},
-                on: on,
-                off: off,
-                broadcast: broadcast,
 
                 // navigation history
-                previousState: null,
-
-                // type cache (this shouldn't really be here)
-                types:    [],
-                setTypes: setTypes,
-                getType:  getType
+                previousState: null
             }
 
             activate();
@@ -105,29 +95,20 @@ phiApp.broadcast('notification', {
 
             }
 
-            function on(eventName, callback) {
-                if (service.listeners[eventName] == undefined) {
-                    service.listeners[eventName] = [];
-                }
-                service.listeners[eventName].push(callback);
+            function loadCode(code) {
+
+                return $http.get("http://phi.io/code/"+code)
+                    .then(function(response) {
+                        load({
+                            title:    response.data.title,
+                            //endpoint: "https://"+response.data.url,
+                            endpoint: "http://"+response.data.url,
+                            logo:     response.data.logo
+                        });
+                    });
+
             }
 
-            function off(eventName, callback) {
-                if (service.listeners[eventName] == undefined) {
-                    return;
-                }                
-                service.listeners[eventName].splice(service.listeners[eventName].indexOf(callback), 1);
-            }
-
-            function broadcast(eventName, eventData) {
-                if (service.listeners[eventName] == undefined) {
-                    return;
-                }
-
-                for (var cont = 0; cont < service.listeners[eventName].length; cont++) {
-                    service.listeners[eventName][cont](eventData);
-                }
-            }
 
             function load(appData) {
 
@@ -144,11 +125,95 @@ phiApp.broadcast('notification', {
                 phiApi.setHost(service.endpoint);
 
                 if (service.token) {
-                    service.authenticate(service.token);
+                    service.setToken(service.token);
                 }
 
                 store();
             }
+
+            function store() {
+                phiStorage.local.set('phiApp', {
+                    title:    service.title,
+                    endpoint: service.endpoint,
+                    logo:     service.logo,
+                    token:    service.token
+                });
+            }
+
+
+            function setToken(strToken) {
+                service.token           = strToken;
+                // service.user            = phiJwt.decode(strToken);
+                service.user            = phiJwt.decode(strToken).person;
+                service.isAuthenticated = true;
+
+                phiApi.setToken(strToken);
+                registerPushNotifications();
+
+                store();
+                $rootScope.$broadcast("phiAppLogin");
+            }
+
+            function logout() {
+
+                if (service.user && service.user.id && window.device && window.device.uuid) {
+                    phiApi.delete("people/" + service.authentication.id + "/devices/" + window.device.uuid);
+                }
+
+                service.token = null;
+                service.user  = null;
+                service.isAuthenticated = false;
+                phiApi.setToken(false);
+
+                store();
+                $rootScope.$broadcast("phiAppLogout");
+            }
+
+            function authenticate(username, password) {
+
+                var deferred = $q.defer();
+
+                phiApi.post('oauth/token', 'grant_type=client_credentials',
+                        {
+                            headers: {
+                                'Authorization': 'Basic ' + btoa(username + ':' + password),
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }
+                    )
+                    .then(function(response) {
+                        service.setToken(response.data.access_token);
+                        deferred.resolve(service.authentication);
+                    }, function (error) {
+                        deferred.reject(error);
+                    });
+
+                return deferred.promise;
+            }
+
+            function googleSignIn() {
+
+                var deferred = $q.defer();
+
+                getGoogleAuthorizationCode()
+                    .then(function(authorizationCode) {
+                        phiApi
+                            .post("oauth/token", {
+                                grant_type: "google_authorization_code",
+                                code: authorizationCode
+                            })
+                            .then(function (response) {
+                                service.setToken(response.data.access_token);
+                                deferred.resolve(service.authentication);
+                            }, function(error) {
+                                deferred.reject(error);
+                            });
+                    });
+
+                return deferred.promise;
+
+            }
+
 
             function registerPushNotifications() {
 
@@ -190,7 +255,7 @@ phiApp.broadcast('notification', {
                     // data.sound,
                     // data.image,
                     // data.additionalData
-                    broadcast("notification", data);
+                    $rootScope.$broadcast("phiAppNotification", data);
                 });
 
                 push.on('error', function(e) {
@@ -199,91 +264,8 @@ phiApp.broadcast('notification', {
 
             }
 
-            function loadCode(code) {
 
-                return $http.get("http://phi.io/code/"+code)
-                    .then(function(response) {
-                        load({
-                            title:    response.data.title,
-                            //endpoint: "https://"+response.data.url,
-                            endpoint: "http://"+response.data.url,
-                            logo:     response.data.logo
-                        });
-                    });
 
-            }
-
-            function logout() {
-
-                if (service.authentication && service.authentication.id && window.device && window.device.uuid) {
-                    phiApi.delete("people/" + service.authentication.id + "/devices/" + window.device.uuid);
-                }
-
-                service.authentication  = null;
-                service.token           = null;
-                service.isAuthenticated = false;
-
-                phiApi.setToken(false);
-
-                broadcast("logout");
-
-                store();
-            }
-
-            function login(username, password) {
-
-                var deferred = $q.defer();
-
-                phiApi.post('oauth/token', 'grant_type=client_credentials',
-                        {
-                            headers: {
-                                'Authorization': 'Basic ' + btoa(username + ':' + password),
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            }
-                        }
-                    )
-                    .then(function(response) {
-                        service.authenticate(response.data.access_token);
-                        deferred.resolve(service.authentication);
-                    }, function (error) {
-                        deferred.reject(error);
-                    });
-
-                return deferred.promise;
-            }
-
-            function googleSignIn() {
-
-                var deferred = $q.defer();
-
-                getGoogleAuthorizationCode()
-                    .then(function(authorizationCode) {
-                        phiApi
-                            .post("oauth/token", {
-                                grant_type: "google_authorization_code",
-                                code: authorizationCode
-                            })
-                            .then(function (response) {
-                                service.authenticate(response.data.access_token);
-                                deferred.resolve(service.authentication);
-                            }, function(error) {
-                                deferred.reject(error);
-                            });
-                    });
-
-                return deferred.promise;
-
-            }
-
-            function authenticate(strToken) {
-                service.token           = strToken;
-                service.authentication  = phiApiToken.decode(strToken);
-                service.isAuthenticated = true;
-
-                phiApi.setToken(strToken);
-                registerPushNotifications();
-                store();
-            }
 
             function getGoogleAuthorizationCode() {
 
@@ -340,14 +322,7 @@ phiApp.broadcast('notification', {
                 return deferred.promise;
             }
 
-            function store() {
-                phiStorage.local.set('phiApp', {
-                    title:    service.title,
-                    endpoint: service.endpoint,
-                    logo:     service.logo,
-                    token:    service.token
-                });
-            }
+
 
             function getDataFromMetaTags() {
 
@@ -375,28 +350,6 @@ phiApp.broadcast('notification', {
                 }
 
                 return retval;
-            }
-
-            function setTypes(types) {
-                service.types = types;
-                return service;
-            }
-
-            function getType(stringSingular) {
-
-                for ( var cont = 0; cont < service.types.length; cont++ ) {
-                    if (stringSingular == service.types[cont].singular ) {
-                        return service.types[cont];
-                    }
-                }
-
-                /* Type not found, return pseudo-type */
-                return {
-                    singular: stringSingular,
-                    plural:   stringSingular + 's',
-                    gender:   1
-                };
-
             }
 
         }

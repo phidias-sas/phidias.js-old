@@ -100,29 +100,4 @@
 
     }
 
-    section[phi-layout] {
-        phi-card {
-            border: 1px solid transparent; 
-            min-width: 25%;
-
-            strong {
-                font-weight: 500;
-            }
-
-            @media (max-width: 600px) {
-                min-width: 50%;
-            }
-        }
-    }
-
-    section#centers {
-        phi-card {
-
-            min-width: 33%;
-
-            @media (max-width: 600px) {
-                min-width: 100%;
-            }            
-        }
-    }
 }

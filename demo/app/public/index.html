@@ -3,7 +3,11 @@
     <head>
         <title>phidias.js</title>
         <meta charset="utf-8">
+
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <meta name="phi-endpoint" content="http://api.mejorescolegios.es">
+        <meta name="phi-title" content="Sample app">
 
         <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
         <link rel="import" href="build/phidias-demo-app.html">
@@ -20,6 +24,30 @@
         <div phi-boundary ng-if="false" class="initializer">
             <h1>cargando</h1>
         </div>
+
+        <phi-app-bar>
+
+            <div phi-boundary>
+
+
+                <div class="authentication">
+
+                    <div class="user" ng-if="phiApp.isAuthenticated">
+                        <h1 ng-bind="phiApp.user.firstName + ' ' + phiApp.user.lastName">Just testing</h1>
+                        <a href ng-click="phiApp.logout()">salir</a>
+                    </div>
+
+                    <div ng-if="!phiApp.isAuthenticated">
+                        <input type="text" ng-model="tmp.username" />
+                        <input type="text" ng-model="tmp.passwd" />
+                        <button ng-click="phiApp.authenticate(tmp.username, tmp.passwd)">login</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </phi-app-bar>
+
         <div class="main-view" ui-view></div>
     </body>
 </html>

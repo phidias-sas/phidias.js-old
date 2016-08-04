@@ -1,0 +1,38 @@
+phi-app-bar {
+    display: block;
+    position: fixed;
+    z-index: 2;
+    
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 46px;
+
+    color: #fff;
+    background: rgba(0, 0, 0, 0);
+
+    & > div {
+        position: relative;
+        padding: 12px 8px;
+
+        .authentication {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 12px 8px;
+
+            h1 {
+                font-size: 1em;
+            }
+
+            .user > * {
+                color: #fff;
+                display: inline-block;
+                vertical-align: middle;
+            }
+        }
+
+    }
+
+
+}

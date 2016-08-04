@@ -1,0 +1,36 @@
+.state-center {
+
+    phi-state-cover {
+        .header {
+            padding: 22px 0;
+            transition: all 200ms;
+
+            h1 {
+                transition: all 200ms;
+            }            
+        }
+
+        &.collapsed {
+            .header {
+                padding: 6px 0;
+
+                h1 {
+                    font-size: 1.4em;
+                }
+
+                p {
+                    display: none;
+                }
+            }            
+        }
+    }
+
+    phi-state-navigation {
+        background-color: #01579b;
+    }
+
+    phi-state-contents {
+        padding: 18px 0;
+    }
+
+}

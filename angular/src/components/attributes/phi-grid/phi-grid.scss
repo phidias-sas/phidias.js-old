@@ -1,0 +1,39 @@
+[phi-grid] {
+
+    box-sizing: border-box;
+
+    display: -webkit-box;  /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+    display: -ms-flexbox;  /* TWEENER - IE 10 */
+    display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+    display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+
+    flex-wrap: wrap;
+
+    & > * {
+        -webkit-box-flex: 1;   /* OLD - iOS 6-, Safari 3.1-6 */
+        width: 20%;            /* For old syntax, otherwise collapses. */
+        -webkit-flex: 1;       /* Safari 6.1+. iOS 7.1+, BB10 */
+        -ms-flex: 1;           /* IE 10 */
+        flex: 1;               /* NEW, Spec - Firefox, Chrome, Opera */
+
+
+        $grid-margin: 11px;
+
+        min-width: 20%;
+        min-width: calc(25% - #{$grid-margin}*2);
+        margin: $grid-margin;
+        margin-bottom: $grid-margin*3;
+
+        @media (max-width: 600px) {
+
+            $grid-margin-small: 4px;
+
+            min-width: 45%;
+            min-width: calc(50% - #{$grid-margin-small}*2);
+            margin: $grid-margin-small;
+            margin-bottom: $grid-margin-small*6;
+
+        }
+    }
+
+}

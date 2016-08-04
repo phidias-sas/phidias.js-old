@@ -1,5 +1,5 @@
 <phi-state id="city">
-    <phi-state-cover style="background-image: url('http://beta.mejorescolegios.es/img/cities/madrid.jpg')" phi-color-tint="#000">
+    <phi-state-cover style="background-image: url('http://beta.mejorescolegios.es/img/cities/{{vm.city}}.jpg')" phi-color-tint="#000">
         <div class="header">
             <div class="search" phi-icon-left="{{vm.isLoading ? 'fa-spinner' : 'fa-search'}}" phi-icon-animation="{{vm.isLoading ? 'spin' : ''}}">
                 <input type="text"
@@ -14,27 +14,30 @@
 
     <phi-state-contents>
 
-        <h1>
+        <h1 class="total">
             <strong ng-bind="vm.isLoading ? 'buscando' : vm.total"></strong>
             <span>colegios en</span>
             <span ng-bind="vm.city"></span>
         </h1>
 
-        <section id="centers" phi-layout="row" phi-layout-wrap>
-            <phi-card ng-repeat="center in vm.centers" class="center">
-                <phi-card-cover style="background-image: url('{{center.cover}}'), url('img/cover.jpg')">
-                    <h1 class="title" ng-bind="center.name"></h1>
-                </phi-card-cover>
+        <section id="centers" phi-grid>
 
-                <phi-card-contents>
-                    <div class="logo" ng-if="center.logo">
-                        <img ng-src="{{center.logo}}" alt="{{center.name}}" />
-                    </div>
-                    <p class="description" ng-bind="center.category"></p>
-                    <p class="address" phi-icon-left="fa-map-marker">{{center.address}}, {{center.city}}, {{center.region}}, {{center.postalCode}}</p>
-                </phi-card-contents>
+            <a ng-repeat="center in vm.centers" ui-sref="center.home({centerId: center.id})" target="_blank">
+                <phi-card class="center">
+                    <phi-card-cover style="background-image: url('{{center.cover}}'), url('img/cover.jpg')" phi-color-tint="#444">
+                        <h1 class="title" ng-bind="center.name"></h1>
+                    </phi-card-cover>
 
-            </phi-card>
+                    <phi-card-contents>
+                        <div class="logo" ng-if="center.logo">
+                            <img ng-src="{{center.logo}}" alt="{{center.name}}" />
+                        </div>
+                        <p class="description" ng-bind="center.category"></p>
+                        <p class="address" phi-icon-left="fa-map-marker">{{center.address}}, {{center.city}}, {{center.region}}, {{center.postalCode}}</p>
+                    </phi-card-contents>
+                </phi-card>
+            </a>
+
         </section>
 
 

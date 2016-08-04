@@ -42,17 +42,17 @@ phi-state#city {
                 }
 
                 &:-moz-placeholder { /* Firefox 18- */
-                color: #666;  
+                color: #666;
                 font-weight: normal;
                 }
 
                 &::-moz-placeholder {  /* Firefox 19+ */
-                color: #666;  
+                color: #666;
                 font-weight: normal;
                 }
 
-                &:-ms-input-placeholder {  
-                color: #666;  
+                &:-ms-input-placeholder {
+                color: #666;
                 font-weight: normal;
                 }
 
@@ -63,13 +63,14 @@ phi-state#city {
     }
 
 
-    section#centers {
-        phi-card {
-            min-width: 33%;
-            @media (max-width: 600px) {
-                min-width: 100%;
-            }
+    .total {
+        font-size: 1.4em;
+        padding: 12px;
+
+        @media (max-width: 600px) {
+            font-size: 1.2em;
         }
+
     }
 
 }

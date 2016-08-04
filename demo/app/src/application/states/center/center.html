@@ -1,0 +1,20 @@
+<phi-state class="state-center">
+    <phi-state-cover style="background-image: url('img/cover.jpg')" phi-color-tint="#01579b" ng-class="{collapsed: !!vm.isCollapsed}">
+        <div class="header">
+            <h1 ng-bind="vm.center.name"></h1>
+            <p ng-bind="vm.center.category"></p>
+        </div>
+    </phi-state-cover>
+
+    <phi-state-navigation>
+        <phi-menu>
+            <phi-menu-item ui-sref="center.home({centerId: vm.centerId})" ui-sref-active="active">Inicio</phi-menu-item>
+            <phi-menu-item ui-sref="center.facilities({centerId: vm.centerId})" ui-sref-active="active">Instalaciones</phi-menu-item>
+            <phi-menu-item ui-sref="center.admissions({centerId: vm.centerId})" ui-sref-active="active">Admisiones</phi-menu-item>
+        </phi-menu>
+    </phi-state-navigation>
+
+    <phi-state-contents ui-view>
+        <h1>... loading ...</h1>
+    </phi-state-contents>
+</phi-state>

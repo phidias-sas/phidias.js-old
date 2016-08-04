@@ -8,6 +8,7 @@
     state.$inject = ["$stateProvider"];
     function state($stateProvider) {
         $stateProvider.state("sample", {
+            abstract:    true,
             url:         "/sample",
             templateUrl:  "/application/states/sample/sample.html",
             controller:   sampleController,
@@ -20,18 +21,10 @@
     function sampleController($state, $scope, phiApi) {
 
         var vm   = this;
+
         vm.title = "sample";
-
-        vm.isVisible = true;
-        vm.visibleAnimation = '';
-        vm.cities = [];
-
-        vm.isLoading = true;
-        phiApi.get("regions/all/cities?limit=5")
-            .then(function(response) {
-                vm.cities = response.data;
-                vm.isLoading = false;
-            });
+        vm.description = "some description";
+        vm.foo = "FOO";
 
     }
 
