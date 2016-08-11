@@ -1,0 +1,18 @@
+<phi-post-header>
+    <phi-post-icon>
+        <iron-image ng-src="{{vm.post.author.avatar}}" sizing="cover"></iron-image>
+    </phi-post-icon>
+    <phi-post-preview>
+        <phi-post-author ng-bind="vm.post.author.firstName + ' ' + vm.post.author.lastName"></phi-post-author>
+        <phi-post-date ng-bind="vm.post.publishDate"></phi-post-date>
+    </phi-post-preview>
+</phi-post-header>
+<phi-post-body>
+    <!--<phi-post-description ng-bind-html="vm.post.description"></phi-post-description>-->
+    <phi-post-blocks>
+        <phi-block
+            ng-repeat="block in vm.post.blocks"
+            ng-model="block">
+        </phi-block>
+    </phi-post-blocks>
+</phi-post-body>

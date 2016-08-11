@@ -11,135 +11,25 @@ post = {
     blocks: [
         {
             type: "html",
-            allowed: ["modify", "delete"],
             url: "nodes/9xaib1v/media/html/1591chpq",
             id: "1591cimg"
         },
 
         {
             type: "form",
-            allowed: ["modify", "delete"],
             url: "data/entities/1591x70r",
             id: "1591x8p9"
         },
 
         {
             type: "html",
-            allowed: ["modify", "delete"],
             url: "nodes/9xaib1v/media/html/15s1ibga",
             id: "15s1idb4"
         }
     ]
 };
 
-
-
-        vm.insertable = [
-
-            {
-                type: "html",
-                title: "texto HTML",
-                icon: "fa-font",
-
-                block: {
-
-                    collectionUrl: 'posts/{$postId}/resources/media/html',
-
-                    menu: [
-                        {
-                            state: "editor",
-                            title: "editar",
-                            icon: "fa-pencil"
-                        },
-
-                        {
-                            state: "delete",
-                            title: "eliminar",
-                            icon: "fa-trash-o"
-                        }
-                    ]
-
-                }
-
-            },
-
-            {
-                type: "youtube",
-                title: "Youtube",
-                icon: "fa-youtube-play",
-
-                block: {
-                    collectionUrl: 'posts/{$postId}/blocks',
-
-                    menu: [
-                        {
-                            state: "editor",
-                            title: "editar",
-                            icon: "fa-pencil"
-                        },
-
-                        {
-                            state: "delete",
-                            title: "eliminar",
-                            icon: "fa-trash-o"
-                        }
-                    ]
-                }
-            },
-
-            {
-                type: "files",
-                title: "Archivos",
-                icon: "fa-files-o",
-
-                block: {
-                    collectionUrl: 'posts/{$postId}/resources/files',
-
-                    menu: [
-                        {
-                            state: "editor",
-                            title: "editar",
-                            icon: "fa-pencil"
-                        },
-
-                        {
-                            state: "delete",
-                            title: "eliminar",
-                            icon: "fa-trash-o"
-                        }
-                    ]
-                }
-            },
-
-            {
-                type: "form",
-                title: "Formulario",
-                icon: "fa-pencil-square-o",
-
-                block: {
-                    collectionUrl: 'posts/{$postId}/resources/data/entities',
-
-                    menu: [
-                        {
-                            state: "editor",
-                            title: "editar",
-                            icon: "fa-pencil"
-                        },
-
-                        {
-                            state: "delete",
-                            title: "eliminar",
-                            icon: "fa-trash-o"
-                        }
-                    ]
-                }
-            }
-
-
-        ];
-
-
-<phi-post-editor ng-model="post" insertable="insertable"></phi-post-editor>
+<phi-post-editor ng-model="post"></phi-post-editor>
 
 */
 
@@ -156,23 +46,21 @@ post = {
             restrict: "E",
 
             scope: {
-                post:       "=ngModel",
-                insertable: "="
+                post: "=ngModel"
             },
 
             controller:       phiPostEditorController,
             controllerAs:     "vm",
             bindToController: true,
 
-            templateUrl: '/components/elements/post/editor/editor.html'
-
+            templateUrl: '/components/elements/phi-post/editor/phi-post-editor.html'
         };
 
     };
 
 
-    phiPostEditorController.$inject = ["phiApi"];
-    function phiPostEditorController(phiApi) {
+    phiPostEditorController.$inject = ["phiApi", "$scope"];
+    function phiPostEditorController(phiApi, $scope) {
 
         var vm         = this;
 
@@ -182,6 +70,106 @@ post = {
         vm.reorder     = reorder;
 
         ///////////////////////
+
+        $scope.$watch("vm.post", function(newValue) {
+            
+            if (!newValue) {
+                return;
+            }
+
+            /* Testing */
+            vm.insertable = [
+                {
+                    type: "html",
+                    title: "texto HTML",
+                    icon: "fa-font",
+
+                    block: {
+                        collectionUrl: '/media/html',
+                        menu: [
+                            {
+                                state: "editor",
+                                title: "editar",
+                                icon: "fa-pencil"
+                            },
+                            {
+                                state: "delete",
+                                title: "eliminar",
+                                icon: "fa-trash-o"
+                            }
+                        ]
+                    }
+                },
+
+                {
+                    type: "youtube",
+                    title: "Youtube",
+                    icon: "fa-youtube-play",
+
+                    block: {
+                        collectionUrl: vm.post.url + '/blocks',
+                        menu: [
+                            {
+                                state: "editor",
+                                title: "editar",
+                                icon: "fa-pencil"
+                            },
+                            {
+                                state: "delete",
+                                title: "eliminar",
+                                icon: "fa-trash-o"
+                            }
+                        ]
+                    }
+                },
+
+                {
+                    type: "files",
+                    title: "Archivos",
+                    icon: "fa-files-o",
+
+                    block: {
+                        collectionUrl: vm.post.url + '/resources/files',
+                        menu: [
+                            {
+                                state: "editor",
+                                title: "editar",
+                                icon: "fa-pencil"
+                            },
+                            {
+                                state: "delete",
+                                title: "eliminar",
+                                icon: "fa-trash-o"
+                            }
+                        ]
+                    }
+                },
+
+                {
+                    type: "form",
+                    title: "Formulario",
+                    icon: "fa-pencil-square-o",
+
+                    block: {
+                        collectionUrl: '/data/entities',
+                        menu: [
+                            {
+                                state: "editor",
+                                title: "editar",
+                                icon: "fa-pencil"
+                            },
+                            {
+                                state: "delete",
+                                title: "eliminar",
+                                icon: "fa-trash-o"
+                            }
+                        ]
+                    }
+                }
+            ];
+        });
+
+
 
         function addBlock(insertable) {
 

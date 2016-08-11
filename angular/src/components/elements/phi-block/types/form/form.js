@@ -3,11 +3,11 @@
 
     angular
         .module("phidias-angular")
-        .factory("phiObjectPostBlockForm", phiObjectPostBlockForm);
+        .factory("phiBlockForm", phiBlockForm);
 
-    phiObjectPostBlockForm.$inject = ["phiApi"];
-    function phiObjectPostBlockForm(phiApi) {
-        return function(phiObject) {
+    phiBlockForm.$inject = ["phiApi", "phiApp"];
+    function phiBlockForm(phiApi, phiApp) {
+        return function(phiBlock) {
 
             var templateFieldPreview = '<div class="phi-form-editor-field-preview" ng-switch="field.type">' +
 
@@ -25,7 +25,7 @@
                                                 '<label ng-bind="field.title"></label>' +
                                                 '<select ng-model="vm.currentRecord[field.name]">' +
                                                     '<option value="">---</option>' +
-                                                    '<option ng-repeat="line in field.options | lines" value="{{line}}">{{line}}</option>' +
+                                                    '<option ng-repeat="line in field.options|lines track by $index" value="{{line}}">{{line}}</option>' +
                                                 '</select>' +
                                             '</div>' +
 
@@ -41,12 +41,12 @@
             var templateEditor = '<form class="phi-form-editor">' +
 
                                     '<fieldset class="description">' +
-                                        '<phi-input multiline ng-model="phiObject.form.description" label="descripci&oacute;n" ng-model-options="{ updateOn: \'default blur\', debounce: { \'default\': 920, \'blur\': 0 } }" ng-change="vm.save()"></phi-input>' +
+                                        '<phi-input multiline ng-model="phiBlock.form.description" label="descripci&oacute;n" ng-model-options="{ updateOn: \'default blur\', debounce: { \'default\': 920, \'blur\': 0 } }" ng-change="vm.save()"></phi-input>' +
                                     '</fieldset>' +
 
-                                    '<fieldset class="fields" sv-root sv-part="phiObject.form.fields" sv-on-sort="vm.reorder()">' +
+                                    '<fieldset class="fields" sv-root sv-part="phiBlock.form.fields" sv-on-sort="vm.reorder()">' +
 
-                                        '<div ng-repeat="field in phiObject.form.fields" sv-element class="phi-form-editor-field">' +
+                                        '<div ng-repeat="field in phiBlock.form.fields" sv-element class="phi-form-editor-field">' +
 
                                             '<div class="phi-form-editor-field-toolbar" sv-handle>' +
                                                 '<a phi-icon="fa-times" ng-click="vm.removeField(field)" href="">&nbsp;</a>' +
@@ -85,23 +85,23 @@
 
             function initialize() {
 
-                if (phiObject.ngModel.url) {
+                if (phiBlock.ngModel.url) {
 
-                    phiApi.get(phiObject.ngModel.url)
+                    phiApi.get(phiBlock.ngModel.url)
                         .then(function(response) {
-                            phiObject.form = response.data;
-                            phiObject.go("default");
+                            phiBlock.form = response.data;
+                            phiBlock.go("default");
                         });
 
                 } else {
 
-                    phiApi.post(phiObject.ngModel.collectionUrl)
+                    phiApi.post(phiBlock.ngModel.collectionUrl)
                         .then(function(response, code, headers) {
-                            phiObject.ngModel.url = headers("location");
-                            phiObject.form        = response.data;
-                            phiObject.form.fields = [];
-                            phiObject.change();
-                            phiObject.go("editor");
+                            phiBlock.ngModel.url = headers("location");
+                            phiBlock.form        = response.data;
+                            phiBlock.form.fields = [];
+                            phiBlock.change();
+                            phiBlock.go("editor");
                         });
 
                 }
@@ -110,7 +110,7 @@
 
             function defaultController() {
 
-                var recordsUrl = 'people/' + phiApi.token.id + '/data/entities/' + phiObject.form.id + '/records';
+                var recordsUrl = 'people/' + phiApp.user.id + '/data/entities/' + phiBlock.form.id + '/records';
 
                 var vm           = this;
                 vm.currentRecord = null;
@@ -150,7 +150,7 @@
 
                 var saveTimer = null;
 
-                $scope.$watch("phiObject.form.fields", function(current, previous) {
+                $scope.$watch("phiBlock.form.fields", function(current, previous) {
 
                     if (current == previous) {
                         return;
@@ -167,30 +167,30 @@
 
                     var newField = {
                         type: "text",
-                        order: phiObject.form.fields.length
+                        order: phiBlock.form.fields.length
                     };
 
-                    phiObject.form.fields.push(newField);
+                    phiBlock.form.fields.push(newField);
 
                 };
 
                 function removeField(field) {
 
                     if (confirm('Deseas eliminar este campo ?')) {
-                        phiObject.form.fields.splice(phiObject.form.fields.indexOf(field), 1);
+                        phiBlock.form.fields.splice(phiBlock.form.fields.indexOf(field), 1);
                     }
 
                 };
 
                 function save() {
-                    phiApi.put(phiObject.ngModel.url, phiObject.form);
+                    phiApi.put(phiBlock.ngModel.url, phiBlock.form);
                 };
 
 
                 function reorder() {
                     var fieldIds = [];
-                    for (var cont = 1; cont <= phiObject.form.fields.length; cont++) {
-                        phiObject.form.fields[cont-1].order = cont;
+                    for (var cont = 1; cont <= phiBlock.form.fields.length; cont++) {
+                        phiBlock.form.fields[cont-1].order = cont;
                     }
                 };
 
@@ -207,15 +207,15 @@
 
                 function confirm() {
 
-                    phiApi.delete(phiObject.ngModel.url)
+                    phiApi.delete(phiBlock.ngModel.url)
                         .then(function() {
-                            phiObject.destroy();
+                            phiBlock.destroy();
                         });
 
                 }
 
                 function cancel() {
-                    phiObject.go("default");
+                    phiBlock.go("default");
                 }
 
             };
@@ -234,9 +234,9 @@
                         controllerAs: "vm",
                         template:   '<div>' +
                                         '<form ng-if="!vm.records.length">' +
-                                            '<p ng-bind="phiObject.form.description"></p>' +
+                                            '<p ng-bind="phiBlock.form.description"></p>' +
                                             '<fieldset>' +
-                                                '<div ng-repeat="field in phiObject.form.fields">' +
+                                                '<div ng-repeat="field in phiBlock.form.fields">' +
                                                     templateFieldPreview +
                                                 '</div>' +
                                             '</fieldset>' +
@@ -248,7 +248,7 @@
 
                                         '<div ng-if="!!vm.records.length">' +
                                             '<fieldset ng-repeat="record in vm.records">' +
-                                                '<div ng-repeat="field in phiObject.form.fields">' +
+                                                '<div ng-repeat="field in phiBlock.form.fields">' +
                                                     '<strong ng-bind="field.title"></strong>: ' +
                                                     '<span ng-if="field.type != \'checkbox\'" ng-bind="record.values[field.name]"></span>' +
                                                     '<span ng-if="field.type == \'checkbox\'" ng-bind="record.values[field.name] == 1 ? \'si\' : \'no\'"></span>' +

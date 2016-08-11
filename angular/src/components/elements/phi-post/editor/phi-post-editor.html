@@ -12,60 +12,62 @@
                         ng-blur="block.menuShown = false"
                         id="menu_toggler_{{post.id}}_{{key}}"
                         ng-show="block.ctrl.currentState == 'default'"
-                        ng-click="block.menuShown = !block.menuShown">
-
-                        <phi-icon icon="fa-ellipsis-v"></phi-icon>
+                        ng-click="block.menuShown = !block.menuShown"
+                        phi-icon="fa-ellipsis-v">
                     </phi-button>
 
                     <phi-button
                         class="cancel"
                         ng-blur="block.menuShown = false"
                         ng-show="block.ctrl.currentState != 'default'"
-                        ng-click="block.ctrl.go('default')">
-
-                        <phi-icon icon="fa-arrow-left"></phi-icon>
+                        ng-click="block.ctrl.go('default')"
+                        phi-icon="fa-arrow-left">
                     </phi-button>
 
                     <div
                         phi-tooltip-for="menu_toggler_{{post.id}}_{{key}}"
                         phi-tooltip-origin="top right"
                         phi-tooltip-align="bottom right"
-                        phi-visible="{{block.menuShown}}"
+                        phi-visible="{{!!block.menuShown}}"
                         phi-visible-animation="slide-bottom">
 
-                        <paper-card>
-                            <phi-list-item ng-repeat="item in block.menu" ng-click="block.menuShown = false; block.ctrl.go(item.state)">
-                                <phi-icon icon="{{item.icon}}" bind-polymer></phi-icon>
-                                <span ng-bind="item.title"></span>
-                            </phi-list-item>
-                        </paper-card>
-                        <!--
                         <phi-menu phi-texture="paper">
-                            <phi-menu-item ng-repeat="item in block.menu" ng-click="block.menuShown = false; block.ctrl.go(item.state)">
+                            <phi-menu-item ng-repeat="item in block.ctrl.states" ng-click="block.menuShown = false; block.ctrl.go(item)">
                                 <phi-icon icon="{{item.icon}}"></phi-icon>
-                                {{item.title}}
+                                {{item}}
                             </phi-menu-item>
                         </phi-menu>
-                        -->
                     </div>
                 </div>
 
             </div>
 
-            <phi-object
-                type="post-block-{{block.type}}"
+            <phi-block
                 ng-model="block"
-                controller-as="block.ctrl"
+                controller-assign="block.ctrl"
                 on-change="vm.attachBlock(block)"
                 on-destroy="vm.removeBlock(block)"
             >
-            </phi-object>
+            </phi-block>
 
         </div>
 
     </div>
 
-    <paper-card>
+
+    <div>
+        <div phi-visible="{{!!adderIsOpen}}" phi-visible-animation="scale">
+            <phi-list-item ng-repeat="insertable in vm.insertable" ng-click="adderIsOpen = false; vm.addBlock(insertable);" phi-icon-left="{{insertable.icon}}">
+                <span ng-bind="insertable.title"></span>
+            </phi-list-item>
+        </div>
+
+        <phi-list-item ng-click="adderIsOpen = !adderIsOpen" phi-icon-left="{{adderIsOpen ? 'fa-times' : 'fa-plus'}}">
+            <span ng-bind="adderIsOpen ? 'cancelar' : 'adjuntar'"></span>
+        </phi-list-item>        
+    </div>
+
+    <!--<paper-card>
         <iron-collapse ng-attr-opened="{{adderIsOpen ? 'opened' : undefined}}">
             <div>
                 <div ng-repeat="insertable in vm.insertable">
@@ -82,6 +84,6 @@
             <iron-icon icon="{{adderIsOpen ? 'close' : 'add'}}"></iron-icon>
             <span ng-bind="adderIsOpen ? 'cancelar' : 'adjuntar'"></span>
         </phi-list-item>
-    </paper-card>
+    </paper-card>-->
 
 </div>

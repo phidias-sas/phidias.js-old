@@ -1,4 +1,5 @@
 <phi-state id="city">
+
     <phi-state-cover style="background-image: url('http://beta.mejorescolegios.es/img/cities/{{vm.city}}.jpg')" phi-color-tint="#000">
         <div class="header">
             <div class="search" phi-icon-left="{{vm.isLoading ? 'fa-spinner' : 'fa-search'}}" phi-icon-animation="{{vm.isLoading ? 'spin' : ''}}">
@@ -10,17 +11,32 @@
                 />
             </div>
         </div>
+
+        <phi-state-navigation>
+            <div>
+                <h1 class="total">
+                    <strong ng-bind="vm.isLoading ? 'buscando' : vm.total"></strong>
+                    <span>colegios en</span>
+                    <span ng-bind="vm.city"></span>
+                </h1>
+
+                <phi-menu>
+                    <phi-menu-item phi-icon-left="fa-th-large"   ng-click="vm.setView('grid')" ng-class="{active: vm.view == 'grid'}">matriz</phi-menu-item>
+                    <phi-menu-item phi-icon-left="fa-bars"       ng-click="vm.setView('list')" ng-class="{active: vm.view == 'list'}">lista</phi-menu-item>
+                    <phi-menu-item phi-icon-left="fa-map-marker" ng-click="vm.setView('map')"  ng-class="{active: vm.view == 'map'}">mapa</phi-menu-item>
+                </phi-menu>
+            </div>
+        </phi-state-navigation>
+
     </phi-state-cover>
+
+
 
     <phi-state-contents>
 
-        <h1 class="total">
-            <strong ng-bind="vm.isLoading ? 'buscando' : vm.total"></strong>
-            <span>colegios en</span>
-            <span ng-bind="vm.city"></span>
-        </h1>
+        <div id="google-map" ng-show="vm.view == 'map'"></div>
 
-        <section id="centers" phi-grid>
+        <section id="centers" phi-grid ng-show="vm.view != 'map'">
 
             <a ng-repeat="center in vm.centers" ui-sref="center.home({centerId: center.id})" target="_blank">
                 <phi-card class="center">

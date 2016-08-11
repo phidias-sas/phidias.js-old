@@ -8,6 +8,7 @@
     state.$inject = ["$stateProvider"];
     function state($stateProvider) {
         $stateProvider.state("home", {
+            parent:     "app",
             url:         "/",
             templateUrl:  "/application/states/home/home.html",
             controller:   homeController,
@@ -15,8 +16,8 @@
         });
     }
 
-    homeController.$inject = ["phiApi"];
-    function homeController(phiApi) {
+    homeController.$inject = ["phiApi", "$scope"];
+    function homeController(phiApi, $scope) {
 
         var vm = this;
 

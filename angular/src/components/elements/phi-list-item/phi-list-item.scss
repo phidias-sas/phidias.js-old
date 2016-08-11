@@ -1,0 +1,27 @@
+phi-list-item {
+    display: block;
+    position: relative;
+    padding: 16px;
+    min-height: 48px;
+    cursor: pointer;
+    font-size: 16px;
+    white-space: nowrap;
+
+    font-weight: 400;
+
+
+    &[phi-icon-left] {
+        padding-left: 64px;
+
+        &:before {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 18px 22px 14px;
+            margin: 0 !important;
+            font-size: 18px;
+        }
+    }
+
+}

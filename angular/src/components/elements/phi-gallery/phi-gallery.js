@@ -2,20 +2,24 @@
     'use strict';
 
     angular.module("phidias-angular")
-        .directive("phiGallery", phiGallery)
-        .directive("phiGalleryImage", phiGalleryImage);
+        .directive("phiGallery", phiGallery);
 
     function phiGallery() {
 
         return {
             restrict: 'E',
 
+            scope: {
+                control: "="
+            },
+
+            controller:       phiGalleryController,
+            controllerAs:     "gallery",
+            bindToController: true,
+
             transclude: true,
-            scope: true,
-
-            template: '<ul class="phi-gallery-thumbnails" ng-transclude></ul>' +
-
-                      '<div phi-modal class="phi-gallery-modal" phi-visible="{{gallery.modalShown}}" ng-click="gallery.modalShown = false">' +
+            replace: true,
+            template: '<div phi-modal class="phi-gallery-modal" phi-visible="{{gallery.isVisible}}" ng-click="gallery.isVisible = false">' +
 
                           '<div class="phi-gallery-modal-navigation">' +
                                 '<a class="previous"' +
@@ -33,16 +37,9 @@
                                 '</a>' +
                           '</div>' +
 
-                          '<div class="phi-gallery-modal-contents" phi-switch="gallery.control">' +
-                                '<div ng-repeat="image in gallery.images">' +
-                                    '<img ng-src="{{image.src}}" />' +
-                                    '<p ng-bind="image.description"></p>' +
-                                '</div>' +
-                          '</div>' +
-                      '</div>',
+                          '<div class="phi-gallery-modal-contents" phi-switch="gallery.control" ng-transclude on-change="gallery.isVisible = true"></div>' +
 
-            controller:   phiGalleryController,
-            controllerAs: "gallery"
+                      '</div>'            
 
         };
 
@@ -51,62 +48,9 @@
 
     phiGalleryController.$inject = ["$scope"];
     function phiGalleryController($scope) {
-
-        var imageCount = 0;
-
-        var gallery = this;
-
-        gallery.control  = null;
-
-        gallery.title    = "foo";
-        gallery.images   = [];
-        gallery.addImage = addImage;
-
-        gallery.modalShown = false;
-
-        function addImage(galleryImage, element) {
-
-            galleryImage.key = imageCount++;
-
-            gallery.images.push(galleryImage);
-
-            element.on("click", function() {
-                // !!! For some reason, the following code causes an error when minified
-                $scope.$apply(function() {
-                    gallery.control.select(galleryImage.key);
-                    gallery.modalShown = true;
-                });
-            });
-        }
-
-    };
-
-
-    function phiGalleryImage() {
-
-        return {
-            restrict: 'E',
-            require: '^phiGallery',
-            template: '<li><img ng-src="{{thumbnail}}" alt="{{alt}}" /></li>',
-            replace: true,
-
-            scope: {
-                "thumbnail": "@",
-                "alt":       "@"
-            },
-
-            link: function(scope, element, attributes, phiGallery) {
-
-                var galleryImage = {
-                    src:         attributes.src,
-                    thumbnail:   attributes.thumbnail
-                };
-
-                phiGallery.addImage(galleryImage, element);
-
-            }
-        };
-
+        var gallery        = this;
+        gallery.isVisible  = false;
+        gallery.control    = gallery.control ? gallery.control : {};
     };
 
 })();

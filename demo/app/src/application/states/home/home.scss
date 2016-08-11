@@ -5,22 +5,45 @@
         text-align: center;
 
         .header {
-            padding: 48px 0;
+            padding-bottom: 36px;
+            transition: all 300ms;
 
             h1 {
                 font-family: Pacifico, sans-serif;
                 text-shadow: 0 0 8px rgba(0, 0, 0, .4);
                 font-size: 2.6em;
 
+                transition: all 300ms;
+                opacity: 1;
+                overflow: hidden;
+                height: 128px;
+                line-height: 128px;
+
+
                 @media (max-width: 600px) {
-                    font-size: 1.4em;
+                    font-size: 1.8em;
+                }
+            }
+        }
+
+
+        /* Expand/Collapse */
+        &.collapsed {
+            .header {
+                padding-bottom: 12px;
+
+                h1 {
+                    opacity: 0;
+                    height: 0;
+                    font-size: 2.3em;
                 }
             }
         }
 
         .search {
-            padding: 0 0 0 42px;
-            background: rgba(255, 255, 255, 0.6);
+
+            padding: 0 0 0 50px;
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 4px;
             color: #666;
             text-align: left;
@@ -31,12 +54,13 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                padding: 12px;
+                padding: 18px;
+                margin: 0;
             }
 
             input {
                 outline: none;
-                padding: 12px 0;
+                padding: 16px 0;
                 border: 0;
                 background: transparent;
                 width: 100%;
@@ -44,58 +68,40 @@
                 display: inline-block;
                 text-align: left;
 
+                font: inherit;
                 color: #333;
-                font-weight: bold;
 
                 &::-webkit-input-placeholder {
-                color: #666;
-                font-weight: normal;
+                    color: #666;
+                    font-weight: normal;
                 }
 
                 &:-moz-placeholder { /* Firefox 18- */
-                color: #666;  
-                font-weight: normal;
+                    color: #666;  
+                    font-weight: normal;
                 }
 
                 &::-moz-placeholder {  /* Firefox 19+ */
-                color: #666;  
-                font-weight: normal;
+                    color: #666;  
+                    font-weight: normal;
                 }
 
                 &:-ms-input-placeholder {  
-                color: #666;  
-                font-weight: normal;
+                    color: #666;  
+                    font-weight: normal;
                 }
 
             }
         }
 
+    }
 
 
+    phi-state-contents {
+        padding-top: 11px;
 
-        /* Expand/Collapse */
-        .header {
-            transition: all 300ms ease-in-out;
-
-            h1 {
-                overflow: hidden;
-                transition: all 200ms ease-in-out;
-                max-height: 80px;
-                opacity: 1;
-            }
-        }
-
-        &.collapsed {
-            .header {
-
-                padding: 0 0 12px 0;
-
-                h1 {
-                    max-height: 0;
-                    opacity: 0;
-                }
-
-            }
+        #cities {
+            margin-bottom: 32px;
         }
 
     }

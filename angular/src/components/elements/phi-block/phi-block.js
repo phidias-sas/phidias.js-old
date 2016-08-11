@@ -17,32 +17,30 @@ someObject = {
 
     angular
         .module("phidias-angular")
-        .directive("phiObject", phiObject);
+        .directive("phiBlock", phiBlock);
 
-    function phiObject() {
+    function phiBlock() {
 
         return {
 
             restrict: "E",
 
             scope: {
-                type:         "@",
-                controllerAs: "=",
-                ngModel:      "=",
-                onChange:     "&",
-                onDestroy:    "&"
+                ngModel:          "=",
+                controllerAssign: "=",
+                onChange:         "&",
+                onDestroy:        "&"
             },
 
-            controller:       phiObjectController,
+            controller:       phiBlockController,
             controllerAs:     "vm"
-
         };
 
     };
 
 
-    phiObjectController.$inject = ["$scope", "$element", "$controller", "$compile"];
-    function phiObjectController($scope, $element, $controller, $compile) {
+    phiBlockController.$inject = ["$scope", "$element", "$controller", "$compile"];
+    function phiBlockController($scope, $element, $controller, $compile) {
 
         var scope;
         var objectService;
@@ -65,7 +63,7 @@ someObject = {
 
 
         /* Load states from corresponding service */
-        objectService   = loadObjectService($scope.type, vm);
+        objectService   = loadObjectService(vm.ngModel.type, vm);
         vm.states       = objectService.states;
 
 
@@ -77,8 +75,8 @@ someObject = {
             isLoading:    vm.isLoading
         };
 
-        if ($scope.controllerAs != undefined) {
-            $scope.controllerAs = vm.controller;
+        if ($scope.controllerAssign != undefined) {
+            $scope.controllerAssign = vm.controller;
         }
 
         /* Run object initialization */
@@ -102,7 +100,7 @@ someObject = {
             }
 
             scope = $scope.$new(true);
-            scope.phiObject = vm;
+            scope.phiBlock = vm;
 
             $element.removeClass("phi-object-state-"+vm.currentState);
             $element.addClass("phi-object-state-"+targetStateName);
@@ -150,7 +148,7 @@ someObject = {
             return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         });
 
-        var serviceName  = "phiObject" + words.join("");
+        var serviceName  = "phiBlock" + words.join("");
 
         try {
             var blockFactory = angular.element(document.body).injector().get(serviceName);

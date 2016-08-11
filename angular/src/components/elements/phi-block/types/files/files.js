@@ -3,12 +3,12 @@
 
     angular
         .module("phidias-angular")
-        .factory("phiObjectPostBlockFiles", phiObjectPostBlockFiles);
+        .factory("phiBlockFiles", phiBlockFiles);
 
-    phiObjectPostBlockFiles.$inject = ["phiApi"];
-    function phiObjectPostBlockFiles(phiApi) {
+    phiBlockFiles.$inject = ["phiApi"];
+    function phiBlockFiles(phiApi) {
 
-        return function(phiObject) {
+        return function(phiBlock) {
 
             return {
 
@@ -17,20 +17,20 @@
                 states: {
 
                     default: {
-                        template:   '<phi-api-resource-files src="{{phiObject.ngModel.url}}"></phi-api-resource-files>'
+                        template:   '<phi-api-resource-files src="{{phiBlock.ngModel.url}}"></phi-api-resource-files>'
                     },
 
                     editor: {
                         controller:   editorController,
-                        template:     '<phi-api-resource-files-editor src="{{phiObject.ngModel.url}}"></phi-api-resource-files-editor>'
+                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
                     },
 
                     delete: {
                         template:   '<form>' + 
                                         '<h1>Eliminar esta carpeta ?</h1>' +
                                         '<footer>' + 
-                                            '<phi-button ng-click="phiObject.destroy()">eliminar</phi-button>' + 
-                                            '<phi-button ng-click="phiObject.go(\'default\')" class="cancel">cancelar</phi-button>' + 
+                                            '<phi-button ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
+                                            '<phi-button ng-click="phiBlock.go(\'default\')" class="cancel">cancelar</phi-button>' + 
                                         '</footer>' + 
                                     '</form>',
                     }
@@ -43,24 +43,24 @@
 
             function initialize() {
 
-                if ( phiObject.ngModel.url ) {
-                    phiObject.go("default");
+                if ( phiBlock.ngModel.url ) {
+                    phiBlock.go("default");
                     return;
                 }
 
-                phiObject.go("editor");
+                phiBlock.go("editor");
 
             }
 
 
             function editorController() {
 
-                if ( !phiObject.ngModel.url ) {
+                if ( !phiBlock.ngModel.url ) {
                     //make one up I guess!
                     var random = Math.floor((Math.random() * 10000) + 1);
 
-                    phiObject.ngModel.url = phiObject.ngModel.collectionUrl + "/block" + random;
-                    phiObject.change();
+                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
+                    phiBlock.change();
                 }
 
             }

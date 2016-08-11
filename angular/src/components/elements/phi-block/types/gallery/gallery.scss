@@ -1,0 +1,37 @@
+.phi-gallery-thumbnails {
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    & > li {
+
+        display: inline-block;
+        width: 140px;
+        height: 105px;
+        line-height: 105px;
+
+        margin: 4px;
+
+        overflow: hidden;
+
+        cursor: pointer;
+        transform-origin: center;
+        transition: all 0.3s;
+
+        text-align: center;
+
+        & > img {
+            height: 100%;
+            vertical-align: middle;
+        }
+
+        & > p {
+            display: none;
+        }
+
+        &:hover {
+            transform: scale(1.03);
+        }
+    }
+}

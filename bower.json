@@ -7,6 +7,9 @@
     "webcomponents.js": "*",
     "angular": "*",
     "angular-aria": "*",
-    "angular-strap": "*"
+    "angular-sanitize": "*",
+    "angular-strap": "*",
+    "angular-sortable-view": "*",
+    "textAngular": "*"
   }
 }

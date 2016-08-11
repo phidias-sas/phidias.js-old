@@ -8,6 +8,7 @@
     state.$inject = ["$stateProvider"];
     function state($stateProvider) {
         $stateProvider.state("center", {
+            parent:      "app",
             abstract:    true,
             url:         "/centers/:centerId",
             templateUrl:  "/application/states/center/center.html",

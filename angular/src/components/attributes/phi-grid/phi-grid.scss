@@ -17,23 +17,35 @@
         flex: 1;               /* NEW, Spec - Firefox, Chrome, Opera */
 
 
-        $grid-margin: 11px;
+        $spacing: 11px;
 
-        min-width: 20%;
-        min-width: calc(25% - #{$grid-margin}*2);
-        margin: $grid-margin;
-        margin-bottom: $grid-margin*3;
+        min-width: 30%;
+        min-width: calc(33% - #{$spacing});
+        margin: 0 $spacing $spacing 0;
+
+        &:nth-child(3n+3) {
+            margin-right: 0;
+        }
+
 
         @media (max-width: 600px) {
 
-            $grid-margin-small: 4px;
+            $spacing-small: 4px;
 
             min-width: 45%;
-            min-width: calc(50% - #{$grid-margin-small}*2);
-            margin: $grid-margin-small;
-            margin-bottom: $grid-margin-small*6;
+            min-width: calc(50% - #{$spacing-small});
+            margin: 0 $spacing-small $spacing-small 0;
+
+            &:nth-child(3n+3) {
+                margin-right: $spacing-small;
+            }
+
+            &:nth-child(2n+2) {
+                margin-right: 0;
+            }
 
         }
     }
 
 }
+

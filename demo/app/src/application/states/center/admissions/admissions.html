@@ -1,0 +1,10 @@
+<div id="state-center-admissions">
+
+    <div ng-repeat="post in vm.processes">
+        <a ui-sref="admissionHome({centerId: vm.parent.center.id, admissionId: post.id})" class="post phi-padded" phi-texture="paper">
+            <h1 ng-bind="post.title"></h1>
+            <p ng-bind="post.description"></p>
+        </a>
+    </div>
+
+</div>

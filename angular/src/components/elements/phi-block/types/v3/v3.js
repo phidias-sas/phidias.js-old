@@ -3,30 +3,30 @@
 
     angular
         .module("phidias-angular")
-        .factory("phiObjectPostBlockV3", phiObjectPostBlockV3);
+        .factory("phiBlockV3", phiBlockV3);
 
-    phiObjectPostBlockV3.$inject = ["phiApi", "$http"];
-    function phiObjectPostBlockV3(phiApi, $http) {
-        return function(phiObject) {
+    phiBlockV3.$inject = ["phiApi", "$http"];
+    function phiBlockV3(phiApi, $http) {
+        return function(phiBlock) {
 
             function initialize() {
-                if ( !phiObject.ngModel.url ) {
-                    phiObject.go("error");
+                if ( !phiBlock.ngModel.url ) {
+                    phiBlock.go("error");
                     return;
                 }
-                phiObject.go("default");
+                phiBlock.go("default");
             }
 
             function defaultController() {
 
                 var vm = this;
 
-                $http.get(phiObject.ngModel.url, {
+                $http.get(phiBlock.ngModel.url, {
                     headers: {'Authorization': 'Bearer ' + phiApi.tokenString}
                 }).then(function(response) {
                     vm.body = response.data;
                 }, function() {
-                    phiObject.go("error");
+                    phiBlock.go("error");
                 });
 
             }

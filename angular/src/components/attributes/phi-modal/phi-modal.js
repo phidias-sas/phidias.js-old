@@ -1,7 +1,7 @@
 /*
-The phi-modal attribute only moves the element to the bottom of the body.
-visibility can be established with the phi-visible attribute, and styling
-is entirely up to the document
+The phi-modal attribute only appends the element to the bottom of the body
+and styles it as a fixed full-screen element (100% width and height).
+visibility can be established with the phi-visible attribute
 */
 
 (function() {

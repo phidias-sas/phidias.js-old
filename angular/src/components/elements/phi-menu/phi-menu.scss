@@ -6,31 +6,32 @@ Elements resulting HTML:
 phi-menu {
     display: block;
     position: relative;
+}
 
-    phi-menu-item,
-    [phi-menu-item] {
-        display: block;
-        cursor: pointer;
-        padding: 16px 20px;
-        text-decoration: none;
-        color: #333;
 
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.03);
-        }
+phi-menu-item,
+[phi-menu-item] {
+    display: block;
+    cursor: pointer;
+    padding: 16px 20px;
+    text-decoration: none;
+    color: #333;
 
-        &:focus {
-            background-color: rgba(0, 0, 0, 0.03);
-            outline: 0;
-        }
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+    }
 
-        &.active {
-            background-color: rgba(0, 0, 0, 0.1);
-        }
+    &:focus {
+        background-color: rgba(0, 0, 0, 0.03);
+        outline: 0;
+    }
 
+    &.active {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 
 }
+
 
 
 phi-submenu {

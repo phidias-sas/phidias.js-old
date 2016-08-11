@@ -3,58 +3,60 @@
 
     angular
         .module("phidias-angular")
-        .factory("phiObjectPostBlockHtml", phiObjectPostBlockHtml);
+        .factory("phiBlockHtml", phiBlockHtml);
 
-    phiObjectPostBlockHtml.$inject = ["phiApi", "$http"];
-    function phiObjectPostBlockHtml(phiApi, $http) {
-        return function(phiObject) {
+    phiBlockHtml.$inject = ["phiApi"];
+    function phiBlockHtml(phiApi) {
+
+        return function(phiBlock) {
 
             function initialize() {
 
-                if ( phiObject.ngModel.url ) {
-                    phiObject.go("default");
+                if ( phiBlock.ngModel.url ) {
+                    phiBlock.go("default");
                     return;
                 }
 
-                if ( !phiObject.ngModel.collectionUrl ) {
-                    phiObject.go("error");
+                if ( !phiBlock.ngModel.collectionUrl ) {
+                    phiBlock.go("error");
                     return;
                 }
 
-                phiApi.post(phiObject.ngModel.collectionUrl)
+                phiApi.post(phiBlock.ngModel.collectionUrl)
                     .then(function(response) {
 
-                        phiObject.ngModel.url = response.headers("location");
+                        phiBlock.ngModel.url = response.headers("location");
 
-                        // Play nice:  report ngModel changes to phiObject
-                        phiObject.change();
+                        // Play nice:  report ngModel changes to phiBlock
+                        phiBlock.change();
 
-                        phiObject.go("editor");
+                        phiBlock.go("editor");
                     });
 
             }
 
 
-            function defaultController() {
+            defaultController.$inject = ["$sce"];
+            function defaultController($sce) {
 
                 var vm = this;
 
-                phiApi.get(phiObject.ngModel.url)
+                phiApi.get(phiBlock.ngModel.url)
                     .then(function(response) {
-                        vm.body = response.data.body;
+                        vm.body = $sce.trustAsHtml(response.data.body);
                     });
             }
 
 
-            editorController.$inject = ["$scope"];
-            function editorController($scope) {
+            editorController.$inject = ["$scope", "$sce"];
+            function editorController($scope, $sce) {
 
                 var vm = this;
 
-                phiApi.get(phiObject.ngModel.url)
+                phiApi.get(phiBlock.ngModel.url)
                     .then(function(response) {
 
-                        vm.body = response.data.body;
+                        vm.body = $sce.trustAsHtml(response.data.body);
 
                         $scope.$watch("vm.body", function(newValue, oldValue) {
                             if (newValue == oldValue || oldValue == undefined || newValue == undefined) {
@@ -66,7 +68,7 @@
                     });
 
                 function save(htmlBody) {
-                    phiApi.put(phiObject.ngModel.url, {body: htmlBody});
+                    phiApi.put(phiBlock.ngModel.url, {body: htmlBody});
                 }
 
             }
@@ -82,15 +84,15 @@
 
                 function confirm() {
 
-                    phiApi.delete(phiObject.ngModel.url)
+                    phiApi.delete(phiBlock.ngModel.url)
                         .then(function() {
-                            phiObject.destroy();
+                            phiBlock.destroy();
                         });
 
                 }
 
                 function cancel() {
-                    phiObject.go("default");
+                    phiBlock.go("default");
                 }
 
             }

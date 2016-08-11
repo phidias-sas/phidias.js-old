@@ -15,11 +15,31 @@
         });
     }
 
-    homeController.$inject = ["$state", "$scope", "phiApi"];
-    function homeController($state, $scope, phiApi) {
+    homeController.$inject = ["$state", "phiApi"];
+    function homeController($state, phiApi) {
 
-        var vm     = this;
-        var center = $scope.$parent.vm.center;
+        var postsUrl = "nodes/" + $state.params.centerId + "/posts";
+
+        var vm    = this;
+        vm.reload = reload;
+
+        vm.post   = null;
+
+        reload();
+
+        ///////////////////////////
+
+        function reload() {
+
+            phiApi.get(postsUrl, {type: "home"})
+                .then(function(response) {
+                    if (!response.data.length) {
+                        return;
+                    }
+                    vm.post     = response.data[0];
+                    vm.post.url = postsUrl + "/" + response.data[0].id;
+                });
+        }
 
     }
 

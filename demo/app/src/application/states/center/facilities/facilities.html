@@ -1,0 +1,16 @@
+<div id="state-center-facilities">
+
+    <code>{{vm}}</code>
+
+    <div class="facilities" phi-layout="row" phi-layout-wrap>
+
+        <div class="facility" phi-texture="paper" ng-repeat="facility in vm.facilities">
+            <h3 ng-bind="facility.type"></h3>
+            <h1 ng-bind="facility.title"></h1>
+            <!--<phidias-api-resource ng-repeat="block in facility.blocks" type="{{block.type}}" src="{{block.url|trustAsResourceUrl}}"></phidias-api-resource>-->
+            <phi-post ng-model="facility"></phi-post>
+        </div>
+
+    </div>
+
+</div>

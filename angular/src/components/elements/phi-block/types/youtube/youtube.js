@@ -3,20 +3,20 @@
 
     angular
         .module("phidias-angular")
-        .factory("phiObjectPostBlockYoutube", phiObjectPostBlockYoutube);
+        .factory("phiBlockYoutube", phiBlockYoutube);
 
-    phiObjectPostBlockYoutube.$inject = ["phiApi"];
-    function phiObjectPostBlockYoutube(phiApi) {
-        return function(phiObject) {
+    phiBlockYoutube.$inject = ["phiApi"];
+    function phiBlockYoutube(phiApi) {
+        return function(phiBlock) {
 
             function initialize() {
 
-                if ( phiObject.ngModel.url ) {
-                    phiObject.go("default");
+                if ( phiBlock.ngModel.url ) {
+                    phiBlock.go("default");
                     return;
                 }
 
-                phiObject.go("editor");
+                phiBlock.go("editor");
 
             }
 
@@ -24,10 +24,10 @@
 
                 var vm = this;
 
-                if (phiObject.ngModel.url) {
-                    phiObject.ngModel.videoId   = getYoutubeId(phiObject.ngModel.url);
-                    phiObject.ngModel.isInvalid = !phiObject.ngModel.videoId;
-                    phiObject.ngModel.thumbnail = phiObject.ngModel.videoId ? "https://img.youtube.com/vi/" + phiObject.ngModel.videoId + "/0.jpg" : null;
+                if (phiBlock.ngModel.url) {
+                    phiBlock.ngModel.videoId   = getYoutubeId(phiBlock.ngModel.url);
+                    phiBlock.ngModel.isInvalid = !phiBlock.ngModel.videoId;
+                    phiBlock.ngModel.thumbnail = phiBlock.ngModel.videoId ? "https://img.youtube.com/vi/" + phiBlock.ngModel.videoId + "/0.jpg" : null;
                 }
 
             }
@@ -40,31 +40,31 @@
                 vm.save   = save;
                 vm.cancel = cancel;
 
-                $scope.$watch("phiObject.ngModel.url", function(current, previous) {
+                $scope.$watch("phiBlock.ngModel.url", function(current, previous) {
 
                     if (current == previous) {
                         return;
                     }
 
-                    phiObject.ngModel.videoId   = getYoutubeId(current);
-                    phiObject.ngModel.isInvalid = !!current && !phiObject.ngModel.videoId;
-                    phiObject.ngModel.thumbnail = phiObject.ngModel.videoId ? "https://img.youtube.com/vi/" + phiObject.ngModel.videoId + "/0.jpg" : null;
+                    phiBlock.ngModel.videoId   = getYoutubeId(current);
+                    phiBlock.ngModel.isInvalid = !!current && !phiBlock.ngModel.videoId;
+                    phiBlock.ngModel.thumbnail = phiBlock.ngModel.videoId ? "https://img.youtube.com/vi/" + phiBlock.ngModel.videoId + "/0.jpg" : null;
 
                 });
 
                 /////////////////
 
                 function save() {
-                    phiObject.change();
-                    phiObject.go("default");
+                    phiBlock.change();
+                    phiBlock.go("default");
                 }
 
                 function cancel() {
 
-                    if (!phiObject.ngModel.videoId) {
-                        phiObject.destroy();
+                    if (!phiBlock.ngModel.videoId) {
+                        phiBlock.destroy();
                     } else {
-                        phiObject.go("default");
+                        phiBlock.go("default");
                     }
 
                 }
@@ -79,11 +79,11 @@
                 /////////////////
 
                 function confirm() {
-                    phiObject.destroy();
+                    phiBlock.destroy();
                 }
 
                 function cancel() {
-                    phiObject.go("default");
+                    phiBlock.go("default");
                 }
 
             }
@@ -114,9 +114,9 @@
                         controller:     defaultController,
                         controllerAs:   'vm',
                         template:       '<div>' +
-                                            '<p ng-show="!phiObject.ngModel.videoId">El v&iacute;deo no es v&aacute;lido</p>' +
-                                            '<p ng-show="!!phiObject.ngModel.videoId" ng-bind="phiObject.ngModel.title"></p>' +
-                                            '<iframe ng-if="!!phiObject.ngModel.videoId" width="100%" height="420" ng-src="{{\'https://www.youtube.com/embed/\' + phiObject.ngModel.videoId | trustAsResourceUrl}}" frameborder="0" allowfullscreen></iframe>' +
+                                            '<p ng-show="!phiBlock.ngModel.videoId">El v&iacute;deo no es v&aacute;lido</p>' +
+                                            '<p ng-show="!!phiBlock.ngModel.videoId" ng-bind="phiBlock.ngModel.title"></p>' +
+                                            '<iframe ng-if="!!phiBlock.ngModel.videoId" width="100%" height="420" ng-src="{{\'https://www.youtube.com/embed/\' + phiBlock.ngModel.videoId | trustAsResourceUrl}}" frameborder="0" allowfullscreen></iframe>' +
                                         '</div>'
                     },
 
@@ -126,18 +126,18 @@
                         template:   '<form>' +
                                         '<fieldset>' +
 
-                                            '<phi-input ng-model="phiObject.ngModel.url" label="URL de youtube"></phi-input>' +
+                                            '<phi-input ng-model="phiBlock.ngModel.url" label="URL de youtube"></phi-input>' +
 
-                                            '<p ng-show="!!phiObject.ngModel.isInvalid">Debes ingresar una direcci&oacute;n v&aacute;lida de YouTube</p>' +
+                                            '<p ng-show="!!phiBlock.ngModel.isInvalid">Debes ingresar una direcci&oacute;n v&aacute;lida de YouTube</p>' +
 
-                                            '<div ng-show="!!phiObject.ngModel.videoId" class="description">' +
-                                                '<phi-input ng-model="phiObject.ngModel.title" label="titulo"></phi-input>' +
-                                                '<phi-input multiline ng-model="phiObject.ngModel.description" label="descripci&oacute;n"></phi-input>' +
-                                                '<img ng-if="!!phiObject.ngModel.thumbnail" ng-src="{{phiObject.ngModel.thumbnail}}" />' +
+                                            '<div ng-show="!!phiBlock.ngModel.videoId" class="description">' +
+                                                '<phi-input ng-model="phiBlock.ngModel.title" label="titulo"></phi-input>' +
+                                                '<phi-input multiline ng-model="phiBlock.ngModel.description" label="descripci&oacute;n"></phi-input>' +
+                                                '<img ng-if="!!phiBlock.ngModel.thumbnail" ng-src="{{phiBlock.ngModel.thumbnail}}" />' +
                                             '</div>' +
 
                                             '<footer style="margin-top: 16px">' +  // !!!! remove built in styles
-                                                '<phi-button ng-show="!!phiObject.ngModel.videoId" ng-click="vm.save()">aceptar</phi-button>' +
+                                                '<phi-button ng-show="!!phiBlock.ngModel.videoId" ng-click="vm.save()">aceptar</phi-button>' +
                                                 '<phi-button ng-click="vm.cancel()" class="cancel">cancelar</phi-button>' +
                                             '</footer>' +
 

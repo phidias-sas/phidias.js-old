@@ -9,12 +9,12 @@ html, body {
 }
 
 * {
-    font-weight: 300;
     box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
+    font-weight: 300;
 }
 
 [ui-sref] {
@@ -23,4 +23,12 @@ h1, h2, h3, h4, h5, h6, p {
 
 a {
     text-decoration: none;
+}
+
+a.back {
+    display: inline-block;
+    color: #fff;
+    font-size: 1.2em;
+    text-decoration: none;
+    padding: 12px; 
 }

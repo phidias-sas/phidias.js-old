@@ -1,0 +1,26 @@
+<phi-state>
+
+    <phi-state-cover style="background-image: url('img/cover.jpg')" phi-color-tint="#01579b">
+        <div class="header">
+            <nav class="breadcrumbs">
+                <a ui-sref="center.admissions({centerId: vm.center.id})" ng-bind="vm.center.name"></a>
+            </nav>
+            <h1 ng-bind="vm.post.title"></h1>
+        </div>
+    </phi-state-cover>
+
+    <phi-state-contents>
+
+        <p ng-bind="vm.post.description" class="phi-padded"></p>
+
+        <div class="phi-padded" phi-texture="paper">
+            <phi-post ng-model="vm.post"></phi-post>
+        </div>
+
+        <div class="phi-padded" phi-texture="paper">
+            <phi-post-editor ng-model="vm.post"></phi-post-editor>
+        </div>
+
+    </phi-state-contents>
+
+</phi-state>

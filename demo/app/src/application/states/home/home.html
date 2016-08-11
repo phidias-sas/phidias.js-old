@@ -1,5 +1,5 @@
 <phi-state id="home">
-    <phi-state-cover style="background-image: url('img/cover.jpg')" phi-color-tint="#01579b" ng-class="{collapsed: searchIsFocused || !!vm.query}">
+    <phi-state-cover style="background-image: url('img/cover.jpg')" phi-color-tint="#2196F3" ng-class="{collapsed: searchIsFocused || !!vm.query}">
         <div class="header">
             <h1>Encuentra el mejor colegio</h1>
             <div class="search" phi-icon-left="{{vm.isLoading ? 'fa-spinner' : 'fa-search'}}" phi-icon-animation="{{vm.isLoading ? 'spin' : ''}}">
@@ -18,7 +18,6 @@
     <phi-state-contents>
 
         <section id="cities" phi-grid>
-
             <phi-card class="city" ng-repeat="city in vm.cities" ui-sref="city({city: city.name})">
                 <phi-card-cover style="background-image: url('http://beta.mejorescolegios.es/img/cities/{{city.name}}.jpg')"></phi-card-cover>
                 <phi-card-contents>
@@ -26,11 +25,9 @@
                     <p><strong ng-bind="city.count"></strong> colegios</p>
                 </phi-card-contents>
             </phi-card>
-
         </section>
 
         <section id="centers" phi-grid>
-
             <phi-card class="center" ng-repeat="center in vm.centers" ui-sref="center.home({centerId: center.id})">
                 <phi-card-cover style="background-image: url('{{center.cover}}'), url('img/cover.jpg')">
                     <h1 class="title" ng-bind="center.name"></h1>
@@ -43,7 +40,6 @@
                     <p class="address" phi-icon-left="fa-map-marker">{{center.address}}, {{center.city}}, {{center.region}}, {{center.postalCode}}</p>
                 </phi-card-contents>
             </phi-card>
-
         </section>
 
     </phi-state-contents>

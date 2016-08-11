@@ -39,7 +39,8 @@ Usage:
 
             scope: {
                 controls:        "=phiSwitch",
-                customClassName: "@phiSwitchActiveClass"
+                customClassName: "@phiSwitchActiveClass",
+                onChange:        "&"
             },
 
             link: phiSwitchLink
@@ -87,6 +88,8 @@ Usage:
 
                     angular.element(items[targetIndex]).addClass(scope.activeClass);
                     this.activeIndex = targetIndex;
+
+                    scope.onChange();
                 },
 
                 next: function() {
@@ -106,25 +109,6 @@ Usage:
                 }
 
             };
-
-
-
-            // scope.$watch(function () {
-
-            //     items                 = element.children();
-            //     scope.controls.length = items.length;
-
-            //     if (scope.controls.activeIndex == null) {
-            //         scope.controls.activeIndex = 0;
-            //     }
-
-            //     if (items[scope.controls.activeIndex] != undefined) {
-            //         angular.element(items[scope.controls.activeIndex]).addClass(scope.activeClass);
-            //     }
-
-
-            // });
-
 
         };
 

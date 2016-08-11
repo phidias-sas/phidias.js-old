@@ -72,14 +72,28 @@ phiApp.broadcast('notification', {
                 authenticate: authenticate,
                 googleSignIn: googleSignIn,
 
-
                 // navigation history
-                previousState: null
+                previousState: null,
+
+
+                // UX helpers
+                loginShown: false,
+
+                showLogin: function() {
+                    service.loginShown = true;
+                },
+
+                hideLogin: function() {
+                    service.loginShown = false;
+                },
+
+                loginController:  loginController,
+                signupController: signupController
+
             }
 
             activate();
 
-            return service;
 
             ///////
 
@@ -143,8 +157,7 @@ phiApp.broadcast('notification', {
 
             function setToken(strToken) {
                 service.token           = strToken;
-                // service.user            = phiJwt.decode(strToken);
-                service.user            = phiJwt.decode(strToken).person;
+                service.user            = phiJwt.decode(strToken);
                 service.isAuthenticated = true;
 
                 phiApi.setToken(strToken);
@@ -198,8 +211,7 @@ phiApp.broadcast('notification', {
                 getGoogleAuthorizationCode()
                     .then(function(authorizationCode) {
                         phiApi
-                            .post("oauth/token", {
-                                grant_type: "google_authorization_code",
+                            .post("oauth/google", {
                                 code: authorizationCode
                             })
                             .then(function (response) {
@@ -273,7 +285,7 @@ phiApp.broadcast('notification', {
 
                 // https://developers.google.com/identity/protocols/OAuth2UserAgent#formingtheurl
                 var authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" + $httpParamSerializer({
-                    "redirect_uri":  "http://www.phi.co/googlesignin.html",
+                    "redirect_uri":  "http://www.phidias.co/googlesignin.html",
                     "client_id":     "890266961007.apps.googleusercontent.com",
                     "scope":         "email",
                     "response_type": "code",
@@ -351,6 +363,122 @@ phiApp.broadcast('notification', {
 
                 return retval;
             }
+
+
+            function loginController() {
+
+                var vm = this;
+
+                vm.isLoading   = false;
+                vm.error       = null;
+
+                vm.credentials = {
+                    username: null,
+                    password: null
+                };
+
+                vm.login = function() {
+
+                    vm.isLoading = true;
+
+                    service.authenticate(vm.credentials.username, vm.credentials.password).then(
+
+                        function(response) {
+                            service.hideLogin();
+                        },
+
+                        function(response) {
+
+                            switch (response.data.error) {
+                                case "Phidias\\OAuth\\Exception\\UserNotFound":
+                                    vm.error = "usuario no encontrado";
+                                break;
+
+                                case "Phidias\\OAuth\\Exception\\WrongPassword":
+                                    vm.error = "contrasena incorrecta";
+                                break;
+
+                                case "Phidias\\OAuth\\Exception\\UserNotActive":
+                                    vm.error = "este usuario aun no esta activado";
+                                break;
+
+                                default:
+                                    vm.error = "ha ocurrido un error iniciando la sesion";
+                                break;
+                            }
+                        }
+
+                    ).finally(function() {
+                        vm.isLoading = false;
+                    });
+
+                };
+
+            };
+
+
+            signupController.$inject = ["$scope", "$stateParams"];
+            function signupController($scope, $stateParams) {
+
+                var vm = this;
+
+                vm.isLoading         = false;           
+                vm.account           = {};
+                vm.errors            = {};
+                vm.verificationEmail = null;
+                vm.signup            = signup;
+
+                activate();
+
+                //////////////////////////
+
+                function activate() {
+                    $scope.$watch(
+                        function () {
+                            return vm.account;
+                        }, 
+                        function (newValue, oldValue) {
+                            for (var property in newValue) {
+                                if (newValue[property] != oldValue[property]) {
+                                    delete vm.errors[property];
+                                }
+                            }
+                        }
+                    );
+                };
+
+
+                function signup() {
+
+                    // Include all stateParams as
+                    // registration payload
+                    vm.account.payload = $stateParams;
+
+                    vm.isLoading = true;
+
+                    phiApi.post("accounts", vm.account)
+                        .then(
+                            function(response) {
+                                vm.verificationEmail = response.data.email
+                            },
+
+                            function(response) {
+                                vm.errors = response.data.data;
+                            }
+                        )
+                        .finally(function() {
+                            vm.isLoading = false;
+                        });
+
+                };
+
+
+
+            };
+
+
+            return service;
+
 
         }
 

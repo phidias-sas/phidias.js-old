@@ -1,0 +1,102 @@
+<phi-app-bar>
+    <div>
+        <a ng-if="$state.current.name != 'home'" href class="back" phi-icon-left="fa-arrow-left" onclick="history.go(-1)"></a>
+
+        <div class="authentication">
+            <div id="main-user" ng-if="phiApp.isAuthenticated">
+
+                <h1 ng-bind="phiApp.user.firstName + ' ' + phiApp.user.lastName" ng-click="userTooltipIsVisible = !userTooltipIsVisible"></h1>
+
+                <div phi-tooltip-for="main-user" phi-visible="{{userTooltipIsVisible}}" phi-visible-animation="slide-bottom">
+                    <phi-menu phi-texture="paper">
+                        <phi-menu-item phi-icon-left="fa-home" ui-sref="home">Mi perfil</phi-menu-item>
+                        <phi-menu-item phi-icon-left="fa-times" ng-click="phiApp.logout()">Salir</phi-menu-item>
+                    </phi-menu>
+                </div>
+
+            </div>
+            <div ng-if="!phiApp.isAuthenticated">
+                <a href ng-click="phiApp.showLogin()">Ingresar</a>
+            </div>
+        </div>
+    </div>
+</phi-app-bar>
+
+<div class="main-view" ui-view></div>
+
+
+<!-- Login modal -->
+<div phi-modal id="login-modal" phi-visible="{{phiApp.loginShown}}" ng-click="phiApp.hideLogin()">
+
+    <div>
+
+        <div class="actions" ng-click="$event.stopPropagation()">
+            <a href ng-class="{active: !phiApp.loginRegistering}" ng-click="phiApp.loginRegistering = false">Ya tengo una cuenta</a>
+            <a href ng-class="{active: phiApp.loginRegistering}" ng-click="phiApp.loginRegistering = true">Crear una cuenta nueva</a>
+        </div>
+
+        <div phi-texture="paper" class="phi-padded" ng-click="$event.stopPropagation()">
+
+            <div ng-show="!phiApp.loginRegistering" ng-controller="phiApp.loginController as loginController">
+
+                <button ng-click="phiApp.googleSignIn().then(phiApp.hideLogin)">Google?</button>
+
+                <form ng-submit="loginController.login()">
+                    <fieldset>
+                        <phi-input ng-model="loginController.credentials.username" label="email" ng-change="loginController.error = null"></phi-input>
+                        <phi-input ng-model="loginController.credentials.password" label="contrase&ntilde;a" type="password" ng-change="loginController.error = null"></phi-input>
+                    </fieldset>
+
+                    <footer>
+                        <button phi-button type="submit" ng-disabled="loginController.isLoading || !loginController.credentials.username.trim().length || !!loginController.error" ng-class="{error: !!loginController.error}">
+                            <span ng-show="loginController.isLoading">cargando</span>
+                            <span ng-show="!loginController.isLoading" ng-bind="loginController.error || 'ingresar'"></span>
+                        </button>                                
+                    </footer>
+                </form>
+            </div>
+
+
+            <div ng-show="phiApp.loginRegistering" ng-controller="phiApp.signupController as signupController">
+
+                <div ng-if="signupController.verificationEmail">
+                    <p>En unos minutos recibir&aacute;s un mensaje a <strong ng-bind="signupController.verificationEmail"></strong> con instrucciones para activar tu cuenta</p>
+                    <a href ng-click="phiApp.hideLogin()">cerrar</a>
+                </div>
+
+                <form ng-submit="signupController.signup()" ng-show="!signupController.verificationEmail">
+
+                    <fieldset>
+                        <phi-input ng-model="signupController.account.email" label="email"></phi-input>
+                        <span class="error" ng-show="signupController.errors.email" ng-bind="signupController.errors.email"></span>
+
+                        <phi-input ng-model="signupController.account.firstName" label="nombre"></phi-input>
+                        <span class="error" ng-show="signupController.errors.firstName" ng-bind="signupController.errors.firstName"></span>
+
+                        <phi-input ng-model="signupController.account.lastName" label="apellido"></phi-input>
+                        <span class="error" ng-show="signupController.errors.lastName" ng-bind="signupController.errors.lastName"></span>
+
+                        <phi-input ng-model="signupController.account.password" label="elige una contrase&ntilde;a" type="password"></phi-input>
+                        <span class="error" ng-show="signupController.errors.password" ng-bind="signupController.errors.password"></span>
+
+                        <phi-input ng-model="signupController.account.password2" label="escribe tu contrase&ntilde;a nuevamente" type="password"></phi-input>
+                        <span class="error" ng-show="signupController.errors.password2" ng-bind="signupController.errors.password2"></span>
+                    </fieldset>
+
+                    <footer>
+                        <button phi-button type="submit" ng-disabled="signupController.isLoading">
+                            <span ng-show="!signupController.isLoading">crear cuenta</span>
+                            <span ng-show="signupController.isLoading">creando</span>
+                        </button>
+                    </footer>
+
+                </form>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
