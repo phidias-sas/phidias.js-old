@@ -1,0 +1,75 @@
+#state-user-dashboard {
+
+    .tip {
+        margin-bottom: 32px;
+    }
+
+    section {
+
+        margin-bottom: 32px;
+
+        & > h2 {
+            margin: 6px 0;
+            color: #999;
+        }
+    }
+
+    .claims,
+    .centers {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .center {
+
+        display: block;
+        margin-bottom: 16px;
+        color: #444;
+
+        border-left: 3px solid;
+
+        &[ui-sref] {
+            cursor: pointer;
+
+            &:hover {
+                background-color: #ff8;
+            }
+        }
+
+
+        & > * {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .logo {
+            overflow: hidden;
+            max-width: 120px;
+            margin-right: 8px;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .details {
+            padding: 16px;
+
+            .category {
+                font-size: 14px;
+                color: #999;
+            }
+
+        }
+
+        .claims {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+
+    }
+
+}

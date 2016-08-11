@@ -1,5 +1,44 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,500,500italic,700,700italic);
 @import url(http://fonts.googleapis.com/css?family=Pacifico);
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0; }
+
+phi-input {
+  display: block;
+  width: 100%;
+  margin-bottom: 1em; }
+
+form footer {
+  margin-top: 32px; }
+
+html, body {
+  font-family: 'Roboto', sans-serif;
+  background: #f3f3f3;
+  color: #444;
+  margin: 0; }
+
+* {
+  box-sizing: border-box; }
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  font-weight: 300; }
+
+[ui-sref] {
+  cursor: pointer; }
+
+a {
+  text-decoration: none; }
+
+a.back {
+  display: inline-block;
+  color: #fff;
+  font-size: 1.2em;
+  text-decoration: none;
+  padding: 12px; }
+
 phi-state-contents[ui-view].ng-enter, phi-state-contents[ui-view].ng-leave {
   position: absolute;
   left: 0;
@@ -75,41 +114,46 @@ phi-state-contents[ui-view].ng-enter, phi-state-contents[ui-view].ng-leave {
 .main-view.ng-leave-active {
   opacity: 0; }
 
-fieldset {
-  border: 0;
-  padding: 0;
-  margin: 0; }
+phi-card.center phi-card-cover {
+  position: relative; }
+  phi-card.center phi-card-cover h1 {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 10px;
+    font-size: 1.4em;
+    color: #fff; }
 
-phi-input {
-  display: block;
-  width: 100%;
-  margin-bottom: 0.5em; }
+phi-card.center phi-card-contents {
+  padding: 10px; }
+  phi-card.center phi-card-contents .description {
+    font-size: 14px;
+    color: #999; }
+  phi-card.center phi-card-contents .address {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #666; }
 
-html, body {
-  font-family: 'Roboto', sans-serif;
-  background: #f3f3f3;
-  color: #444;
-  margin: 0; }
-
-* {
-  box-sizing: border-box; }
-
-h1, h2, h3, h4, h5, h6, p {
-  margin: 0;
-  font-weight: 300; }
-
-[ui-sref] {
-  cursor: pointer; }
-
-a {
-  text-decoration: none; }
-
-a.back {
-  display: inline-block;
-  color: #fff;
-  font-size: 1.2em;
-  text-decoration: none;
-  padding: 12px; }
+phi-card.city {
+  position: relative; }
+  phi-card.city phi-card-cover {
+    background-position-x: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%; }
+  phi-card.city phi-card-contents {
+    position: relative;
+    padding: 12px;
+    padding-top: 68px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.2); }
+    phi-card.city phi-card-contents h1 {
+      font-size: 2em;
+      text-transform: capitalize; }
 
 phi-app-bar {
   display: block;
@@ -133,6 +177,16 @@ phi-app-bar {
       padding: 12px 16px; }
       phi-app-bar > div .authentication h1 {
         font-size: 1em; }
+
+.googleSignIn {
+  background: transparent;
+  border: none;
+  padding: 12px;
+  background: url("../img/google.png") no-repeat 0 50%;
+  background-size: 24px;
+  padding-left: 32px;
+  float: right;
+  cursor: pointer; }
 
 #login-modal {
   background-color: rgba(0, 0, 0, 0.9); }
@@ -336,6 +390,12 @@ phi-state#city .phi-marker-cluster {
   #home phi-state-contents #cities {
     margin-bottom: 32px; }
 
+#state-user phi-cover [phi-boundary] {
+  padding: 24px 0;
+  color: #fff; }
+  #state-user phi-cover [phi-boundary] h1 {
+    margin: 0; }
+
 .state-sample phi-state-cover > div {
   padding: 22px 0;
   transition: all 200ms; }
@@ -354,53 +414,6 @@ phi-state#city .phi-marker-cluster {
 
 .state-sample phi-state-contents {
   padding: 18px 0; }
-
-phi-card.center phi-card-cover {
-  position: relative; }
-  phi-card.center phi-card-cover h1 {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    padding: 10px;
-    font-size: 1.4em;
-    color: #fff; }
-
-phi-card.center phi-card-contents {
-  padding: 10px; }
-  phi-card.center phi-card-contents .description {
-    font-size: 14px;
-    color: #999; }
-  phi-card.center phi-card-contents .address {
-    margin-top: 6px;
-    font-size: 14px;
-    color: #666; }
-
-phi-card.city {
-  position: relative; }
-  phi-card.city phi-card-cover {
-    background-position-x: 50%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%; }
-  phi-card.city phi-card-contents {
-    position: relative;
-    padding: 12px;
-    padding-top: 68px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.2); }
-    phi-card.city phi-card-contents h1 {
-      font-size: 2em;
-      text-transform: capitalize; }
-
-#state-center-admissions .post {
-  display: block;
-  margin-bottom: 24px; }
-  #state-center-admissions .post h1, #state-center-admissions .post p {
-    margin: 0; }
 
 #state-center-facilities {
   /*
@@ -459,7 +472,60 @@ phi-card.city {
       padding: 0;
       margin: 1em 0.25em; }
 
+#state-center-admissions .post {
+  display: block;
+  margin-bottom: 24px; }
+  #state-center-admissions .post h1, #state-center-admissions .post p {
+    margin: 0; }
+
 #state-center-home phi-post {
   padding: 12px; }
   #state-center-home phi-post phi-post-header {
     display: none; }
+
+#state-user-dashboard .tip {
+  margin-bottom: 32px; }
+
+#state-user-dashboard section {
+  margin-bottom: 32px; }
+  #state-user-dashboard section > h2 {
+    margin: 6px 0;
+    color: #999; }
+
+#state-user-dashboard .claims,
+#state-user-dashboard .centers {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+
+#state-user-dashboard .center {
+  display: block;
+  margin-bottom: 16px;
+  color: #444;
+  border-left: 3px solid; }
+  #state-user-dashboard .center[ui-sref] {
+    cursor: pointer; }
+    #state-user-dashboard .center[ui-sref]:hover {
+      background-color: #ff8; }
+  #state-user-dashboard .center > * {
+    display: inline-block;
+    vertical-align: middle; }
+  #state-user-dashboard .center .logo {
+    overflow: hidden;
+    max-width: 120px;
+    margin-right: 8px; }
+    #state-user-dashboard .center .logo img {
+      width: 100%; }
+  #state-user-dashboard .center .details {
+    padding: 16px; }
+    #state-user-dashboard .center .details .category {
+      font-size: 14px;
+      color: #999; }
+  #state-user-dashboard .center .claims {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+
+#state-user-profile .saved {
+  margin: 0 0 0 1em;
+  color: green; }

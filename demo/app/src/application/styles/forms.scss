@@ -7,5 +7,11 @@ fieldset {
 phi-input {
     display: block;
     width: 100%;
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
+}
+
+form {
+    footer {
+        margin-top: 32px;
+    }
 }

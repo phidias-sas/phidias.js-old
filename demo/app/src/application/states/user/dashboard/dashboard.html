@@ -1,0 +1,60 @@
+<div id="state-user-dashboard">
+
+    <div class="tip">
+        <h1>Bienvenido a tu cuenta</h1>
+        <p>Esta es tu p&aacute;gina personal.  Aqu&iacute; encontrar&aacute;s un detalle consolidado de todos los colegios que administras</p>
+    </div>
+
+    <section ng-if="state.centers.length">
+
+        <h2>Mis centros</h2>
+
+        <ul class="centers">
+            <li ng-repeat="center in state.centers" class="center" phi-texture="paper" ui-sref="manage.home({centerId: center.id})" phi-color-theme="{{center.color}}" phi-color-border="500">
+
+                <div ng-if="center.logo" class="logo">
+                    <img ng-src="{{center.logo}}" alt="{{center.name}}" />
+                </div>
+
+                <div class="details">
+                    <h2 ng-bind="center.name"></h2>
+                    <p class="category" ng-bind="center.category"></p>
+                </div>
+            </li>
+        </ul>
+
+    </section>
+
+
+    <section ng-if="state.claims.length">
+
+        <h2>Solicitudes pendientes</h2>
+
+        <ul class="claims">
+            <li ng-repeat="center in state.claims" class="center" phi-texture="paper">
+
+                <div ng-if="center.logo" class="logo">
+                    <img ng-src="{{center.logo}}" alt="{{center.name}}" />
+                </div>
+
+                <div class="details">
+                    <h2 class="phi-color-font-500" ng-bind="center.name"></h2>
+                    <p class="category" ng-bind="center.category"></p>
+
+                    <ul class="claims">
+                        <li ng-repeat="claim in center.claims">
+                            <p class="claimDate">
+                                <span>solicitado</span>
+                                <span ng-bind="state.getTimestamp(claim.id) | momentCalendar"></span>
+                            </p>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </li>
+        </ul>
+    </section>
+
+
+</div>

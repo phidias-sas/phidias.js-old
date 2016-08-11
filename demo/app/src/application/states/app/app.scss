@@ -37,6 +37,18 @@ phi-app-bar {
 
 }
 
+.googleSignIn {
+    background: transparent;
+    border: none;
+    padding: 12px;
+    background: url('../img/google.png') no-repeat 0 50%;
+    background-size: 24px;
+
+    padding-left: 32px;
+
+    float: right;
+    cursor: pointer;
+}
 
 
 #login-modal {

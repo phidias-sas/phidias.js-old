@@ -1,0 +1,25 @@
+<div id="state-user-profile">
+
+    <form ng-submit="vm.save()">
+        
+        <fieldset>
+            <legend>Datos personales</legend>
+
+            <div phi-layout="row">
+                <phi-input label="Nombre" ng-model="vm.parent.person.firstName"></phi-input>
+                <phi-input label="Primer apellido" ng-model="vm.parent.person.lastName"></phi-input>
+                <phi-input label="Segundo apellido" ng-model="vm.parent.person.lastName2"></phi-input>
+            </div>
+        </fieldset>
+
+        <footer>
+            <button phi-button>
+                <span ng-show="!vm.status.loading && !vm.status.saved">guardar</span>
+                <span ng-show="vm.status.loading" phi-icon-left="fa-spinner" phi-icon-animation="spin">guardando</span>
+                <span ng-show="vm.status.saved" phi-icon-left="fa-check">los cambios han sido guardados</span>
+            </button>
+        </footer>
+
+    </form>
+
+</div>

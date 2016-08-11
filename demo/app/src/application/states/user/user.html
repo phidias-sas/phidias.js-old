@@ -1,0 +1,21 @@
+<phi-state>
+
+    <phi-state-cover style="background-image: url('img/cover.jpg')" phi-color-tint="#01579b">
+        <div>
+            <h1>
+                <span ng-bind="vm.person.firstName"></span>
+                <span ng-bind="vm.person.lastName"></span>
+            </h1>
+        </div>
+
+        <phi-state-navigation>
+            <phi-menu>
+                <phi-menu-item ui-sref="user.dashboard" ui-sref-active="active">Inicio</phi-menu-item>
+                <phi-menu-item ui-sref="user.profile" ui-sref-active="active">Datos personales</phi-menu-item>
+            </phi-menu>
+        </phi-state-navigation>
+    </phi-state-cover>
+
+    <phi-state-contents ui-view></phi-state-contents>
+
+</phi-state>
