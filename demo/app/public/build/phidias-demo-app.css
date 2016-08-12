@@ -114,47 +114,6 @@ phi-state-contents[ui-view].ng-enter, phi-state-contents[ui-view].ng-leave {
 .main-view.ng-leave-active {
   opacity: 0; }
 
-phi-card.center phi-card-cover {
-  position: relative; }
-  phi-card.center phi-card-cover h1 {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    padding: 10px;
-    font-size: 1.4em;
-    color: #fff; }
-
-phi-card.center phi-card-contents {
-  padding: 10px; }
-  phi-card.center phi-card-contents .description {
-    font-size: 14px;
-    color: #999; }
-  phi-card.center phi-card-contents .address {
-    margin-top: 6px;
-    font-size: 14px;
-    color: #666; }
-
-phi-card.city {
-  position: relative; }
-  phi-card.city phi-card-cover {
-    background-position-x: 50%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%; }
-  phi-card.city phi-card-contents {
-    position: relative;
-    padding: 12px;
-    padding-top: 68px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.2); }
-    phi-card.city phi-card-contents h1 {
-      font-size: 2em;
-      text-transform: capitalize; }
-
 phi-app-bar {
   display: block;
   position: fixed;
@@ -215,6 +174,73 @@ phi-app-bar {
     opacity: 1; }
   #login-modal .phi-padded {
     padding: 32px; }
+
+#home phi-state-cover {
+  text-align: center;
+  /* Expand/Collapse */ }
+  #home phi-state-cover .header {
+    padding-bottom: 36px;
+    transition: all 300ms; }
+    #home phi-state-cover .header h1 {
+      font-family: Pacifico, sans-serif;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+      font-size: 2.6em;
+      transition: all 300ms;
+      opacity: 1;
+      overflow: hidden;
+      height: 128px;
+      line-height: 128px; }
+      @media (max-width: 600px) {
+        #home phi-state-cover .header h1 {
+          font-size: 1.8em; } }
+  #home phi-state-cover.collapsed .header {
+    padding-bottom: 12px; }
+    #home phi-state-cover.collapsed .header h1 {
+      opacity: 0;
+      height: 0;
+      font-size: 2.3em; }
+  #home phi-state-cover .search {
+    padding: 0 0 0 50px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 4px;
+    color: #666;
+    text-align: left;
+    position: relative; }
+    #home phi-state-cover .search:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 18px;
+      margin: 0; }
+    #home phi-state-cover .search input {
+      outline: none;
+      padding: 16px 0;
+      border: 0;
+      background: transparent;
+      width: 100%;
+      display: inline-block;
+      text-align: left;
+      font: inherit;
+      color: #333; }
+      #home phi-state-cover .search input::-webkit-input-placeholder {
+        color: #666;
+        font-weight: normal; }
+      #home phi-state-cover .search input:-moz-placeholder {
+        /* Firefox 18- */
+        color: #666;
+        font-weight: normal; }
+      #home phi-state-cover .search input::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #666;
+        font-weight: normal; }
+      #home phi-state-cover .search input:-ms-input-placeholder {
+        color: #666;
+        font-weight: normal; }
+
+#home phi-state-contents {
+  padding-top: 11px; }
+  #home phi-state-contents #cities {
+    margin-bottom: 32px; }
 
 phi-state#city phi-state-navigation {
   background-color: rgba(0, 0, 0, 0.5); }
@@ -323,79 +349,6 @@ phi-state#city .phi-marker-cluster {
 .state-center phi-state-contents {
   padding: 18px 0; }
 
-#home phi-state-cover {
-  text-align: center;
-  /* Expand/Collapse */ }
-  #home phi-state-cover .header {
-    padding-bottom: 36px;
-    transition: all 300ms; }
-    #home phi-state-cover .header h1 {
-      font-family: Pacifico, sans-serif;
-      text-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
-      font-size: 2.6em;
-      transition: all 300ms;
-      opacity: 1;
-      overflow: hidden;
-      height: 128px;
-      line-height: 128px; }
-      @media (max-width: 600px) {
-        #home phi-state-cover .header h1 {
-          font-size: 1.8em; } }
-  #home phi-state-cover.collapsed .header {
-    padding-bottom: 12px; }
-    #home phi-state-cover.collapsed .header h1 {
-      opacity: 0;
-      height: 0;
-      font-size: 2.3em; }
-  #home phi-state-cover .search {
-    padding: 0 0 0 50px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 4px;
-    color: #666;
-    text-align: left;
-    position: relative; }
-    #home phi-state-cover .search:before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: 18px;
-      margin: 0; }
-    #home phi-state-cover .search input {
-      outline: none;
-      padding: 16px 0;
-      border: 0;
-      background: transparent;
-      width: 100%;
-      display: inline-block;
-      text-align: left;
-      font: inherit;
-      color: #333; }
-      #home phi-state-cover .search input::-webkit-input-placeholder {
-        color: #666;
-        font-weight: normal; }
-      #home phi-state-cover .search input:-moz-placeholder {
-        /* Firefox 18- */
-        color: #666;
-        font-weight: normal; }
-      #home phi-state-cover .search input::-moz-placeholder {
-        /* Firefox 19+ */
-        color: #666;
-        font-weight: normal; }
-      #home phi-state-cover .search input:-ms-input-placeholder {
-        color: #666;
-        font-weight: normal; }
-
-#home phi-state-contents {
-  padding-top: 11px; }
-  #home phi-state-contents #cities {
-    margin-bottom: 32px; }
-
-#state-user phi-cover [phi-boundary] {
-  padding: 24px 0;
-  color: #fff; }
-  #state-user phi-cover [phi-boundary] h1 {
-    margin: 0; }
-
 .state-sample phi-state-cover > div {
   padding: 22px 0;
   transition: all 200ms; }
@@ -414,6 +367,64 @@ phi-state#city .phi-marker-cluster {
 
 .state-sample phi-state-contents {
   padding: 18px 0; }
+
+#state-user phi-cover [phi-boundary] {
+  padding: 24px 0;
+  color: #fff; }
+  #state-user phi-cover [phi-boundary] h1 {
+    margin: 0; }
+
+phi-card.center phi-card-cover {
+  position: relative; }
+  phi-card.center phi-card-cover h1 {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 10px;
+    font-size: 1.4em;
+    color: #fff; }
+
+phi-card.center phi-card-contents {
+  padding: 10px; }
+  phi-card.center phi-card-contents .description {
+    font-size: 14px;
+    color: #999; }
+  phi-card.center phi-card-contents .address {
+    margin-top: 6px;
+    font-size: 14px;
+    color: #666; }
+
+phi-card.city {
+  position: relative; }
+  phi-card.city phi-card-cover {
+    background-position-x: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%; }
+  phi-card.city phi-card-contents {
+    position: relative;
+    padding: 12px;
+    padding-top: 68px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.2); }
+    phi-card.city phi-card-contents h1 {
+      font-size: 2em;
+      text-transform: capitalize; }
+
+#state-center-admissions .post {
+  display: block;
+  margin-bottom: 24px; }
+  #state-center-admissions .post h1, #state-center-admissions .post p {
+    margin: 0; }
+
+#state-center-home phi-post {
+  padding: 12px; }
+  #state-center-home phi-post phi-post-header {
+    display: none; }
 
 #state-center-facilities {
   /*
@@ -471,17 +482,6 @@ phi-state#city .phi-marker-cluster {
     #state-center-facilities .facility > div {
       padding: 0;
       margin: 1em 0.25em; }
-
-#state-center-admissions .post {
-  display: block;
-  margin-bottom: 24px; }
-  #state-center-admissions .post h1, #state-center-admissions .post p {
-    margin: 0; }
-
-#state-center-home phi-post {
-  padding: 12px; }
-  #state-center-home phi-post phi-post-header {
-    display: none; }
 
 #state-user-dashboard .tip {
   margin-bottom: 32px; }

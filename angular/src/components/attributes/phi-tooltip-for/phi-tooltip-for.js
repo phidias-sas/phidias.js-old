@@ -6,8 +6,10 @@
         .directive("phiTooltipFor", phiTooltipFor);
 
 
-    phiTooltipFor.$inject = ["phiCoordinates"];
-    function phiTooltipFor(phiCoordinates) {
+    var uniqueTooltipId = 0;
+
+    phiTooltipFor.$inject = ["phiCoordinates", "$document", "$timeout"];
+    function phiTooltipFor(phiCoordinates, $document, $timeout) {
 
         return {
             restrict: "A",
@@ -18,6 +20,57 @@
         function phiTooltipForLink(scope, element, attributes) {
 
             element.css("position", "absolute");
+
+            uniqueTooltipId++;
+            scope.uniqueId = uniqueTooltipId;
+
+            var targetElement = angular.element(document.getElementById(attributes.phiTooltipFor));
+            targetElement.data("phiTooltipId", scope.uniqueId);
+
+            if (attributes.phiTooltipAutoToggle != undefined) {
+                hide();
+                targetElement.bind('click', toggle);
+            }
+
+            function toggle() {
+                if (element.attr("phi-visible") == "true") {
+                    hide();
+                } else {
+                    show();
+                }
+            }
+
+            function show() {
+                element.attr("phi-visible", true);
+                reposition();
+
+                $timeout(function() {
+                    $document.bind('click', hide);
+                });
+            }
+
+            function hide() {
+                element.attr("phi-visible", false);
+                reposition();
+
+                $document.unbind('click', hide);
+            }
+
+
+            function documentClicked(e) {
+
+                $document.unbind('click', documentClicked);
+
+                // ignore clicks on the target element
+                var clickTargetId = angular.element(e.target).inheritedData("phiTooltipId");
+                if (clickTargetId == scope.uniqueId) {
+                    console.log("self click");
+                    return;
+                }
+
+                hide();
+            }
+
 
             attributes.$observe("phiTooltipFor", function() {
                 reposition();
@@ -31,21 +84,20 @@
                 reposition();
             });
 
-            attributes.$observe("phiVisible", function() {
+            attributes.$observe("phiVisible", function(value) {
                 reposition();
             });
 
 
+
             function reposition() {
 
-                var parentElement = angular.element(document.getElementById(attributes.phiTooltipFor));
-
-                if (!parentElement.length) {
+                if (!targetElement.length) {
                     return;
                 }
 
-                var parentCoordinates = phiCoordinates.getBounds(parentElement);
-                var localCoordinates  = phiCoordinates.getBounds(element);
+                var localCoordinates         = phiCoordinates.getBounds(element);
+                var targetElementCoordinates = phiCoordinates.getBounds(targetElement);
 
                 var coordinates = {
                     top:  0,
@@ -56,29 +108,29 @@
 
                 switch (alignment.vertical) {
                     case "top":
-                        coordinates.top += parentCoordinates.top;
+                        coordinates.top += targetElementCoordinates.top;
                     break;
 
                     case "center":
-                        coordinates.top += parentCoordinates.top + parentCoordinates.height/2;
+                        coordinates.top += targetElementCoordinates.top + targetElementCoordinates.height/2;
                     break;
 
                     case "bottom":
-                        coordinates.top += parentCoordinates.top + parentCoordinates.height;
+                        coordinates.top += targetElementCoordinates.top + targetElementCoordinates.height;
                     break;
                 }
 
                 switch (alignment.horizontal) {
                     case "left":
-                        coordinates.left += parentCoordinates.left;
+                        coordinates.left += targetElementCoordinates.left;
                     break;
 
                     case "center":
-                        coordinates.left += parentCoordinates.left + parentCoordinates.width/2;
+                        coordinates.left += targetElementCoordinates.left + targetElementCoordinates.width/2;
                     break;
 
                     case "right":
-                        coordinates.left += parentCoordinates.left + parentCoordinates.width;
+                        coordinates.left += targetElementCoordinates.left + targetElementCoordinates.width;
                     break;
                 }
 
@@ -115,9 +167,9 @@
                 };
 
                 if (attributes.phiTooltipMatch == "width") {
-                    elementCoordinates.minWidth = parentCoordinates.width+"px";
+                    elementCoordinates.minWidth = targetElementCoordinates.width+"px";
                 } else if (attributes.phiTooltipMatch == "height") {
-                    elementCoordinates.minHeight = parentCoordinates.height+"px";
+                    elementCoordinates.minHeight = targetElementCoordinates.height+"px";
                 }
 
                 element.css(elementCoordinates);

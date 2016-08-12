@@ -5129,39 +5129,6 @@ phi-state phi-state-contents > * {
         [phi-grid] > *:nth-child(2n+2) {
           margin-right: 0; } }
 
-[phi-if-screen] {
-  display: none; }
-
-@media (max-width: 600px) {
-  [phi-if-screen~=small] {
-    display: inline;
-    display: initial; } }
-
-@media (min-width: 600px) {
-  [phi-if-screen~=gt-small] {
-    display: inline;
-    display: initial; } }
-
-@media (min-width: 600px) and (max-width: 960px) {
-  [phi-if-screen~=medium] {
-    display: inline;
-    display: initial; } }
-
-@media (min-width: 960px) {
-  [phi-if-screen~=gt-medium] {
-    display: inline;
-    display: initial; } }
-
-@media (min-width: 960px) and (max-width: 1200px) {
-  [phi-if-screen~=large] {
-    display: inline;
-    display: initial; } }
-
-@media (min-width: 1200px) {
-  [phi-if-screen~=gt-large] {
-    display: inline;
-    display: initial; } }
-
 [phi-icon=fa-glass]:before {
   font-family: FontAwesome;
   content: "";
@@ -12542,6 +12509,39 @@ phi-state phi-state-contents > * {
   font-style: normal;
   margin-left: 0.5em; }
 
+[phi-if-screen] {
+  display: none; }
+
+@media (max-width: 600px) {
+  [phi-if-screen~=small] {
+    display: inline;
+    display: initial; } }
+
+@media (min-width: 600px) {
+  [phi-if-screen~=gt-small] {
+    display: inline;
+    display: initial; } }
+
+@media (min-width: 600px) and (max-width: 960px) {
+  [phi-if-screen~=medium] {
+    display: inline;
+    display: initial; } }
+
+@media (min-width: 960px) {
+  [phi-if-screen~=gt-medium] {
+    display: inline;
+    display: initial; } }
+
+@media (min-width: 960px) and (max-width: 1200px) {
+  [phi-if-screen~=large] {
+    display: inline;
+    display: initial; } }
+
+@media (min-width: 1200px) {
+  [phi-if-screen~=gt-large] {
+    display: inline;
+    display: initial; } }
+
 [phi-inline] {
   display: inline-block; }
 
@@ -14320,14 +14320,14 @@ phi-content {
   display: block;
   height: 100%; }
 
+phi-cover {
+  display: block;
+  background-size: cover; }
+
 phi-event-editor {
   display: block; }
   phi-event-editor .date-options > div {
     margin-right: 2em; }
-
-phi-cover {
-  display: block;
-  background-size: cover; }
 
 phi-event-repeat .week ul,
 phi-event-repeat .month ul {
@@ -14938,6 +14938,10 @@ phi-toolbar {
   100% {
     transform: rotateZ(359deg); } }
 
+[phi-texture="paper"] {
+  border-radius: 3px;
+  background: #fff; }
+
 [phi-texture="emboss"] {
   border: 1px solid #dcdcdc;
   border-radius: 3px;
@@ -14958,10 +14962,6 @@ phi-toolbar {
 
 .phi-texture-emboss-highlighted, button[phi-texture="emboss"]:hover, button[phi-texture="emboss"]:focus {
   border: 1px solid #bbb; }
-
-[phi-texture="paper"] {
-  border-radius: 3px;
-  background: #fff; }
 
 [phi-texture="xray"] {
   border-radius: 3px;
@@ -15209,29 +15209,6 @@ phi-api-resource-files ul {
     height: 3px;
     margin-top: 2px; }
 
-.phi-gallery-thumbnails {
-  list-style: none;
-  margin: 0;
-  padding: 0; }
-  .phi-gallery-thumbnails > li {
-    display: inline-block;
-    width: 140px;
-    height: 105px;
-    line-height: 105px;
-    margin: 4px;
-    overflow: hidden;
-    cursor: pointer;
-    transform-origin: center;
-    transition: all 0.3s;
-    text-align: center; }
-    .phi-gallery-thumbnails > li > img {
-      height: 100%;
-      vertical-align: middle; }
-    .phi-gallery-thumbnails > li > p {
-      display: none; }
-    .phi-gallery-thumbnails > li:hover {
-      transform: scale(1.03); }
-
 .phi-form-editor {
   margin-bottom: 32px; }
   .phi-form-editor > .description {
@@ -15293,6 +15270,29 @@ phi-api-resource-files ul {
       padding: 16px;
       text-align: center;
       text-transform: uppercase; }
+
+.phi-gallery-thumbnails {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  .phi-gallery-thumbnails > li {
+    display: inline-block;
+    width: 140px;
+    height: 105px;
+    line-height: 105px;
+    margin: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transform-origin: center;
+    transition: all 0.3s;
+    text-align: center; }
+    .phi-gallery-thumbnails > li > img {
+      height: 100%;
+      vertical-align: middle; }
+    .phi-gallery-thumbnails > li > p {
+      display: none; }
+    .phi-gallery-thumbnails > li:hover {
+      transform: scale(1.03); }
 
 phi-object[type=post-block-html] > div {
   word-break: break-all; }

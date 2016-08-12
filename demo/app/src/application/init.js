@@ -30,6 +30,16 @@
         $rootScope.phiApp = phiApp;
         $rootScope.phiApi = phiApi;
 
+
+        $rootScope.$on("phiAppLogin", function() {
+            $state.go("user.dashboard");
+        });
+
+        $rootScope.$on("phiAppLogout", function() {
+            $state.go("home");
+        });
+
+
         /* Determine state transition direction */
         $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
             $rootScope.stateChangeDirection = 'right';

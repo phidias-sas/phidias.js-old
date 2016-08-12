@@ -3,22 +3,23 @@
         <a ng-if="$state.current.name != 'home'" href class="back" phi-icon-left="fa-arrow-left" onclick="history.go(-1)"></a>
 
         <div class="authentication">
+
+            <div ng-if="!phiApp.isAuthenticated">
+                <a href ng-click="phiApp.showLogin()">Ingresar</a>
+            </div>
+
             <div id="main-user" ng-if="phiApp.isAuthenticated">
-
-                <h1 ng-bind="phiApp.user.firstName + ' ' + phiApp.user.lastName" ng-click="userTooltipIsVisible = !userTooltipIsVisible"></h1>
-
-                <div phi-tooltip-for="main-user" phi-visible="{{userTooltipIsVisible}}" phi-visible-animation="slide-bottom">
+                <h1 ng-bind="phiApp.user.firstName + ' ' + phiApp.user.lastName" id="user-menu-handle"></h1>
+                <div phi-tooltip-for="user-menu-handle" phi-tooltip-auto-toggle phi-visible-animation="slide-bottom">
                     <phi-menu phi-texture="paper">
                         <phi-menu-item phi-icon-left="fa-home" ui-sref="user.dashboard">Mi perfil</phi-menu-item>
                         <phi-menu-item phi-icon-left="fa-times" ng-click="phiApp.logout()">Salir</phi-menu-item>
                     </phi-menu>
                 </div>
+            </div>
 
-            </div>
-            <div ng-if="!phiApp.isAuthenticated">
-                <a href ng-click="phiApp.showLogin()">Ingresar</a>
-            </div>
         </div>
+
     </div>
 </phi-app-bar>
 
