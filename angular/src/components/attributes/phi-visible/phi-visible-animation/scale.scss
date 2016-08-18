@@ -1,15 +1,15 @@
+/* The height to auto transition is done in JS (see scale.js) */
 [phi-visible-animation="scale"] {
 
 	overflow: hidden;
-    // transition: height $phi-visible-transition-duration;
 
 	&[phi-visible="false"] {
-		opacity: 0.6;
+		opacity: 0.2;
 		height: 0;
 	}
 
 	&[phi-visible="true"] {
 		opacity: 1;
-		height: 50px;
+		height: auto;
 	}
 }

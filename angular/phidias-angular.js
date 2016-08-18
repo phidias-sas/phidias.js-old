@@ -850,32 +850,6 @@ angular.module("phidias-angular").directive('ngThumb', ['$window', function($win
     };
 
 }]);
-(function() {
-    'use strict';
-
-    angular.module("phidias-angular")
-        .directive('phiAvatar', phiAvatar);
-
-
-    function phiAvatar() {
-
-        return {
-            restrict: 'E',
-            template:
-
-                '<div>' +
-                    '<img ng-src="{{src}}" />' +
-                '</div>',
-
-            scope: {
-                src: "@"
-            }
-
-        };
-
-    };
-
-})();
 /*
 
 someObject = {
@@ -1039,6 +1013,52 @@ someObject = {
     };
 
 })();
+(function() {
+    'use strict';
+
+    angular.module("phidias-angular")
+        .directive('phiAvatar', phiAvatar);
+
+
+    function phiAvatar() {
+
+        return {
+            restrict: 'E',
+            template:
+
+                '<div>' +
+                    '<img ng-src="{{src}}" />' +
+                '</div>',
+
+            scope: {
+                src: "@"
+            }
+
+        };
+
+    };
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
+        .directive("phiButton", phiButtonDirective);
+
+
+    function phiButtonDirective() {
+
+        return {
+            restrict:   "E",
+            transclude: true,
+            template:   "<button phi-button ng-transclude></button>",
+            replace:    true
+        }
+
+    }
+
+})();
 /**
  * Proof of concept: Port an angular-material element
  */
@@ -1162,26 +1182,6 @@ function MdCheckboxDirective(inputDirective) {
 }
 
 })();
-(function() {
-    'use strict';
-
-    angular
-        .module("phidias-angular")
-        .directive("phiButton", phiButtonDirective);
-
-
-    function phiButtonDirective() {
-
-        return {
-            restrict:   "E",
-            transclude: true,
-            template:   "<button phi-button ng-transclude></button>",
-            replace:    true
-        }
-
-    }
-
-})();
 /*
 phi-cover is esentially a shorthand way of creating a <div> with a background-image css property
 
@@ -1283,62 +1283,6 @@ will produce
 
         vm.sanitize();
     }
-
-})();
-(function() {
-    'use strict';
-
-    angular.module("phidias-angular")
-        .directive("phiGallery", phiGallery);
-
-    function phiGallery() {
-
-        return {
-            restrict: 'E',
-
-            scope: {
-                control: "="
-            },
-
-            controller:       phiGalleryController,
-            controllerAs:     "gallery",
-            bindToController: true,
-
-            transclude: true,
-            replace: true,
-            template: '<div phi-modal class="phi-gallery-modal" phi-visible="{{gallery.isVisible}}" ng-click="gallery.isVisible = false">' +
-
-                          '<div class="phi-gallery-modal-navigation">' +
-                                '<a class="previous"' +
-                                   'ng-class="{disabled: !gallery.control.hasPrevious()}"' +
-                                   'ng-click="gallery.control.previous(); $event.stopPropagation();">' +
-                                   'anterior' +
-                                '</a>' +
-
-                                '<span>{{gallery.control.activeIndex+1}} de {{gallery.control.length}}</span>' +
-
-                                '<a class="next"' +
-                                   'ng-class="{disabled: !gallery.control.hasNext()}"' +
-                                   'ng-click="gallery.control.next(); $event.stopPropagation();">' +
-                                   'siguiente' +
-                                '</a>' +
-                          '</div>' +
-
-                          '<div class="phi-gallery-modal-contents" phi-switch="gallery.control" ng-transclude on-change="gallery.isVisible = true"></div>' +
-
-                      '</div>'            
-
-        };
-
-    };
-
-
-    phiGalleryController.$inject = ["$scope"];
-    function phiGalleryController($scope) {
-        var gallery        = this;
-        gallery.isVisible  = false;
-        gallery.control    = gallery.control ? gallery.control : {};
-    };
 
 })();
 (function() {
@@ -1472,6 +1416,62 @@ will produce
 
 
     }
+
+})();
+(function() {
+    'use strict';
+
+    angular.module("phidias-angular")
+        .directive("phiGallery", phiGallery);
+
+    function phiGallery() {
+
+        return {
+            restrict: 'E',
+
+            scope: {
+                control: "="
+            },
+
+            controller:       phiGalleryController,
+            controllerAs:     "gallery",
+            bindToController: true,
+
+            transclude: true,
+            replace: true,
+            template: '<div phi-modal class="phi-gallery-modal" phi-visible="{{gallery.isVisible}}" ng-click="gallery.isVisible = false">' +
+
+                          '<div class="phi-gallery-modal-navigation">' +
+                                '<a class="previous"' +
+                                   'ng-class="{disabled: !gallery.control.hasPrevious()}"' +
+                                   'ng-click="gallery.control.previous(); $event.stopPropagation();">' +
+                                   'anterior' +
+                                '</a>' +
+
+                                '<span>{{gallery.control.activeIndex+1}} de {{gallery.control.length}}</span>' +
+
+                                '<a class="next"' +
+                                   'ng-class="{disabled: !gallery.control.hasNext()}"' +
+                                   'ng-click="gallery.control.next(); $event.stopPropagation();">' +
+                                   'siguiente' +
+                                '</a>' +
+                          '</div>' +
+
+                          '<div class="phi-gallery-modal-contents" phi-switch="gallery.control" ng-transclude on-change="gallery.isVisible = true"></div>' +
+
+                      '</div>'            
+
+        };
+
+    };
+
+
+    phiGalleryController.$inject = ["$scope"];
+    function phiGalleryController($scope) {
+        var gallery        = this;
+        gallery.isVisible  = false;
+        gallery.control    = gallery.control ? gallery.control : {};
+    };
 
 })();
 /*
@@ -2924,8 +2924,8 @@ phiStorage.local.clear(); // clears all
         .directive("phiVisibleAnimation", phiVisibleAnimation);
 
 
-    phiVisibleAnimation.$inject = ["phiCoordinates", "$timeout"];
-    function phiVisibleAnimation(phiCoordinates, $timeout) {
+    phiVisibleAnimation.$inject = ["phiCoordinates"];
+    function phiVisibleAnimation(phiCoordinates) {
 
         return {
             restrict: "A",
@@ -2939,18 +2939,36 @@ phiStorage.local.clear(); // clears all
                 return;
             }
 
+            var el = element[0];
+
             attributes.$observe("phiVisible", function(newValue) {
 
                 if (newValue == 'true') {
-                    element.css('height', 'auto');
-                    var bounds = element[0].getBoundingClientRect();
-                    element.css('height', 0);
-                    $timeout(function() {
-                        element.css('height', bounds.height + 'px');
-                    }, 0);
+
+                    // Measure the final height 
+                    el.style.height = 'auto';
+                    var endheight = getComputedStyle(el).height;                    
+
+                    // reset
+                    el.style.height = 0;
+                    el.offsetHeight; // force repaint
+
+                    // transition to final height:
+                    el.style.height = endheight;
+
+                    // set height to auto after transition
+                    el.addEventListener('transitionend', function transitionEnd(event) {
+                        if (event.propertyName == 'height') {
+                            el.removeEventListener('transitionend', transitionEnd, false);
+                            el.style.height = 'auto';
+                        }
+                    }, false);
+
 
                 } else {
-                    element.css('height', 0);
+                    el.style.height = getComputedStyle(el).height;  //set height to a numeric value (because if height is "auto" it will not transition)
+                    el.offsetHeight; // force repaint
+                    el.style.height = '0';
                 }
 
             });
@@ -3418,6 +3436,54 @@ post = {
 
     angular
         .module("phidias-angular")
+        .directive("phiApiResourceFiles", phiApiResourceFiles);
+
+    function phiApiResourceFiles() {
+
+        return {
+
+            restrict: "E",
+            scope: {
+                src: "@"
+            },
+            controller:       phiApiResourceFilesController,
+            controllerAs:     "vm",
+            bindToController: true,
+
+            template:   '<ul>' +
+                            '<li ng-repeat="item in vm.files" class="phi-api-resource-files-file" ng-class="{selected: selected.url == item.url}" ng-click="select(item)">' +
+                                '<a class="thumbnail" target="_blank" href="{{item.url}}">' +
+                                    '<img ng-if="!!item.thumbnail" ng-src="{{item.thumbnail}}" />' +
+                                '</a>' +
+                                '<a class="details" target="_blank" href="{{item.url}}">' +
+                                    '<h3 ng-bind="item.title"></h3>' +
+                                    '<p>{{item.size|bytes}} - {{item.name}}</p>' +
+                                '</a>' +
+                            '</li>' +
+                        '</ul>'
+        };
+
+    }
+
+    phiApiResourceFilesController.$inject = ["phiApi"];
+    function phiApiResourceFilesController(phiApi) {
+
+        var vm   = this;
+        vm.files = [];
+
+        phiApi.get(vm.src)
+            .then(function(response) {
+                vm.files = response.data;
+            });
+
+    }
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
         .factory("phiBlockFiles", phiBlockFiles);
 
     phiBlockFiles.$inject = ["phiApi"];
@@ -3491,45 +3557,95 @@ post = {
 
     angular
         .module("phidias-angular")
-        .directive("phiApiResourceFiles", phiApiResourceFiles);
+        .factory("phiBlockGallery", phiBlockGallery);
 
-    function phiApiResourceFiles() {
+    phiBlockGallery.$inject = ["phiApi"];
+    function phiBlockGallery(phiApi) {
 
-        return {
+        return function(phiBlock) {
 
-            restrict: "E",
-            scope: {
-                src: "@"
-            },
-            controller:       phiApiResourceFilesController,
-            controllerAs:     "vm",
-            bindToController: true,
+            return {
 
-            template:   '<ul>' +
-                            '<li ng-repeat="item in vm.files" class="phi-api-resource-files-file" ng-class="{selected: selected.url == item.url}" ng-click="select(item)">' +
-                                '<a class="thumbnail" target="_blank" href="{{item.url}}">' +
-                                    '<img ng-if="!!item.thumbnail" ng-src="{{item.thumbnail}}" />' +
-                                '</a>' +
-                                '<a class="details" target="_blank" href="{{item.url}}">' +
-                                    '<h3 ng-bind="item.title"></h3>' +
-                                    '<p>{{item.size|bytes}} - {{item.name}}</p>' +
-                                '</a>' +
-                            '</li>' +
-                        '</ul>'
-        };
+                initialize: initialize,
 
-    }
+                states: {
 
-    phiApiResourceFilesController.$inject = ["phiApi"];
-    function phiApiResourceFilesController(phiApi) {
+                    default: {
+                        controller: defaultController,
+                        controllerAs: "vm",
+                        template:   '<div>' + 
+                                        '<ul class="phi-gallery-thumbnails">' + 
+                                            '<li ng-repeat="image in vm.images" ng-click="vm.control.select($index)"><img ng-src="{{image.thumbnail}}" alt="{{image.name}}" /></li>' + 
+                                        '</ul>' + 
+                                        '<phi-gallery control="vm.control">' + 
+                                            '<div ng-repeat="image in vm.images">' + 
+                                                '<img ng-src="{{image.url}}" alt="{{image.name}}" />' + 
+                                            '</div>' + 
+                                        '</phi-gallery>' + 
+                                    '</div>'
+                    },
 
-        var vm   = this;
-        vm.files = [];
+                    editor: {
+                        controller:   editorController,
+                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
+                    },
 
-        phiApi.get(vm.src)
-            .then(function(response) {
-                vm.files = response.data;
-            });
+                    delete: {
+                        template:   '<form>' + 
+                                        '<h1>Eliminar esta galería ?</h1>' +
+                                        '<footer>' + 
+                                            '<phi-button ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
+                                            '<phi-button ng-click="phiBlock.go(\'default\')" class="cancel">cancelar</phi-button>' + 
+                                        '</footer>' + 
+                                    '</form>',
+                    }
+
+                }
+
+            };
+
+            //////////////////////
+
+            function initialize() {
+
+                if (phiBlock.ngModel.url) {
+                    phiBlock.go("default");
+                    return;
+                }
+
+                phiBlock.go("editor");
+
+            }
+
+
+            function defaultController() {
+
+                var vm     = this;
+                vm.images  = [];
+                vm.control = {};
+
+                phiApi.get(phiBlock.ngModel.url + '/files')
+                    .then(function(response) {
+                        vm.images = response.data;
+                    });
+
+            }
+
+
+            function editorController() {
+
+                if ( !phiBlock.ngModel.url ) {
+                    //make one up I guess!
+                    var random = Math.floor((Math.random() * 10000) + 1);
+
+                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
+                    phiBlock.change();
+                }
+
+            }
+
+        }
+
 
     }
 
@@ -3814,104 +3930,6 @@ post = {
             };
 
         };
-
-
-    }
-
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module("phidias-angular")
-        .factory("phiBlockGallery", phiBlockGallery);
-
-    phiBlockGallery.$inject = ["phiApi"];
-    function phiBlockGallery(phiApi) {
-
-        return function(phiBlock) {
-
-            return {
-
-                initialize: initialize,
-
-                states: {
-
-                    default: {
-                        controller: defaultController,
-                        controllerAs: "vm",
-                        template:   '<div>' + 
-                                        '<ul class="phi-gallery-thumbnails">' + 
-                                            '<li ng-repeat="image in vm.images" ng-click="vm.control.select($index)"><img ng-src="{{image.thumbnail}}" alt="{{image.name}}" /></li>' + 
-                                        '</ul>' + 
-                                        '<phi-gallery control="vm.control">' + 
-                                            '<div ng-repeat="image in vm.images">' + 
-                                                '<img ng-src="{{image.url}}" alt="{{image.name}}" />' + 
-                                            '</div>' + 
-                                        '</phi-gallery>' + 
-                                    '</div>'
-                    },
-
-                    editor: {
-                        controller:   editorController,
-                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
-                    },
-
-                    delete: {
-                        template:   '<form>' + 
-                                        '<h1>Eliminar esta galería ?</h1>' +
-                                        '<footer>' + 
-                                            '<phi-button ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
-                                            '<phi-button ng-click="phiBlock.go(\'default\')" class="cancel">cancelar</phi-button>' + 
-                                        '</footer>' + 
-                                    '</form>',
-                    }
-
-                }
-
-            };
-
-            //////////////////////
-
-            function initialize() {
-
-                if (phiBlock.ngModel.url) {
-                    phiBlock.go("default");
-                    return;
-                }
-
-                phiBlock.go("editor");
-
-            }
-
-
-            function defaultController() {
-
-                var vm     = this;
-                vm.images  = [];
-                vm.control = {};
-
-                phiApi.get(phiBlock.ngModel.url + '/files')
-                    .then(function(response) {
-                        vm.images = response.data;
-                    });
-
-            }
-
-
-            function editorController() {
-
-                if ( !phiBlock.ngModel.url ) {
-                    //make one up I guess!
-                    var random = Math.floor((Math.random() * 10000) + 1);
-
-                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
-                    phiBlock.change();
-                }
-
-            }
-
-        }
 
 
     }
