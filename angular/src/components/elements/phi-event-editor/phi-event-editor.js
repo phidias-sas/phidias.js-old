@@ -14,7 +14,7 @@
             controller:       phiEventEditorController,
             controllerAs:     "vm",
             bindToController: true,
-            templateUrl:      '/components/elements/event/editor.html'
+            templateUrl:      '/components/elements/phi-event-editor/phi-event-editor.html'
         };
     }
 

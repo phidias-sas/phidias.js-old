@@ -9152,21 +9152,6 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
 [phi-z="5"] {
   box-shadow: 0 19px 36px 0 #8a8a8a; }
 
-.phi-drawer > button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  color: #333;
-  border: 0;
-  cursor: pointer;
-  padding: 16px 20px;
-  text-transform: uppercase; }
-
-.phi-drawer > button:hover,
-.phi-drawer > button.cancel {
-  background: #f6f6f6; }
-
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/fonts/glyphicons-halflings-regular.eot");
@@ -14210,11 +14195,26 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
     .bootstrap .hidden-print {
       display: none !important; } }
 
-.phi-padded, phi-card phi-card-contents {
-  padding: 12px 20px; }
+.phi-drawer > button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: #333;
+  border: 0;
+  cursor: pointer;
+  padding: 16px 20px;
+  text-transform: uppercase; }
+
+.phi-drawer > button:hover,
+.phi-drawer > button.cancel {
+  background: #f6f6f6; }
 
 .phi-rounded, phi-card {
   border-radius: 3px; }
+
+.phi-padded, phi-card phi-card-contents {
+  padding: 12px 20px; }
 
 phi-avatar {
   display: inline-block;
@@ -14324,11 +14324,6 @@ phi-cover {
   display: block;
   background-size: cover; }
 
-phi-event-editor {
-  display: block; }
-  phi-event-editor .date-options > div {
-    margin-right: 2em; }
-
 phi-event-repeat .week ul,
 phi-event-repeat .month ul {
   display: inline-block;
@@ -14346,6 +14341,11 @@ phi-event-repeat div > label {
 
 phi-event-repeat .summary {
   margin: 16px 0; }
+
+phi-event-editor {
+  display: block; }
+  phi-event-editor .date-options > div {
+    margin-right: 2em; }
 
 phi-gallery {
   display: block; }

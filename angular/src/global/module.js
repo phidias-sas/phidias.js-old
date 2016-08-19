@@ -5,6 +5,7 @@
             "ngAria", 
             "ngSanitize",
             "angular-sortable-view",
-            "textAngular"
+            "textAngular",
+            "mgcrea.ngStrap"
         ]);
 })();

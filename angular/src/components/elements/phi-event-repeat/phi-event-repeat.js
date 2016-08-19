@@ -14,7 +14,7 @@
             controller:       phiEventRepeatController,
             controllerAs:     "vm",
             bindToController: true,
-            templateUrl:      '/components/elements/event/repeat.html'
+            templateUrl:      '/components/elements/phi-event-repeat/phi-event-repeat.html'
         };
     }
 
