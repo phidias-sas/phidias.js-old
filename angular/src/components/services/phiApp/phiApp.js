@@ -109,15 +109,22 @@ phiApp.broadcast('notification', {
 
             }
 
-            function loadCode(code) {
+            function loadCode(code, rackUrl, useHttps) {
 
-                return $http.get("http://phi.io/code/"+code)
+                if (rackUrl == undefined) {
+                    rackUrl = "http://phidias.io/";
+                }
+
+                if (useHttps == undefined) {
+                    useHttps = true;
+                }
+
+                return $http.get(rackUrl + "/code/" + code)
                     .then(function(response) {
                         load({
                             title:    response.data.title,
-                            //endpoint: "https://"+response.data.url,
-                            endpoint: "http://"+response.data.url,
-                            logo:     response.data.logo
+                            logo:     response.data.logo,
+                            endpoint: (useHttps ? "https://" : "http://") + response.data.url
                         });
                     });
 
