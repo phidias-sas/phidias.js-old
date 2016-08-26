@@ -14,20 +14,6 @@ phi-state phi-state-contents > * {
     max-width: 100%;
     max-width: calc(100% - 16px); } }
 
-[phi-color-tint] {
-  position: relative; }
-  [phi-color-tint] > * {
-    position: relative; }
-
-.phi-color-tint {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  max-width: none;
-  opacity: 0.5; }
-
 [phi-grid] {
   box-sizing: border-box;
   display: -webkit-box;
@@ -64,6 +50,20 @@ phi-state phi-state-contents > * {
           margin-right: 4px; }
         [phi-grid] > *:nth-child(2n+2) {
           margin-right: 0; } }
+
+[phi-color-tint] {
+  position: relative; }
+  [phi-color-tint] > * {
+    position: relative; }
+
+.phi-color-tint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: none;
+  opacity: 0.5; }
 
 [phi-icon=fa-glass]:before {
   font-family: FontAwesome;
@@ -7478,6 +7478,9 @@ phi-state phi-state-contents > * {
     display: inline;
     display: initial; } }
 
+[phi-inline] {
+  display: inline-block; }
+
 /**
 
 Based on: https://github.com/angular/material/blob/master/src/core/style/layout.scss
@@ -9101,9 +9104,6 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
   [phi-layout="column"] > [phi-flex-for-gt-large="67"] {
     flex: 0 0 66.66%;
     max-height: 66.66%; } }
-
-[phi-inline] {
-  display: inline-block; }
 
 [phi-modal] {
   position: fixed;
@@ -14210,11 +14210,11 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
 .phi-drawer > button.cancel {
   background: #f6f6f6; }
 
-.phi-rounded, phi-card {
-  border-radius: 3px; }
-
 .phi-padded, phi-card phi-card-contents {
   padding: 12px 20px; }
+
+.phi-rounded, phi-card {
+  border-radius: 3px; }
 
 phi-avatar {
   display: inline-block;
@@ -14294,6 +14294,7 @@ phi-checkbox {
   phi-checkbox.phi-checked .phi-checkbox-box {
     border: 2px solid transparent;
     text-align: center;
+    background-color: #01579b;
     /* The checkbox tick */ }
     phi-checkbox.phi-checked .phi-checkbox-box:after {
       content: ' ';
@@ -14324,6 +14325,11 @@ phi-cover {
   display: block;
   background-size: cover; }
 
+phi-event-editor {
+  display: block; }
+  phi-event-editor .date-options > div {
+    margin-right: 2em; }
+
 phi-event-repeat .week ul,
 phi-event-repeat .month ul {
   display: inline-block;
@@ -14341,11 +14347,6 @@ phi-event-repeat div > label {
 
 phi-event-repeat .summary {
   margin: 16px 0; }
-
-phi-event-editor {
-  display: block; }
-  phi-event-editor .date-options > div {
-    margin-right: 2em; }
 
 phi-gallery {
   display: block; }
@@ -14503,21 +14504,27 @@ phi-list-item {
   display: block;
   position: relative;
   padding: 16px;
+  padding-left: 64px;
   min-height: 48px;
   cursor: pointer;
   font-size: 16px;
   white-space: nowrap;
   font-weight: 400; }
-  phi-list-item[phi-icon-left] {
-    padding-left: 64px; }
-    phi-list-item[phi-icon-left]:before {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: 18px 22px 14px;
-      margin: 0 !important;
-      font-size: 18px; }
+  phi-list-item > * {
+    display: inline-block;
+    vertical-align: middle; }
+  phi-list-item:before,
+  phi-list-item > img {
+    display: block;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin: 0 !important;
+    font-size: 18px;
+    text-align: center; }
 
 /**
 Elements resulting HTML:
@@ -14568,34 +14575,148 @@ phi-submenu {
   phi-submenu[expanded] > .phi-submenu-contents {
     max-height: 777px; }
 
+phi-notification-settings {
+  display: block; }
+  phi-notification-settings > button {
+    display: block;
+    margin-top: 24px; }
+
+phi-setting {
+  display: block;
+  /* Setting states */
+  /* Specific transports */ }
+  phi-setting phi-setting-header {
+    cursor: pointer;
+    display: block;
+    position: relative;
+    outline: none; }
+    phi-setting phi-setting-header:hover {
+      background-color: rgba(0, 0, 0, 0.04); }
+    phi-setting.open > phi-setting-header {
+      background-color: rgba(0, 0, 0, 0.04); }
+    phi-setting phi-setting-header phi-setting-icon {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 72px;
+      padding: 16px;
+      box-sizing: border-box;
+      height: 100%;
+      text-align: center; }
+      phi-setting phi-setting-header phi-setting-icon:before {
+        font-family: FontAwesome;
+        content: "";
+        cursor: inherit;
+        font-style: normal;
+        font-size: 22px;
+        color: #666; }
+      phi-setting phi-setting-header phi-setting-icon > *, phi-setting phi-setting-header phi-setting-icon:before {
+        display: block;
+        text-align: center;
+        max-width: 22px; }
+    phi-setting phi-setting-header phi-setting-contents {
+      display: block;
+      outline: none;
+      padding: 16px;
+      padding-left: 0;
+      margin-left: 72px; }
+      phi-setting phi-setting-header phi-setting-contents phi-setting-title {
+        display: block;
+        margin: 0;
+        font-size: 1.5em;
+        font-weight: normal;
+        max-width: 100%;
+        word-break: break-word; }
+      phi-setting phi-setting-header phi-setting-contents phi-setting-notice {
+        display: block;
+        color: #444; }
+  phi-setting phi-setting-body {
+    display: block;
+    padding: 16px 0;
+    margin-left: 72px; }
+    phi-setting phi-setting-body > phi-checkbox {
+      display: block;
+      margin: 0 0 24px 0; }
+    phi-setting phi-setting-body phi-setting-schedule {
+      display: block; }
+      phi-setting phi-setting-body phi-setting-schedule phi-checkbox {
+        display: block;
+        margin-bottom: 12px; }
+  phi-setting.open > phi-setting-body {
+    display: block; }
+  phi-setting.closed > phi-setting-body {
+    display: none; }
+  phi-setting.disabled > phi-setting-body > phi-setting-schedule,
+  phi-setting.disabled > phi-setting-body > phi-drawer {
+    opacity: 0.5; }
+  phi-setting.setting-transport > phi-setting-header > phi-setting-contents > phi-setting-title {
+    text-transform: uppercase; }
+  phi-setting.transport-email phi-setting-icon:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+  phi-setting.transport-mobile phi-setting-icon:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+
+phi-drawer {
+  display: block;
+  margin: 12px 0; }
+  phi-drawer-title {
+    display: block;
+    padding: 8px;
+    cursor: pointer; }
+    phi-drawer-title:before {
+      display: inline-block;
+      margin-right: 1em; }
+  phi-drawer-body {
+    display: block; }
+  phi-drawer.open > phi-drawer-title:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+  phi-drawer.open > phi-drawer-body {
+    display: block; }
+  phi-drawer.closed > phi-drawer-title:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+  phi-drawer.closed > phi-drawer-body {
+    display: none; }
+
 phi-post {
   display: block; }
 
 phi-post-header {
   display: block;
-  position: relative; }
+  position: relative;
+  padding: 12px 12px 6px 70px;
+  min-height: 74px; }
   phi-post-header phi-post-icon {
-    padding: 16px;
+    padding: 12px;
     position: absolute;
     top: 0;
     left: 0; }
-    phi-post-header phi-post-icon iron-image {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%; }
   phi-post-header phi-post-preview {
     display: block; }
 
 phi-post-body {
-  display: block; }
+  display: block;
+  padding: 12px; }
 
 phi-post-author {
-  display: inline-block;
+  display: block;
   color: #222;
   font-weight: normal; }
 
 phi-post-date {
-  display: inline-block;
+  display: block;
   color: #777;
   font-size: 0.8em; }
 
@@ -14612,6 +14733,41 @@ phi-post-blocks {
   phi-post-blocks > * {
     display: block;
     margin-bottom: 1em; }
+
+phi-post-editor {
+  display: block; }
+  phi-post-editor .phi-post-editor-block {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding: 4px; }
+    phi-post-editor .phi-post-editor-block-toolbar {
+      position: relative;
+      height: 42px;
+      border-radius: 4px;
+      background-color: rgba(0, 0, 0, 0.065);
+      cursor: move; }
+      phi-post-editor .phi-post-editor-block-toolbar-menu {
+        position: absolute;
+        top: 0;
+        right: 0; }
+        phi-post-editor .phi-post-editor-block-toolbar-menu button {
+          background: transparent;
+          border: 0;
+          padding: 6px 22px;
+          height: 42px; }
+  phi-post-editor iron-collapse {
+    transition-duration: 190ms; }
+  phi-post-editor paper-card {
+    display: block !important; }
+
+/* !!! Editor Hacks */
+/* "Disable" form block submit's button when inside an editor */
+phi-post-editor phi-object[type="post-block-form"] footer > button {
+  cursor: default;
+  pointer-events: none;
+  color: #c0c0c0;
+  background-color: #ffffff; }
 
 phi-select {
   position: relative;
@@ -14819,6 +14975,9 @@ phi-thread-header {
       display: block !important;
       margin: auto;
       margin-top: 6px; }
+    phi-thread-header phi-thread-icon img {
+      width: 24px;
+      height: 24px; }
   phi-thread-header phi-thread-preview {
     outline: none;
     display: block;
@@ -15024,132 +15183,6 @@ phi-toolbar {
 
 phi-menu[phi-texture=xray] a:hover {
   background: rgba(255, 255, 255, 0.3); }
-
-phi-notification-settings {
-  display: block; }
-  phi-notification-settings > button {
-    display: block;
-    margin-top: 24px; }
-
-phi-setting {
-  display: block;
-  /* Setting states */
-  /* Specific transports */ }
-  phi-setting phi-setting-header {
-    cursor: pointer;
-    display: block;
-    position: relative;
-    outline: none; }
-    phi-setting phi-setting-header:hover {
-      background-color: rgba(0, 0, 0, 0.04); }
-    phi-setting.open > phi-setting-header {
-      background-color: rgba(0, 0, 0, 0.04); }
-    phi-setting phi-setting-header phi-setting-icon {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 72px;
-      padding: 16px;
-      box-sizing: border-box;
-      height: 100%;
-      text-align: center; }
-      phi-setting phi-setting-header phi-setting-icon:before {
-        font-size: 22px;
-        color: #ccc; }
-      phi-setting phi-setting-header phi-setting-icon > *, phi-setting phi-setting-header phi-setting-icon:before {
-        display: block;
-        text-align: center;
-        max-width: 22px; }
-    phi-setting phi-setting-header phi-setting-contents {
-      display: block;
-      outline: none;
-      padding: 16px;
-      padding-left: 0;
-      margin-left: 72px; }
-      phi-setting phi-setting-header phi-setting-contents phi-setting-title {
-        display: block;
-        margin: 0;
-        font-size: 1.5em;
-        font-weight: normal;
-        max-width: 100%;
-        word-break: break-word; }
-      phi-setting phi-setting-header phi-setting-contents phi-setting-notice {
-        display: block;
-        color: #444; }
-  phi-setting phi-setting-body {
-    display: block;
-    padding: 16px 0;
-    margin-left: 72px; }
-    phi-setting phi-setting-body > phi-checkbox {
-      display: block;
-      margin: 0 0 24px 0; }
-    phi-setting phi-setting-body phi-setting-schedule {
-      display: block; }
-      phi-setting phi-setting-body phi-setting-schedule phi-checkbox {
-        display: block;
-        margin-bottom: 12px; }
-  phi-setting.open > phi-setting-body {
-    display: block; }
-  phi-setting.closed > phi-setting-body {
-    display: none; }
-  phi-setting.disabled > phi-setting-body > phi-setting-schedule,
-  phi-setting.disabled > phi-setting-body > phi-drawer {
-    opacity: 0.5; }
-  phi-setting.setting-transport > phi-setting-header > phi-setting-contents > phi-setting-title {
-    text-transform: uppercase; }
-
-phi-drawer {
-  display: block;
-  margin: 12px 0; }
-  phi-drawer-title {
-    display: block;
-    padding: 8px;
-    cursor: pointer; }
-    phi-drawer-title:before {
-      display: inline-block;
-      margin-right: 1em; }
-  phi-drawer-body {
-    display: block; }
-  phi-drawer.open > phi-drawer-body {
-    display: block; }
-  phi-drawer.closed > phi-drawer-body {
-    display: none; }
-
-phi-post-editor {
-  display: block; }
-  phi-post-editor .phi-post-editor-block {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 12px;
-    padding: 4px; }
-    phi-post-editor .phi-post-editor-block-toolbar {
-      position: relative;
-      height: 42px;
-      border-radius: 4px;
-      background-color: rgba(0, 0, 0, 0.065);
-      cursor: move; }
-      phi-post-editor .phi-post-editor-block-toolbar-menu {
-        position: absolute;
-        top: 0;
-        right: 0; }
-        phi-post-editor .phi-post-editor-block-toolbar-menu button {
-          background: transparent;
-          border: 0;
-          padding: 6px 22px;
-          height: 42px; }
-  phi-post-editor iron-collapse {
-    transition-duration: 190ms; }
-  phi-post-editor paper-card {
-    display: block !important; }
-
-/* !!! Editor Hacks */
-/* "Disable" form block submit's button when inside an editor */
-phi-post-editor phi-object[type="post-block-form"] footer > button {
-  cursor: default;
-  pointer-events: none;
-  color: #c0c0c0;
-  background-color: #ffffff; }
 
 .phi-group > [phi-texture="emboss"] {
   border-radius: 0; }

@@ -14,8 +14,9 @@
 
         <phi-setting-schedule>
             <phi-checkbox ng-model="setting.hasSchedule" ng-change="vm.toggleScheduling(setting, setting.hasSchedule)">consolidar en un envio diario</phi-checkbox>
-            <div phi-visible="{{!!setting.hasSchedule}}" phi-visible-animation="scale">
-                <uib-timepicker class="bootstrap" ng-model="setting.scheduleDate" minute-step="10" ng-change="setting.schedule = vm.toHour(setting.scheduleDate)"></uib-timepicker>
+            <div phi-visible="{{!!setting.hasSchedule}}" phi-visible-animation="scale" class="bootstrap">
+                <!--<uib-timepicker class="bootstrap" ng-model="setting.scheduleDate" minute-step="10" ng-change="setting.schedule = vm.toHour(setting.scheduleDate)"></uib-timepicker>-->
+                <input bs-timepicker autoclose="false" type="text" name="endTime" ng-model="setting.scheduleDate" class="form-control" size="8" placeholder="hora" />
             </div>
         </phi-setting-schedule>
 
@@ -36,8 +37,9 @@
                         <phi-checkbox ng-model="typeSetting.isEnabled">recibir notificaciones</phi-checkbox>
                         <phi-setting-schedule>
                             <phi-checkbox ng-model="typeSetting.hasSchedule" ng-change="vm.toggleScheduling(typeSetting, typeSetting.hasSchedule)">consolidar en un envio diario</phi-checkbox>
-                            <div phi-visible="{{!!typeSetting.hasSchedule}}" phi-visible-animation="scale">
-                                <uib-timepicker class="bootstrap" ng-model="typeSetting.scheduleDate" minute-step="10" ng-change="typeSetting.schedule = vm.toHour(typeSetting.scheduleDate)"></uib-timepicker>
+                            <div phi-visible="{{!!typeSetting.hasSchedule}}" phi-visible-animation="scale" class="bootstrap">
+                                <!--<uib-timepicker class="bootstrap" ng-model="typeSetting.scheduleDate" minute-step="10" ng-change="typeSetting.schedule = vm.toHour(typeSetting.scheduleDate)"></uib-timepicker>-->
+                                <input bs-timepicker autoclose="false" type="text" name="endTime" ng-model="typeSetting.scheduleDate" class="form-control" size="8" placeholder="hora" />
                             </div>
                         </phi-setting-schedule>
                     </phi-setting-body>

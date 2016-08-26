@@ -57,7 +57,7 @@
 
     <div>
         <div phi-visible="{{!!adderIsOpen}}" phi-visible-animation="scale">
-            <phi-list-item ng-repeat="insertable in vm.insertable" ng-click="adderIsOpen = false; vm.addBlock(insertable);" phi-icon-left="{{insertable.icon}}">
+            <phi-list-item ng-repeat="insertable in vm.insertable" ng-click="$parent.adderIsOpen = false; vm.addBlock(insertable);" phi-icon-left="{{insertable.icon}}">
                 <span ng-bind="insertable.title"></span>
             </phi-list-item>
         </div>

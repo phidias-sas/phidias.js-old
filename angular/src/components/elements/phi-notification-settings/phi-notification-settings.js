@@ -15,7 +15,7 @@
                 personId: "@"
             },
 
-            templateUrl: '/components/elements/notification/settings/settings.html',
+            templateUrl: '/components/elements/phi-notification-settings/phi-notification-settings.html',
             controller: phiNotificationSettingsController,
             controllerAs: 'vm',
             bindToController: true

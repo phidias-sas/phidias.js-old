@@ -47,9 +47,9 @@ phi-setting {
             text-align: center;
 
             &:before {
-                // @include phi-icon(fa-file-text);
+                @include phi-icon(fa-file-text);
                 font-size: 22px;
-                color: #ccc;
+                color: #666;
             }
 
             & > *,
@@ -149,13 +149,13 @@ phi-setting {
 
     &.transport-email {
         phi-setting-icon:before {
-            // @include phi-icon(fa-envelope-o);
+            @include phi-icon(fa-envelope-o);
         }
     }
 
     &.transport-mobile {
         phi-setting-icon:before {
-            // @include phi-icon(fa-tablet);
+            @include phi-icon(fa-tablet);
         }
     }
 
@@ -187,7 +187,7 @@ phi-drawer {
     &.open {
 
         & > phi-drawer-title:before {
-            // @include phi-icon(fa-chevron-down);
+            @include phi-icon(fa-chevron-down);
         }
 
         & > phi-drawer-body {
@@ -199,7 +199,7 @@ phi-drawer {
     &.closed {
 
         & > phi-drawer-title:before {
-            // @include phi-icon(fa-chevron-right);
+            @include phi-icon(fa-chevron-right);
         }
 
         & > phi-drawer-body {

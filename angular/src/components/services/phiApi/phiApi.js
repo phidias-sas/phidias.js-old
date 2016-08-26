@@ -42,9 +42,11 @@
                 'delete': deleteFn,
 
                 /* Cache handlers */
-                cache: phiStorage.session,
-                getCache: getCache,
-                maxCacheTime: 30 // default cache lifetime in seconds
+                cacheIsEnabled: true,
+                maxCacheTime: 30, // default cache lifetime in seconds
+                setCaching: function(value) {
+                    service.cacheIsEnabled = value;
+                }
             }
 
 
@@ -65,7 +67,6 @@
                     var url = request.url.replace(service.host,'').replace(/[/?]+$/, "");
                     return "api-cache:" + url;
                 };
-
 
                 function runListeners(current, previous) {
                     var url = request.url.replace(service.host,'').replace(/[/?]+$/, "");
@@ -224,26 +225,6 @@
                 return execute('delete', resource, data, config);
             }
 
-            function getCache(method, resource, data, config) {
-
-                var request = {
-                    url: service.host ? service.host + '/' + resource : resource
-                };
-
-                if (method == 'get') {
-                    request.url += '?' + serialize(data);
-                }
-
-                var cacheKey = "phi-api:" + request.url;
-                var cacheContents = service.cache.get(cacheKey);
-                if (!cacheContents) {
-                    return null;
-                }
-
-                cacheContents.key = cacheKey;
-                return cacheContents;
-            }
-
             function execute(method, resource, data, config) {
 
                 var request = {
@@ -267,19 +248,21 @@
                     request.url += '?' + serialize(request.data);
                     request.data = null;
 
-                    var resourceCache  = service.cache(request);
-                    var cachedResponse = resourceCache.get();
-                    if (cachedResponse) {
-                        var deferred = $q.defer();
-                        deferred.resolve(cachedResponse);
-                        return deferred.promise;
-                    }
+                    if (service.cacheIsEnabled) {
+                        var resourceCache  = service.cache(request);
+                        var cachedResponse = resourceCache.get();
+                        if (cachedResponse) {
+                            var deferred = $q.defer();
+                            deferred.resolve(cachedResponse);
+                            return deferred.promise;
+                        }
 
-                    return $http(request)
-                        .then(function(response) {
-                            resourceCache.store(response);
-                            return response;
-                        });
+                        return $http(request)
+                            .then(function(response) {
+                                resourceCache.store(response);
+                                return response;
+                            });
+                    }
 
                 }
 

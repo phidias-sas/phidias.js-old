@@ -53,7 +53,7 @@ post = {
             controllerAs:     "vm",
             bindToController: true,
 
-            templateUrl: '/components/elements/phi-post/editor/phi-post-editor.html'
+            templateUrl: '/components/elements/phi-post-editor/phi-post-editor.html'
         };
 
     };

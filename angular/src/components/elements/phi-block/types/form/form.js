@@ -96,8 +96,8 @@
                 } else {
 
                     phiApi.post(phiBlock.ngModel.collectionUrl)
-                        .then(function(response, code, headers) {
-                            phiBlock.ngModel.url = headers("location");
+                        .then(function(response) {
+                            phiBlock.ngModel.url = response.headers("location");
                             phiBlock.form        = response.data;
                             phiBlock.form.fields = [];
                             phiBlock.change();

@@ -1,27 +1,37 @@
+$phi-list-item-padding: 16px;
+
 phi-list-item {
+
     display: block;
     position: relative;
-    padding: 16px;
+    
+    padding: $phi-list-item-padding;
+    padding-left: 64px;
     min-height: 48px;
+
     cursor: pointer;
     font-size: 16px;
     white-space: nowrap;
 
     font-weight: 400;
 
+    & > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
 
-    &[phi-icon-left] {
-        padding-left: 64px;
-
-        &:before {
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 18px 22px 14px;
-            margin: 0 !important;
-            font-size: 18px;
-        }
+    &:before,
+    & > img {
+        display: block;
+        position: absolute;
+        top: $phi-list-item-padding;
+        left: $phi-list-item-padding;
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        margin: 0 !important;
+        font-size: 18px;
+        text-align: center;
     }
 
 }

@@ -120,7 +120,7 @@ This element provides an interface with a phi filesystem endpoint
                 var uploadsUrl = phiApi.host ? phiApi.host + "/" + scope.src : scope.src;
 
                 scope.uploader = new FileUploader({url: uploadsUrl, headers: {
-                    'Authorization': 'Bearer ' + phiApi.tokenString
+                    'Authorization': 'Bearer ' + phiApi.token
                 }});
 
                 scope.uploader.onAfterAddingAll = function(addedItems) {

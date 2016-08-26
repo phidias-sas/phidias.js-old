@@ -4,12 +4,13 @@
   "main": [],
   "ignore": [],
   "dependencies": {
-    "webcomponents.js": "*",
+    "webcomponentsjs": "*",
     "angular": "*",
     "angular-aria": "*",
     "angular-sanitize": "*",
     "angular-strap": "*",
     "angular-sortable-view": "*",
+    "angular-file-upload": "*",
     "textAngular": "*",
     "moment": "*"
   }
