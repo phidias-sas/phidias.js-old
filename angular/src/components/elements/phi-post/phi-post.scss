@@ -6,16 +6,18 @@ phi-post-header {
     
     display: block;
     position: relative;
-    padding: 12px 12px 6px 70px;
-    min-height: 74px;
+    padding: 12px 12px 12px 70px;
 
-    phi-post-icon {
-        
+    phi-post-icon {       
         padding: 12px;
         position: absolute;
         top: 0;
         left: 0;
+    }
 
+    phi-avatar {
+        width: 36px;
+        height: 36px;
     }
 
     phi-post-preview {
@@ -25,19 +27,19 @@ phi-post-header {
 
 phi-post-body {
     display: block;
-    padding: 12px;
+    padding: 0 12px 0 70px;
 }
 
 phi-post-author {
     display: block;
     color: #222;
-    font-weight: normal;
+    font-weight: bold;
 }
 
 phi-post-date {
     display: block;
-    color: #777;
-    font-size: 0.8em;
+    color: #999;
+    font-size: 0.9em;
 }
 
 phi-post-description {

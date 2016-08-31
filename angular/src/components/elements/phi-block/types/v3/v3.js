@@ -5,8 +5,8 @@
         .module("phidias-angular")
         .factory("phiBlockV3", phiBlockV3);
 
-    phiBlockV3.$inject = ["phiApi", "$http"];
-    function phiBlockV3(phiApi, $http) {
+    phiBlockV3.$inject = ["phiApi", "$http", "$sce"];
+    function phiBlockV3(phiApi, $http, $sce) {
         return function(phiBlock) {
 
             function initialize() {
@@ -22,9 +22,10 @@
                 var vm = this;
 
                 $http.get(phiBlock.ngModel.url, {
-                    headers: {'Authorization': 'Bearer ' + phiApi.tokenString}
+                    headers: {'Authorization': 'Bearer ' + phiApi.token}
                 }).then(function(response) {
-                    vm.body = response.data;
+                    // vm.body = response.data;
+                    vm.body = $sce.trustAsHtml(response.data);
                 }, function() {
                     phiBlock.go("error");
                 });

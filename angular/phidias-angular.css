@@ -9131,16 +9131,16 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
   transition: all 310ms; }
 
 /* classes specify the visibility effect (describes how it becomes visible) */
-[phi-z], phi-card, [phi-button], [phi-texture="paper"] {
+[phi-z], phi-button, phi-card, [phi-texture="paper"] {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4); }
 
-[phi-z="0"], [phi-button]:active, [phi-button].cancel {
+[phi-z="0"], phi-button:active, phi-button.cancel {
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4) !important; }
 
 [phi-z="1"] {
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4); }
 
-[phi-z="2"], [phi-button]:hover, [phi-button]:focus {
+[phi-z="2"], phi-button:hover, phi-button:focus {
   box-shadow: 0 4px 8px 0 #aaa; }
 
 [phi-z="3"] {
@@ -14229,17 +14229,15 @@ phi-avatar {
     phi-avatar > div > img {
       width: 100%; }
 
-phi-card {
-  display: block;
-  background-color: #fff;
-  overflow: hidden; }
-  phi-card phi-card-cover {
-    display: block;
-    background-size: cover;
-    min-height: 120px; }
-  phi-card phi-card-contents {
-    display: block; }
+phi-block {
+  display: block; }
 
+.phi-block-state-delete {
+  text-align: center; }
+  .phi-block-state-delete h1 {
+    margin: 16px 0; }
+
+phi-button,
 [phi-button] {
   display: inline-block;
   padding: 12px 20px;
@@ -14256,17 +14254,37 @@ phi-card {
   -ms-user-select: none;
   user-select: none;
   background-color: #01579b; }
-  [phi-button]:hover, [phi-button]:focus {
+  phi-button:hover, phi-button:focus,
+  [phi-button]:hover,
+  [phi-button]:focus {
     outline: 0; }
+  phi-button.danger,
+  [phi-button].danger {
+    background-color: #d9534f;
+    color: #fff; }
+  phi-button.cancel,
   [phi-button].cancel {
     background: transparent !important;
     color: #444; }
+    phi-button.cancel:hover,
     [phi-button].cancel:hover {
       color: #900; }
+  phi-button[disabled],
   [phi-button][disabled] {
     box-shadow: none;
     background-color: #444;
     opacity: 0.6; }
+
+phi-card {
+  display: block;
+  background-color: #fff;
+  overflow: hidden; }
+  phi-card phi-card-cover {
+    display: block;
+    background-size: cover;
+    min-height: 120px; }
+  phi-card phi-card-contents {
+    display: block; }
 
 phi-checkbox {
   display: inline-block;
@@ -14324,6 +14342,11 @@ phi-content {
 phi-cover {
   display: block;
   background-size: cover; }
+
+phi-event-editor {
+  display: block; }
+  phi-event-editor .date-options > div {
+    margin-right: 2em; }
 
 phi-event-repeat .week ul,
 phi-event-repeat .month ul {
@@ -14391,11 +14414,6 @@ phi-gallery {
         transform: scale(1); }
       .phi-gallery-modal > .phi-gallery-modal-contents > * img {
         width: 100%; }
-
-phi-event-editor {
-  display: block; }
-  phi-event-editor .date-options > div {
-    margin-right: 2em; }
 
 [phi-input], phi-input {
   display: inline-block;
@@ -14690,35 +14708,78 @@ phi-drawer {
   phi-drawer.closed > phi-drawer-body {
     display: none; }
 
+phi-post-editor {
+  display: block; }
+  phi-post-editor .phi-post-editor-block {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding: 4px; }
+    phi-post-editor .phi-post-editor-block-toolbar {
+      display: flex;
+      height: 42px;
+      border-radius: 4px;
+      background-color: rgba(0, 0, 0, 0.065); }
+      phi-post-editor .phi-post-editor-block-toolbar-handle {
+        flex: 1;
+        cursor: move;
+        height: 42px; }
+      phi-post-editor .phi-post-editor-block-toolbar-menu {
+        flex: none; }
+        phi-post-editor .phi-post-editor-block-toolbar-menu phi-menu-item {
+          text-transform: capitalize; }
+          phi-post-editor .phi-post-editor-block-toolbar-menu phi-menu-item:before {
+            font-size: 1.3em;
+            color: #666; }
+        phi-post-editor .phi-post-editor-block-toolbar-menu button {
+          background: transparent;
+          border: 0;
+          padding: 6px 22px;
+          height: 42px; }
+  phi-post-editor iron-collapse {
+    transition-duration: 190ms; }
+  phi-post-editor paper-card {
+    display: block !important; }
+
+/* !!! Editor Hacks */
+/* "Disable" form block submit's button when inside an editor */
+phi-post-editor phi-block.phi-block-type-form footer > button {
+  cursor: default;
+  pointer-events: none;
+  color: #c0c0c0;
+  background-color: #ffffff; }
+
 phi-post {
   display: block; }
 
 phi-post-header {
   display: block;
   position: relative;
-  padding: 12px 12px 6px 70px;
-  min-height: 74px; }
+  padding: 12px 12px 12px 70px; }
   phi-post-header phi-post-icon {
     padding: 12px;
     position: absolute;
     top: 0;
     left: 0; }
+  phi-post-header phi-avatar {
+    width: 36px;
+    height: 36px; }
   phi-post-header phi-post-preview {
     display: block; }
 
 phi-post-body {
   display: block;
-  padding: 12px; }
+  padding: 0 12px 0 70px; }
 
 phi-post-author {
   display: block;
   color: #222;
-  font-weight: normal; }
+  font-weight: bold; }
 
 phi-post-date {
   display: block;
-  color: #777;
-  font-size: 0.8em; }
+  color: #999;
+  font-size: 0.9em; }
 
 phi-post-description {
   display: block;
@@ -14733,41 +14794,6 @@ phi-post-blocks {
   phi-post-blocks > * {
     display: block;
     margin-bottom: 1em; }
-
-phi-post-editor {
-  display: block; }
-  phi-post-editor .phi-post-editor-block {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 12px;
-    padding: 4px; }
-    phi-post-editor .phi-post-editor-block-toolbar {
-      position: relative;
-      height: 42px;
-      border-radius: 4px;
-      background-color: rgba(0, 0, 0, 0.065);
-      cursor: move; }
-      phi-post-editor .phi-post-editor-block-toolbar-menu {
-        position: absolute;
-        top: 0;
-        right: 0; }
-        phi-post-editor .phi-post-editor-block-toolbar-menu button {
-          background: transparent;
-          border: 0;
-          padding: 6px 22px;
-          height: 42px; }
-  phi-post-editor iron-collapse {
-    transition-duration: 190ms; }
-  phi-post-editor paper-card {
-    display: block !important; }
-
-/* !!! Editor Hacks */
-/* "Disable" form block submit's button when inside an editor */
-phi-post-editor phi-object[type="post-block-form"] footer > button {
-  cursor: default;
-  pointer-events: none;
-  color: #c0c0c0;
-  background-color: #ffffff; }
 
 phi-select {
   position: relative;
@@ -14965,16 +14991,7 @@ phi-thread-header {
     display: block;
     flex: 0 0 38px;
     box-sizing: content-box;
-    padding: 16px;
-    z-index: 1; }
-    phi-thread-header phi-thread-icon iron-image {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%; }
-    phi-thread-header phi-thread-icon iron-icon {
-      display: block !important;
-      margin: auto;
-      margin-top: 6px; }
+    padding: 16px; }
     phi-thread-header phi-thread-icon img {
       width: 24px;
       height: 24px; }
@@ -14987,14 +15004,14 @@ phi-thread-header {
     phi-thread-header phi-thread-preview phi-thread-title {
       display: block;
       margin: 0;
-      font-size: 1.3em;
-      font-weight: normal;
+      font-size: 1.2em;
+      font-weight: 500;
       max-width: 100%;
       word-break: break-word; }
     phi-thread-header phi-thread-preview phi-thread-author,
     phi-thread-header phi-thread-preview phi-thread-description {
       display: inline-block;
-      color: #444; }
+      color: #555; }
     phi-thread-header phi-thread-preview phi-thread-description {
       max-width: 100%;
       word-break: break-word; }
@@ -15002,6 +15019,16 @@ phi-thread-header {
       content: ' - '; }
     phi-thread-header phi-thread-preview phi-thread-date {
       display: none; }
+  phi-thread-header phi-thread-actions {
+    display: flex; }
+    phi-thread-header phi-thread-actions button {
+      border: 0;
+      margin: 0;
+      padding: 0 12px;
+      background: transparent;
+      color: #666;
+      font-size: 1em;
+      min-width: 56px; }
 
 /* States */
 phi-thread.selected phi-thread-header {
@@ -15118,10 +15145,6 @@ phi-toolbar {
 .phi-texture-emboss-highlighted, button[phi-texture="emboss"]:hover, button[phi-texture="emboss"]:focus {
   border: 1px solid #bbb; }
 
-[phi-texture="paper"] {
-  border-radius: 3px;
-  background: #fff; }
-
 [phi-texture="xray"] {
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.92);
@@ -15130,6 +15153,10 @@ phi-toolbar {
   [phi-texture="xray"] * {
     color: #fff !important;
     font-weight: normal; }
+
+[phi-texture="paper"] {
+  border-radius: 3px;
+  background: #fff; }
 
 /* The height to auto transition is done in JS (see scale.js) */
 [phi-visible-animation="scale"] {

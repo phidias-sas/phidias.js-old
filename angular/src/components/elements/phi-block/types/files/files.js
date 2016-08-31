@@ -14,6 +14,21 @@
 
                 initialize: initialize,
 
+                menu: [
+                    {
+                        label: 'editar',
+                        icon:  'fa-pencil',
+                        state: 'editor'
+                    },
+
+                    {
+                        label: 'eliminar',
+                        icon:  'fa-times',
+                        state: 'delete'
+                    }
+                ],
+
+
                 states: {
 
                     default: {
@@ -29,8 +44,8 @@
                         template:   '<form>' + 
                                         '<h1>Eliminar esta carpeta ?</h1>' +
                                         '<footer>' + 
-                                            '<phi-button ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
-                                            '<phi-button ng-click="phiBlock.go(\'default\')" class="cancel">cancelar</phi-button>' + 
+                                            '<phi-button class="danger" ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
+                                            '<phi-button class="cancel" ng-click="phiBlock.go(\'default\')">cancelar</phi-button>' + 
                                         '</footer>' + 
                                     '</form>',
                     }

@@ -1,3 +1,4 @@
+phi-button,
 [phi-button] {
 
     @extend [phi-z];
@@ -31,6 +32,10 @@
         @extend [phi-z="0"];
     }
 
+    &.danger {
+        background-color: #d9534f;
+        color: #fff;
+    }
 
     &.cancel {
         @extend [phi-z="0"];

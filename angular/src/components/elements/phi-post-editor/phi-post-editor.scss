@@ -12,17 +12,33 @@ phi-post-editor {
         padding: 4px;
 
         &-toolbar {
-            position: relative;
+
+            display: flex;
             height: $phi-post-editor-block-toolbar-height;
             border-radius: 4px;
             background-color: rgba(0, 0, 0, 0.065);
-            cursor: move;
+
+            &-handle {
+
+                flex: 1;
+
+                cursor: move;
+                height: $phi-post-editor-block-toolbar-height;
+            }
 
 
             &-menu {
-                position: absolute;
-                top: 0;
-                right: 0;
+
+                flex: none;
+
+                phi-menu-item {
+                    text-transform: capitalize;
+
+                    &:before {
+                        font-size: 1.3em;
+                        color: #666;
+                    }
+                }
 
                 button {
                     background: transparent;
@@ -50,7 +66,7 @@ phi-post-editor {
 /* !!! Editor Hacks */
 
 /* "Disable" form block submit's button when inside an editor */
-phi-post-editor phi-object[type="post-block-form"] footer > button {
+phi-post-editor phi-block.phi-block-type-form footer > button {
 
     cursor: default;
     pointer-events: none;

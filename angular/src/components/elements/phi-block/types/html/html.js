@@ -103,6 +103,20 @@
 
                 initialize: initialize,
 
+                menu: [
+                    {
+                        label: 'editar',
+                        icon:  'fa-pencil',
+                        state: 'editor'
+                    },
+
+                    {
+                        label: 'eliminar',
+                        icon:  'fa-times',
+                        state: 'delete'
+                    }
+                ],
+
                 states: {
 
                     default: {

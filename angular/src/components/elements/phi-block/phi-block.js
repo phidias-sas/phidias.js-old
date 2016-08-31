@@ -63,13 +63,16 @@ someObject = {
 
 
         /* Load states from corresponding service */
+        $element.addClass("phi-block-type-"+vm.ngModel.type);
         objectService   = loadObjectService(vm.ngModel.type, vm);
-        vm.states       = objectService.states;
 
+        vm.states       = objectService.states;
+        vm.menu         = objectService.menu ? objectService.menu : null;
 
         /* Setup external controller */
         vm.controller = {
             states:       Object.keys(vm.states),
+            menu:         vm.menu,
             currentState: vm.currentState,
             go:           go,
             isLoading:    vm.isLoading
@@ -102,8 +105,8 @@ someObject = {
             scope = $scope.$new(true);
             scope.phiBlock = vm;
 
-            $element.removeClass("phi-object-state-"+vm.currentState);
-            $element.addClass("phi-object-state-"+targetStateName);
+            $element.removeClass("phi-block-state-"+vm.currentState);
+            $element.addClass("phi-block-state-"+targetStateName);
 
             vm.currentState            = targetStateName;
             vm.controller.currentState = targetStateName;

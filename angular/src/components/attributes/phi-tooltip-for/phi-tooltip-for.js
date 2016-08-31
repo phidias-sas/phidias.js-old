@@ -64,7 +64,6 @@
                 // ignore clicks on the target element
                 var clickTargetId = angular.element(e.target).inheritedData("phiTooltipId");
                 if (clickTargetId == scope.uniqueId) {
-                    console.log("self click");
                     return;
                 }
 
@@ -91,6 +90,8 @@
 
 
             function reposition() {
+
+                var targetElement = angular.element(document.getElementById(attributes.phiTooltipFor));
 
                 if (!targetElement.length) {
                     return;

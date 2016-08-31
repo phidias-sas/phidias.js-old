@@ -108,6 +108,20 @@
 
                 initialize: initialize,
 
+                menu: [
+                    {
+                        label: 'editar',
+                        icon:  'fa-pencil',
+                        state: 'editor'
+                    },
+
+                    {
+                        label: 'eliminar',
+                        icon:  'fa-times',
+                        state: 'delete'
+                    }
+                ],
+
                 states: {
 
                     default: {
@@ -151,8 +165,8 @@
                         template:   '<form>' +
                                         '<h1>Eliminar este video ?</h1>' +
                                         '<footer>' +
-                                            '<phi-button ng-click="vm.confirm()">eliminar</phi-button>' +
-                                            '<phi-button ng-click="vm.cancel()" class="cancel">cancelar</phi-button>' +
+                                            '<phi-button class="danger" ng-click="vm.confirm()">eliminar</phi-button>' +
+                                            '<phi-button class="cancel" ng-click="vm.cancel()">cancelar</phi-button>' +
                                         '</footer>' +
                                     '</form>',
                     },

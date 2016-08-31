@@ -4,13 +4,16 @@
 
         <div ng-repeat="(key, block) in vm.post.blocks" ng-init="block.ctrl = {}" class="phi-post-editor-block" sv-element>
 
-            <div class="phi-post-editor-block-toolbar" sv-handle>
+            <div class="phi-post-editor-block-toolbar">
 
-                <div class="phi-post-editor-block-toolbar-menu">
+                <div class="phi-post-editor-block-toolbar-handle" sv-handle></div>
+
+                <div ng-if="block.ctrl.menu" class="phi-post-editor-block-toolbar-menu">
+
                     <phi-button
+                        id="menu_toggler_{{block.id}}_{{key}}"
                         class="cancel"
                         ng-blur="block.menuShown = false"
-                        id="menu_toggler_{{post.id}}_{{key}}"
                         ng-show="block.ctrl.currentState == 'default'"
                         ng-click="block.menuShown = !block.menuShown"
                         phi-icon="fa-ellipsis-v">
@@ -25,17 +28,20 @@
                     </phi-button>
 
                     <div
-                        phi-tooltip-for="menu_toggler_{{post.id}}_{{key}}"
+                        phi-tooltip-for="menu_toggler_{{block.id}}_{{key}}"
                         phi-tooltip-origin="top right"
                         phi-tooltip-align="bottom right"
                         phi-visible="{{!!block.menuShown}}"
                         phi-visible-animation="slide-bottom">
 
                         <phi-menu phi-texture="paper">
-                            <phi-menu-item ng-repeat="item in block.ctrl.states" ng-click="block.menuShown = false; block.ctrl.go(item)">
+                            <phi-menu-item ng-repeat="action in block.ctrl.menu" ng-click="block.menuShown = false; block.ctrl.go(action.state)" phi-icon-left="{{action.icon}}">
+                                {{action.label}}
+                            </phi-menu-item>
+                            <!--<phi-menu-item ng-repeat="item in block.ctrl.states" ng-click="block.menuShown = false; block.ctrl.go(item)">
                                 <phi-icon icon="{{item.icon}}"></phi-icon>
                                 {{item}}
-                            </phi-menu-item>
+                            </phi-menu-item>-->
                         </phi-menu>
                     </div>
                 </div>
@@ -67,23 +73,5 @@
         </phi-list-item>        
     </div>
 
-    <!--<paper-card>
-        <iron-collapse ng-attr-opened="{{adderIsOpen ? 'opened' : undefined}}">
-            <div>
-                <div ng-repeat="insertable in vm.insertable">
-                    <phi-list-item ng-click="$parent.adderIsOpen = false; vm.addBlock(insertable);">
-                        <phi-icon icon="{{insertable.icon}}" bind-polymer></phi-icon>
-                        <span ng-bind="insertable.title"></span>
-                    </phi-list-item>
-                </div>
-
-            </div>
-        </iron-collapse>
-
-        <phi-list-item ng-click="adderIsOpen = !adderIsOpen">
-            <iron-icon icon="{{adderIsOpen ? 'close' : 'add'}}"></iron-icon>
-            <span ng-bind="adderIsOpen ? 'cancelar' : 'adjuntar'"></span>
-        </phi-list-item>
-    </paper-card>-->
 
 </div>
