@@ -23,7 +23,6 @@ Phidias.Client = class {
             data = null;
         }
 
-
         var xhr = new XMLHttpRequest;
         xhr.open(method, this.host + "/" + url);
 
@@ -91,7 +90,17 @@ Phidias.Client = class {
 
 
     /* Client credentials authentication with OAuth */
+    setToken(string) {
+        this.token = {
+            string: string,
+            data: Phidias.Jwt.decode(string)
+        };
+
+        return this.token.data;
+    }
+
     authenticate(username, password, url) {
+        var _this = this;
 
         if (url == undefined) {
             url = "oauth/token";
@@ -102,12 +111,17 @@ Phidias.Client = class {
                 'Authorization': 'Basic ' + btoa(username + ':' + password)
             }
         }).then(function(response) {
-            return response.data.access_token;
+            return _this.setToken(response.data.access_token);
         });
 
     }
 
-
+    logout() {
+        this.token = {
+            string: null,
+            data: null
+        };
+    }
 
     static serialize(obj, prefix) {
         var str = [];
