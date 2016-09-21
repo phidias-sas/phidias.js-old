@@ -1,210 +1,166 @@
 phi-notification-settings {
-
     display: block;
 
-    & > button {
-        display: block;
-        margin-top: 24px;
+
+    & > section {
+
+        margin-bottom: 24px;
+
+        & > h1 {
+            font-size: 1em;
+            color: #666;
+            border-bottom: 1px solid #d7d7d7;
+            padding-bottom: 2px;
+            margin-bottom: 2px;
+        }
+
+    }
+
+    .subpreferences {
+        padding-left: 20px;
     }
 }
 
+.disabled .subpreferences {
+    opacity: 0.5 !important;
+    pointer-events: none;
+}
 
-phi-setting {
 
-    display: block;
+phi-notification-setting {
+    
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 
-    phi-setting-header {
-
+    .face {
+        flex: 1;
+        padding: 7px 0;
         cursor: pointer;
-        display: block;
-        position: relative;
 
-        outline: none;
-
-        &:hover {
-            background-color: rgba(0,0,0, 0.04);
+        h1 {
+            font-size: 1.2em;
         }
 
-        @at-root {
-            phi-setting.open > phi-setting-header {
-                background-color: rgba(0,0,0, 0.04);
-            }
-        }
-
-
-        phi-setting-icon {
-            display: block;
-
-            position: absolute;
-            top: 0;
-            left: 0;
-
-            width: 72px;
-            padding: 16px;
-            box-sizing: border-box;
-            height: 100%;
-
-            text-align: center;
-
-            &:before {
-                @include phi-icon(fa-file-text);
-                font-size: 22px;
-                color: #666;
-            }
-
-            & > *,
-            &:before {
-                display: block;
-                text-align: center;
-                max-width: 22px;
-            }
-
-        }
-
-        phi-setting-contents {
-            display: block;
-            outline: none;
-
-            padding: 16px;
-            padding-left: 0;
-            margin-left: 72px;
-
-            phi-setting-title {
-
-                display: block;
-                margin: 0;
-                font-size: 1.5em;
-                font-weight: normal;
-
-                max-width: 100%;
-                word-break: break-word;
-
-            }
-
-            phi-setting-notice {
-                display: block;
-                color: #444;
-            }
-
-        }
-
-    }
-
-
-    phi-setting-body {
-
-        display: block;
-        padding: 16px 0;
-
-        margin-left: 72px;
-
-        & > phi-checkbox {
-            display: block;
-            margin: 0 0 24px 0;
-        }
-
-        phi-setting-schedule {
-            display: block;
-
-            phi-checkbox {
-                display: block;
-                margin-bottom: 12px;
-            }
-        }
-
-    }
-
-
-
-    /* Setting states */
-    &.open {
-        & > phi-setting-body {
-            display: block;
+        phi-input {
+            width: 100%;
         }
     }
 
-    &.closed {
-        & > phi-setting-body {
-            display: none;
+    .toggler, 
+    .schedule, 
+    .menu {
+        margin-left: 1em;
+    }
+
+    .schedule {
+        select {
+            border: 0;
+            padding: 4px 0;
         }
     }
 
-    &.disabled {
-        & > phi-setting-body {
-            & > phi-setting-schedule,
-            & > phi-drawer {
-                opacity: 0.5;
-            }
-        }
+    button {
+        background-color: transparent;
+        color: #333;
+        border: 0;
+        font-size: 1.2em;
+        min-width: 2.5em;
     }
-
-
-    /* Specific transports */
-    &.setting-transport {
-        & > phi-setting-header > phi-setting-contents > phi-setting-title {
-            text-transform: uppercase;
-        }
-    }
-
-
-    &.transport-email {
-        phi-setting-icon:before {
-            @include phi-icon(fa-envelope-o);
-        }
-    }
-
-    &.transport-mobile {
-        phi-setting-icon:before {
-            @include phi-icon(fa-tablet);
-        }
-    }
-
 
 }
 
 
-phi-drawer {
-
-    display: block;
-    margin: 12px 0;
-
-    &-title {
-        display: block;
-        padding: 8px;
-        cursor: pointer;
-
+/* 
+Toggler 
+https://codepen.io/mallendeo/pen/eLIiG
+*/
+.tgl {
+	display: none;
+  
+	// add default box-sizing for this scope
+	&,
+    &:after,
+    &:before,
+	& *,
+    & *:after,
+    & *:before,
+	& + .tgl-btn {
+		box-sizing: border-box;
+		&::selection {
+			background: none;
+		}
+	}
+  
+	+ .tgl-btn {
+		outline: 0;
+		display: block;
+		width: 4em;
+		height: 2em;
+		position: relative;
+		cursor: pointer;
+        user-select: none;
+		&:after,
         &:before {
-            display: inline-block;
-            margin-right: 1em;
+			position: relative;
+			display: block;
+			content: "";
+			width: 50%;
+			height: 100%;
+		}
+    
+		&:after {
+			left: 0;
+		}
+    
+		&:before {
+			display: none;
+		}
+	}
+  
+	&:checked + .tgl-btn:after {
+		left: 50%;
+	}
+}
+
+
+.tgl-ios {
+	+ .tgl-btn {
+		background: #aaa;
+		border-radius: 2em;
+		padding: 2px;
+		transition: all .4s ease;
+		border: 1px solid #e8eae9;
+		&:after {
+			border-radius: 2em;
+			background: #fbfbfb;
+			transition:
+                left .3s cubic-bezier(0.175, 0.885, 0.320, 1.275),
+                padding .3s ease, margin .3s ease;
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,.1),
+                0 4px 0 rgba(0,0,0,.08);
+		}
+    
+        &:hover:after {
+            will-change: padding;
         }
-
-    }
-
-    &-body {
-        display: block;
-    }
-
-    &.open {
-
-        & > phi-drawer-title:before {
-            @include phi-icon(fa-chevron-down);
+    
+		&:active {
+			box-shadow: inset 0 0 0 2em #e8eae9;
+			&:after {
+				padding-right: .8em;
+			}
+		}
+	}
+  
+	&:checked + .tgl-btn {
+        background: #01579b;
+        &:active {
+            box-shadow: none;
+            &:after {
+                margin-left: -.8em;
+            }
         }
-
-        & > phi-drawer-body {
-            display: block;
-        }
-
-    }
-
-    &.closed {
-
-        & > phi-drawer-title:before {
-            @include phi-icon(fa-chevron-right);
-        }
-
-        & > phi-drawer-body {
-            display: none;
-        }
-    }
-
+	}
 }

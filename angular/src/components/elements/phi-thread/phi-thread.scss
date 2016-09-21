@@ -105,11 +105,14 @@ phi-thread-header {
         box-sizing: content-box;
         padding: 16px;
 
-        // z-index: 1; // previene que la imagen pierda su border-radius mientras se muestra un paper-ripple (!!!)
+        text-align: center;
+        align-self: center;
 
-        img {
-            width: 24px;
-            height: 24px;
+        & > * {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            z-index: 1;
         }
 
     }

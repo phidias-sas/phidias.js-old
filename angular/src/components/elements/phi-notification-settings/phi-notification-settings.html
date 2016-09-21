@@ -1,54 +1,81 @@
-<phi-setting ng-repeat="setting in vm.settings" class="setting-transport transport-{{setting.transport}}" ng-class="{open: setting.isOpen, closed: !setting.isOpen, enabled: setting.isEnabled, disabled: !setting.isEnabled}">
+<!-- Manual list of transports -->
+<section border-box ng-repeat="transport in vm.transports" ng-show="!!(vm.destinations|filter:{transport:transport.name}).length || (vm.allowEdit && transport.allowEdit)" class="phi-notification-transport phi-notification-transport-{{transport.name}}">
 
-    <phi-setting-header ng-click="setting.isOpen = !setting.isOpen">
-        <phi-setting-icon></phi-setting-icon>
-        <phi-setting-contents>
-            <phi-setting-title ng-bind="vm.getTransportName(setting.transport)"></phi-setting-title>
-            <phi-setting-notice ng-repeat="notice in vm.describeSetting(setting)" ng-bind="notice"></phi-setting-notice>
-        </phi-setting-contents>
-    </phi-setting-header>
+    <h1 ng-bind="transport.label"></h1>
 
-    <phi-setting-body>
+    <div ng-repeat="destination in vm.destinations | filter: {transport:transport.name}" ng-class="{enabled: destination.isEnabled, disabled: !destination.isEnabled}">
 
-        <phi-checkbox ng-model="setting.isEnabled">recibir notificaciones</phi-checkbox>
+        <phi-notification-setting>
 
-        <phi-setting-schedule>
-            <phi-checkbox ng-model="setting.hasSchedule" ng-change="vm.toggleScheduling(setting, setting.hasSchedule)">consolidar en un envio diario</phi-checkbox>
-            <div phi-visible="{{!!setting.hasSchedule}}" phi-visible-animation="scale" class="bootstrap">
-                <!--<uib-timepicker class="bootstrap" ng-model="setting.scheduleDate" minute-step="10" ng-change="setting.schedule = vm.toHour(setting.scheduleDate)"></uib-timepicker>-->
-                <input bs-timepicker autoclose="false" type="text" name="endTime" ng-model="setting.scheduleDate" class="form-control" size="8" placeholder="hora" />
+            <div class="face" ng-click="destination.isExpanded = !destination.isExpanded">
+                <h1 ng-bind="destination.destination || transport.defaultText || 'predeterminado'" phi-icon-left="{{destination.isExpanded ? 'fa-caret-down' : 'fa-caret-right'}}"></h1>
             </div>
-        </phi-setting-schedule>
 
-        <phi-drawer ng-class="{open: setting.drawerIsOpen, closed: !setting.drawerIsOpen}">
+            <div class="toggler">
+                <input id="toggle_{{destination.id}}" type="checkbox" class="tgl tgl-ios" ng-model="destination.isEnabled"  ng-change="vm.save(destination)" />
+                <label for="toggle_{{destination.id}}" class="tgl-btn"></label>
+            </div>
 
-            <phi-drawer-title ng-click="setting.drawerIsOpen = !setting.drawerIsOpen">filtrar por tipo</phi-drawer-title>
+            <div class="schedule" phi-icon="fa-clock-o">
+                <select ng-model="destination.schedule" ng-change="vm.save(destination)" ng-options="hour.value as hour.label for hour in vm.scheduleHours">
+                    <option value="">inmediato</option>
+                </select>
+            </div>
 
-            <phi-drawer-body>
-                <phi-setting ng-repeat="typeSetting in setting.types" ng-class="{open: typeSetting.isOpen, closed: !typeSetting.isOpen, enabled: typeSetting.isEnabled, disabled: !typeSetting.isEnabled}">
-                    <phi-setting-header ng-click="typeSetting.isOpen = !typeSetting.isOpen">
-                        <phi-setting-icon>{{type.icon}}</phi-setting-icon>
-                        <phi-setting-contents>
-                            <phi-setting-title ng-bind="typeSetting.type"></phi-setting-title>
-                            <phi-setting-notice ng-repeat="notice in vm.describeSetting(typeSetting)" ng-bind="notice"></phi-setting-notice>
-                        </phi-setting-contents>
-                    </phi-setting-header>
-                    <phi-setting-body>
-                        <phi-checkbox ng-model="typeSetting.isEnabled">recibir notificaciones</phi-checkbox>
-                        <phi-setting-schedule>
-                            <phi-checkbox ng-model="typeSetting.hasSchedule" ng-change="vm.toggleScheduling(typeSetting, typeSetting.hasSchedule)">consolidar en un envio diario</phi-checkbox>
-                            <div phi-visible="{{!!typeSetting.hasSchedule}}" phi-visible-animation="scale" class="bootstrap">
-                                <!--<uib-timepicker class="bootstrap" ng-model="typeSetting.scheduleDate" minute-step="10" ng-change="typeSetting.schedule = vm.toHour(typeSetting.scheduleDate)"></uib-timepicker>-->
-                                <input bs-timepicker autoclose="false" type="text" name="endTime" ng-model="typeSetting.scheduleDate" class="form-control" size="8" placeholder="hora" />
-                            </div>
-                        </phi-setting-schedule>
-                    </phi-setting-body>
-                </phi-setting>
-            </phi-drawer-body>
+            <button ng-if="transport.allowEdit && !!destination.destination" class="menu" phi-icon="fa-trash-o" ng-click="vm.remove(destination)"></button>
+            <button ng-if="!(transport.allowEdit && !!destination.destination)" class="menu"></button> <!-- placeholder -->
 
-        </phi-drawer>
+        </phi-notification-setting>
 
-    </phi-setting-body>
-</phi-setting>
+        <div class="subpreferences" phi-visible="{{!!destination.isExpanded}}" phi-visible-animation="scale">
 
-<phi-button ng-click="vm.save()">Guardar</phi-button>
+            <phi-notification-setting ng-repeat="(key, preference) in destination.preferences">
+                <div class="face">
+                    <h1 ng-bind="preference.type"></h1>
+                </div>
+                <div class="toggler">
+                    <input id="toggle_pref_{{key}}" type="checkbox" class="tgl tgl-ios" ng-model="preference.isEnabled"  ng-change="vm.save(destination)" />
+                    <label for="toggle_pref_{{key}}" class="tgl-btn"></label>
+                </div>
+                <div class="schedule" phi-icon="fa-clock-o">
+                    <select ng-model="preference.schedule" ng-change="vm.save(destination)" ng-options="hour.value as hour.label for hour in vm.scheduleHours">
+                        <option value="">{{destination.schedule ? 'consolidado' : 'inmediato'}}</option>
+                    </select>
+                </div>
+            </phi-notification-setting>
+
+        </div>
+
+    </div>
+
+    <div phi-visible="{{transport.isAdding}}" phi-visible-animation="scale" ng-init="transport.new = {transport: transport.name, isEnabled:true, destination: null, schedule: null}">
+        <phi-notification-setting>
+
+            <div class="face" style="display:flex">
+                <button phi-icon="fa-times" ng-click="transport.isAdding = false"></button>
+                <phi-input ng-model="transport.new.destination"></phi-input>
+            </div>
+
+            <div class="toggler">
+                <input id="new_{{transport.name}}" type="checkbox" class="tgl tgl-ios" ng-model="transport.isAdding"/>
+                <label for="new_{{transport.name}}" class="tgl-btn"></label>
+            </div>
+
+            <div class="schedule" phi-icon="fa-clock-o">
+                <select ng-model="transport.new.schedule" ng-change="vm.save(destination)" ng-options="hour.value as hour.label for hour in vm.scheduleHours">
+                    <option value="">{{destination.schedule ? 'consolidado' : 'inmediato'}}</option>
+                </select>
+            </div>
+
+            <button class="menu" ng-click="vm.save(transport.new); transport.isAdding = false; transport.new = {transport: transport.name, isEnabled:true, destination: null, schedule: null}" phi-icon="fa-check"></button>
+
+        </phi-notification-setting>
+    </div>
+
+    <phi-notification-setting class="adder" ng-if="vm.allowEdit && transport.allowEdit" ng-click="transport.isAdding = true" phi-visible="{{!transport.isAdding}}" phi-visible-animation="scale">
+        <div class="face">
+            <h1 phi-icon-left="fa-plus">agregar destinatario</h1>
+        </div>
+    </phi-notification-setting>
+
+</section>

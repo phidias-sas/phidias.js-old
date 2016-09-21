@@ -12,7 +12,8 @@
             restrict: 'E',
 
             scope: {
-                personId: "@"
+                personId: "@",
+                allowEdit: "="
             },
 
             templateUrl: '/components/elements/phi-notification-settings/phi-notification-settings.html',
@@ -24,188 +25,181 @@
 
         function phiNotificationSettingsController() {
 
-            var vm          = this;
-            var settingsUrl = "people/" + vm.personId + "/notifications/settings";
+            var vm = this;
+            var destinationsUrl = "people/" + vm.personId + "/notification/destinations";
 
-            vm.types    = [];
-            vm.settings = {};
+            vm.transports = [
+                {
+                    name: 'email',
+                    label: 'e-Mail',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    allowEdit: true,
+                    defaultText: 'mi correo principal'
+                },
 
-            vm.getTransportName = getTransportName;
-            vm.toHour           = toHour;
+                {
+                    name: 'sms',
+                    label: 'SMS',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    allowEdit: true,
+                    defaultText: 'mi teléfono principal'
+                },
 
-            vm.toggleScheduling = toggleScheduling;
-            vm.describeSetting  = describeSetting;
+                // {
+                //     name: 'slack',
+                //     label: 'Slack',
+                //     image: phiApi.host + "/icons/fa-envelope.png",
+                //     allowEdit: true
+                // },
 
-            vm.save = save;
+                {
+                    name: 'gcm',
+                    label: 'Android',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    defaultText: 'app móvil'
+                },
+
+                {
+                    name: 'apn',
+                    label: 'Apple',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    defaultText: 'app móvil'
+                }
+            ];
+
+            vm.types        = [];
+            vm.destinations = [];
+
+            vm.isLoading = false;
+            vm.save      = save;
+            vm.remove    = remove;
+
+            vm.scheduleHours = [];
+
+            for (var hour = 5; hour <= 23; hour++) {
+                var hour12 = hour > 12 ? hour-12 : hour;
+                var ampm   = hour > 12 ? 'pm' : 'am';
+
+                vm.scheduleHours.push({
+                    label: hour12 + ':00 ' + ampm,
+                    value: hour + '00'
+                }, {
+                    label: hour12 + ':30 ' + ampm,
+                    value: hour + '30'
+                });
+            }
+
 
             initialize();
 
-            ////////////////
+            ///////////
+
+            function save(destination) {
+
+                var request  = null;
+                vm.isLoading = true;
+
+                if (destination.id != undefined) {
+                    request = phiApi.put(destinationsUrl + "/" + destination.id, destination);
+                } else {
+                    request = phiApi.post(destinationsUrl, destination)
+                        .then(function(response) {
+                            vm.destinations.push(sanitizeDestination(response.data));
+                        });
+                }
+
+                request.finally(function() {
+                    vm.isLoading = false;
+                });
+
+            }
+
+            function remove(destination) {
+                if (!confirm('eliminar este destinatario?')) {
+                    return;
+                }
+
+                phiApi.remove(destinationsUrl + "/" + destination.id)
+                    .then(function() {
+                        vm.destinations.splice(vm.destinations.indexOf(destination), 1);
+                    });
+            }
+
 
             function initialize() {
                 phiApi.get("types/post")
                     .then(function(response) {
                         vm.types = response.data;
-                        phiApi.get(settingsUrl)
+                        phiApi.get(destinationsUrl)
                             .then(function(response) {
-                                vm.settings = response.data.map(sanitizeSetting);
+                                vm.destinations = response.data.map(sanitizeDestination);
                             });
                     });
             }
 
-            function getTransportName(transport) {
-                switch (transport) {
-                    case 'mobile':
-                        return 'aplicación móvil';
-                    break;
-                    default:
-                        return transport;
-                    break;
+
+
+            function sanitizeDestination(destination) {
+
+                sanitizeSchedule(destination);
+
+                /* Fill preferences */
+                var allPreferences = [];
+
+                if (destination.preferences == undefined) {
+                    destination.preferences = [];
                 }
-            }
-
-            function sanitizeSetting(setting) {
-                setting.hasSchedule = !!setting.schedule;
-                if (setting.hasSchedule) {
-                    setting.scheduleDate = new Date(null, null, null, setting.schedule.slice(0, 2), setting.schedule.slice(-2));
-                }
-                fillMissingTypes(setting);
-                return setting;
-            }
-
-            function fillMissingTypes(setting) {
-
-                // if this setting is already a type setting, ignore
-                if (setting.type != undefined) {
-                    return setting;
-                }
-
-                var typeSettings = [];
 
                 for (var cont = 0; cont < vm.types.length; cont++) {
 
-                    var type        = vm.types[cont];
-                    var typeSetting = findTypeSetting(setting.types, type.singular);
+                    var type       = vm.types[cont];
+                    var preference = findPreference(destination.preferences, type.singular);
 
-                    if (typeSetting) {
-                        typeSettings.push(sanitizeSetting(typeSetting));
+                    if (preference) {
+                        allPreferences.push(sanitizeSchedule(preference));
                     } else {
                         // settings for this type are not explicitly declared.  Crete default:
-                        typeSettings.push({
+                        allPreferences.push({
                             type: type.singular,
                             isEnabled: true
                         });
                     }
                 }
 
-                setting.types = typeSettings;
-                return setting;
+                destination.preferences = allPreferences;
+
+                return destination;
             }
 
-            function findTypeSetting(settingArray, typeName) {
 
-                if (settingArray == undefined) {
+
+            function sanitizeSchedule(preference) {
+
+                preference.isEnabled = preference.isEnabled == "1";
+
+                preference.hasSchedule = !!preference.schedule;
+                if (preference.hasSchedule) {
+                    preference.scheduleDate = new Date(null, null, null, preference.schedule.slice(0, 2), preference.schedule.slice(-2));
+                }
+                return preference;
+            }
+
+
+            function findPreference(preferences, typeName) {
+
+                if (preferences == undefined) {
                     return null;
                 }
 
-                for (var cont = 0; cont < settingArray.length; cont++) {
-                    var typeSetting = settingArray[cont];
-                    if (typeSetting.type == typeName) {
-                        return typeSetting;
+                for (var cont = 0; cont < preferences.length; cont++) {
+                    var preference = preferences[cont];
+                    if (preference.type == typeName) {
+                        return preference;
                     }
                 }
 
                 return null;
-
             }
-
-
-
-            function toHour(date) {
-                var hours   = ("00"+String(date.getHours())).slice(-2);
-                var minutes = ("00"+String(date.getMinutes())).slice(-2);
-                return hours+minutes;
-            }
-
-
-            function save() {
-                phiApi.post(settingsUrl, vm.settings)
-                    .then(function(response) {
-                        initialize(); // reload everything
-                    });
-            }
-
-            function toggleScheduling(setting, isEnabled) {
-                if (!setting.scheduleDate) {
-                    setting.scheduleDate = new Date(null, null, null, 17, 0);
-                }
-                setting.schedule = isEnabled ? vm.toHour(setting.scheduleDate) : null;
-            }
-
-            function describeSetting(setting) {
-
-                var notices = [];
-
-                if (!setting.isEnabled) {
-                    notices.push('desactivado');
-                    return notices;
-                }
-
-                if (setting.hasSchedule) {
-                    var hours   = setting.scheduleDate.getHours();
-                    var minutes = ('00' + String(setting.scheduleDate.getMinutes())).slice(-2);
-                    var am      = hours >= 12 ? 'pm' : 'am';
-
-                    if (hours >= 12) {
-                        hours = hours - 12;
-                    }
-
-                    if (hours == 0) {
-                        hours = 12;
-                    }
-
-                    notices.push('se envia un consolidado a las ' + hours + ':' + minutes + ' ' + am);
-                } else {
-                    notices.push('activado');
-                }
-
-                if (setting.types) {
-
-                    var disabledTypes = [];
-
-                    for (var cont = 0; cont < setting.types.length; cont++) {
-
-                        var typeSetting = setting.types[cont];
-                        var type        = getType(typeSetting.type);
-
-                        if (!typeSetting.isEnabled) {
-                            disabledTypes.push(type.plural);
-                            continue;
-                        }
-
-                        if (typeSetting.hasSchedule) {
-                            notices.push((type.gender ? 'los ' : 'las ') + type.plural + ' se consolidan');
-                        }
-                    }
-
-                    if (disabledTypes.length > 0) {
-                        notices.push("excepto " + disabledTypes.join(", "));
-                    }
-                }
-
-                return notices;
-
-            }
-
-            function getType(typeName) {
-                for (var cont = 0; cont < vm.types.length; cont++) {
-                    if (vm.types[cont].singular == typeName) {
-                        return vm.types[cont];
-                    }
-                }
-                return null;
-            }
-
 
 
         }

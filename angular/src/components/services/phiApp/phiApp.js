@@ -41,7 +41,7 @@ phiApp.broadcast('notification', {
 
     angular
         .module("phidias-angular")
-        .provider('phiApp', phiApp);
+        .provider("phiApp", phiApp);
 
     function phiApp() {
 
@@ -61,6 +61,10 @@ phiApp.broadcast('notification', {
                 endpoint: null,
                 logo:     null,
                 loadCode: loadCode,
+                clear:    clear,
+
+                // google client id,
+                googleClientId: null,
 
                 // authentication
                 isAuthenticated: false,
@@ -98,25 +102,16 @@ phiApp.broadcast('notification', {
             ///////
 
             function activate() {
-
-                /* Look for stored data */
-                var storedData = phiStorage.local.get('phiApp');
-                if (!storedData) {
-                    storedData = getDataFromMetaTags();
-                }
-
-                load(storedData);
-
+                var data = {};
+                angular.merge(data, getDataFromMetaTags());
+                angular.merge(data, phiStorage.local.get("phiApp"));
+                load(data);
             }
 
-            function loadCode(code, rackUrl, useHttps) {
+            function loadCode(code, rackUrl) {
 
                 if (rackUrl == undefined) {
                     rackUrl = "http://phidias.io/";
-                }
-
-                if (useHttps == undefined) {
-                    useHttps = true;
                 }
 
                 return $http.get(rackUrl + "/code/" + code)
@@ -124,7 +119,7 @@ phiApp.broadcast('notification', {
                         load({
                             title:    response.data.title,
                             logo:     response.data.logo,
-                            endpoint: (useHttps ? "https://" : "http://") + response.data.url
+                            endpoint: response.data.url
                         });
                     });
 
@@ -133,17 +128,20 @@ phiApp.broadcast('notification', {
 
             function load(appData) {
 
-                if (!appData.endpoint) {
+                if (!appData) {
                     return;
                 }
 
-                service.isLoaded = true;
-                service.title    = appData.title;
-                service.endpoint = appData.endpoint;
-                service.logo     = appData.logo;
-                service.token    = appData.token;
+                service.title          = appData.title          || service.title;
+                service.logo           = appData.logo           || service.logo;
+                service.token          = appData.token          || service.token;
+                service.googleClientId = appData.googleClientId || service.googleClientId;
 
-                phiApi.setHost(service.endpoint);
+                if (appData.endpoint) {
+                    service.isLoaded       = true;
+                    service.endpoint       = appData.endpoint;
+                    phiApi.setHost(service.endpoint);
+                }
 
                 if (service.token) {
                     service.setToken(service.token);
@@ -153,14 +151,19 @@ phiApp.broadcast('notification', {
             }
 
             function store() {
-                phiStorage.local.set('phiApp', {
-                    title:    service.title,
-                    endpoint: service.endpoint,
-                    logo:     service.logo,
-                    token:    service.token
+                phiStorage.local.set("phiApp", {
+                    title:          service.title,
+                    endpoint:       service.endpoint,
+                    logo:           service.logo,
+                    token:          service.token,
+                    googleClientId: service.googleClientId
                 });
             }
 
+            function clear() {
+                phiStorage.clear("phiApp");
+                load(getDataFromMetaTags());
+            }
 
             function setToken(strToken) {
                 service.token           = strToken;
@@ -177,7 +180,7 @@ phiApp.broadcast('notification', {
             function logout() {
 
                 if (service.user && service.user.id && window.device && window.device.uuid) {
-                    phiApi.delete("people/" + service.authentication.id + "/devices/" + window.device.uuid);
+                    phiApi.delete("people/" + service.user.id + "/devices/" + window.device.uuid);
                 }
 
                 service.token = null;
@@ -203,7 +206,7 @@ phiApp.broadcast('notification', {
                     )
                     .then(function(response) {
                         service.setToken(response.data.access_token);
-                        deferred.resolve(service.authentication);
+                        deferred.resolve(service.user);
                     }, function (error) {
                         deferred.reject(error);
                     });
@@ -223,7 +226,7 @@ phiApp.broadcast('notification', {
                             })
                             .then(function (response) {
                                 service.setToken(response.data.access_token);
-                                deferred.resolve(service.authentication);
+                                deferred.resolve(service.user);
                             }, function(error) {
                                 deferred.reject(error);
                             });
@@ -242,7 +245,7 @@ phiApp.broadcast('notification', {
 
                 var push = PushNotification.init({
                     android: {
-                        senderID: "890266961007"
+                        senderID: service.googleClientId
                     },
                     ios: {
                         alert: "true",
@@ -258,7 +261,7 @@ phiApp.broadcast('notification', {
                         return;
                     }
 
-                    phiApi.post("people/" + service.authentication.id + "/devices/", {
+                    phiApi.post("people/" + service.user.id + "/devices/", {
                         token:    data.registrationId,
                         platform: window.device.platform,
                         model:    window.device.model,
@@ -278,7 +281,7 @@ phiApp.broadcast('notification', {
                 });
 
                 push.on('error', function(e) {
-                    // e.message
+                    alert(e.message);
                 });
 
             }
@@ -293,7 +296,7 @@ phiApp.broadcast('notification', {
                 // https://developers.google.com/identity/protocols/OAuth2UserAgent#formingtheurl
                 var authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" + $httpParamSerializer({
                     "redirect_uri":  "http://www.phidias.co/googlesignin.html",
-                    "client_id":     "890266961007.apps.googleusercontent.com",
+                    "client_id":     service.googleClientId + ".apps.googleusercontent.com",
                     "scope":         "email",
                     "response_type": "code",
                     "prompt":        "select_account"
@@ -349,6 +352,7 @@ phiApp.broadcast('notification', {
 
                 /* Obtain data from metatags (in public/index.html) */
                 var metas = $document.find('meta');
+
                 for (var cont = 0; cont < metas.length; cont++) {
 
                     /* Obtain endpoint from "phi-endpoint" metatag */
@@ -364,6 +368,11 @@ phiApp.broadcast('notification', {
                     /* Obtain logo from "phi-endpoint" metatag */
                     if (metas[cont].name == "phi-logo") {
                         retval.logo = metas[cont].content;
+                    }
+
+                    /* Obtain googleClientId from "phi-google-client-id" metatag */
+                    if (metas[cont].name == "phi-google-client-id") {
+                        retval.googleClientId = metas[cont].content;
                     }
 
                 }

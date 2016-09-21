@@ -1,0 +1,54 @@
+<phi-setting ng-repeat="setting in vm.settings" class="setting-transport transport-{{setting.transport}}" ng-class="{open: setting.isOpen, closed: !setting.isOpen, enabled: setting.isEnabled, disabled: !setting.isEnabled}">
+
+    <phi-setting-header ng-click="setting.isOpen = !setting.isOpen">
+        <phi-setting-icon></phi-setting-icon>
+        <phi-setting-contents>
+            <phi-setting-title ng-bind="vm.getTransportName(setting.transport)"></phi-setting-title>
+            <phi-setting-notice ng-repeat="notice in vm.describeSetting(setting)" ng-bind="notice"></phi-setting-notice>
+        </phi-setting-contents>
+    </phi-setting-header>
+
+    <phi-setting-body>
+
+        <phi-checkbox ng-model="setting.isEnabled">recibir notificaciones</phi-checkbox>
+
+        <phi-setting-schedule>
+            <phi-checkbox ng-model="setting.hasSchedule" ng-change="vm.toggleScheduling(setting, setting.hasSchedule)">consolidar en un envio diario</phi-checkbox>
+            <div phi-visible="{{!!setting.hasSchedule}}" phi-visible-animation="scale" class="bootstrap">
+                <!--<uib-timepicker class="bootstrap" ng-model="setting.scheduleDate" minute-step="10" ng-change="setting.schedule = vm.toHour(setting.scheduleDate)"></uib-timepicker>-->
+                <input bs-timepicker autoclose="false" type="text" name="endTime" ng-model="setting.scheduleDate" class="form-control" size="8" placeholder="hora" />
+            </div>
+        </phi-setting-schedule>
+
+        <phi-drawer ng-class="{open: setting.drawerIsOpen, closed: !setting.drawerIsOpen}">
+
+            <phi-drawer-title ng-click="setting.drawerIsOpen = !setting.drawerIsOpen">filtrar por tipo</phi-drawer-title>
+
+            <phi-drawer-body>
+                <phi-setting ng-repeat="typeSetting in setting.types" ng-class="{open: typeSetting.isOpen, closed: !typeSetting.isOpen, enabled: typeSetting.isEnabled, disabled: !typeSetting.isEnabled}">
+                    <phi-setting-header ng-click="typeSetting.isOpen = !typeSetting.isOpen">
+                        <phi-setting-icon>{{type.icon}}</phi-setting-icon>
+                        <phi-setting-contents>
+                            <phi-setting-title ng-bind="typeSetting.type"></phi-setting-title>
+                            <phi-setting-notice ng-repeat="notice in vm.describeSetting(typeSetting)" ng-bind="notice"></phi-setting-notice>
+                        </phi-setting-contents>
+                    </phi-setting-header>
+                    <phi-setting-body>
+                        <phi-checkbox ng-model="typeSetting.isEnabled">recibir notificaciones</phi-checkbox>
+                        <phi-setting-schedule>
+                            <phi-checkbox ng-model="typeSetting.hasSchedule" ng-change="vm.toggleScheduling(typeSetting, typeSetting.hasSchedule)">consolidar en un envio diario</phi-checkbox>
+                            <div phi-visible="{{!!typeSetting.hasSchedule}}" phi-visible-animation="scale" class="bootstrap">
+                                <!--<uib-timepicker class="bootstrap" ng-model="typeSetting.scheduleDate" minute-step="10" ng-change="typeSetting.schedule = vm.toHour(typeSetting.scheduleDate)"></uib-timepicker>-->
+                                <input bs-timepicker autoclose="false" type="text" name="endTime" ng-model="typeSetting.scheduleDate" class="form-control" size="8" placeholder="hora" />
+                            </div>
+                        </phi-setting-schedule>
+                    </phi-setting-body>
+                </phi-setting>
+            </phi-drawer-body>
+
+        </phi-drawer>
+
+    </phi-setting-body>
+</phi-setting>
+
+<phi-button ng-click="vm.save()">Guardar</phi-button>

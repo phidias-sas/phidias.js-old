@@ -43,7 +43,7 @@
 
                 /* Cache handlers */
                 cacheIsEnabled: true,
-                maxCacheTime: 30, // default cache lifetime in seconds
+                maxCacheTime: 20, // default cache lifetime in seconds
                 setCaching: function(value) {
                     service.cacheIsEnabled = value;
                 }

@@ -181,80 +181,6 @@ Creates a containing element tinted with the given hue
     };
 
 })();
-angular.module("phidias-angular").directive("phiPosition", ["phiCoordinates", function(phiCoordinates) {
-
-    return {
-
-        restrict: "A",
-
-        scope: {},
-
-        link: function(scope, element, attributes)  {
-
-            element.parent().css("position", "relative");
-            element.css("position", "absolute");
-
-            scope.reposition = function(positionString) {
-
-                var boundingRect = phiCoordinates.getBounds(element);
-                var alignment    = phiCoordinates.parseAlignmentString(positionString) || {vertical: "top", horizontal: "left"};
-
-                var coordinates  = {
-                    top:        "auto",
-                    left:       "auto",
-                    bottom:     "auto",
-                    right:      "auto",
-                    marginTop:  0,
-                    marginLeft: 0
-                };
-
-                switch (alignment.vertical) {
-
-                    case "top":
-                        coordinates.top = "10px";
-                    break;
-
-                    case "center":
-                        coordinates.top       = "50%";
-                        coordinates.marginTop = (boundingRect.height * -0.5) + "px";
-                    break;
-
-                    case "bottom":
-                        coordinates.bottom = "10px";
-                    break;
-
-                }
-
-                switch (alignment.horizontal) {
-
-                    case "left":
-                        coordinates.left = "10px";
-                    break;
-
-                    case "center":
-                        coordinates.left       = "50%";
-                        coordinates.marginLeft = (boundingRect.width * -0.5) + "px";
-                    break;
-
-                    case "right":
-                        coordinates.right = "10px";
-                    break;
-
-                }
-
-                element.css(coordinates);
-
-            };
-
-            attributes.$observe("phiPosition", function(positionString) {
-                scope.reposition(positionString);
-            });
-
-        }
-    };
-
-}]);
-
 /*
 The phi-modal attribute only appends the element to the bottom of the body
 and styles it as a fixed full-screen element (100% width and height).
@@ -404,6 +330,80 @@ Usage:
     };
 
 })();
+
+angular.module("phidias-angular").directive("phiPosition", ["phiCoordinates", function(phiCoordinates) {
+
+    return {
+
+        restrict: "A",
+
+        scope: {},
+
+        link: function(scope, element, attributes)  {
+
+            element.parent().css("position", "relative");
+            element.css("position", "absolute");
+
+            scope.reposition = function(positionString) {
+
+                var boundingRect = phiCoordinates.getBounds(element);
+                var alignment    = phiCoordinates.parseAlignmentString(positionString) || {vertical: "top", horizontal: "left"};
+
+                var coordinates  = {
+                    top:        "auto",
+                    left:       "auto",
+                    bottom:     "auto",
+                    right:      "auto",
+                    marginTop:  0,
+                    marginLeft: 0
+                };
+
+                switch (alignment.vertical) {
+
+                    case "top":
+                        coordinates.top = "10px";
+                    break;
+
+                    case "center":
+                        coordinates.top       = "50%";
+                        coordinates.marginTop = (boundingRect.height * -0.5) + "px";
+                    break;
+
+                    case "bottom":
+                        coordinates.bottom = "10px";
+                    break;
+
+                }
+
+                switch (alignment.horizontal) {
+
+                    case "left":
+                        coordinates.left = "10px";
+                    break;
+
+                    case "center":
+                        coordinates.left       = "50%";
+                        coordinates.marginLeft = (boundingRect.width * -0.5) + "px";
+                    break;
+
+                    case "right":
+                        coordinates.right = "10px";
+                    break;
+
+                }
+
+                element.css(coordinates);
+
+            };
+
+            attributes.$observe("phiPosition", function(positionString) {
+                scope.reposition(positionString);
+            });
+
+        }
+    };
+
+}]);
 
 (function() {
     'use strict';
@@ -853,32 +853,6 @@ angular.module("phidias-angular").directive('ngThumb', ['$window', function($win
     };
 
 }]);
-(function() {
-    'use strict';
-
-    angular.module("phidias-angular")
-        .directive('phiAvatar', phiAvatar);
-
-
-    function phiAvatar() {
-
-        return {
-            restrict: 'E',
-            template:
-
-                '<div>' +
-                    '<img ng-src="{{src}}" />' +
-                '</div>',
-
-            scope: {
-                src: "@"
-            }
-
-        };
-
-    };
-
-})();
 /*
 
 someObject = {
@@ -1058,7 +1032,7 @@ someObject = {
         return {
             restrict:   "E",
             transclude: true,
-            template:   "<button phi-button ng-transclude></button>",
+            template:   "<button phi-button type=\"button\" ng-transclude></button>",
             replace:    true
         }
 
@@ -1679,7 +1653,8 @@ angular.module("phidias-angular").directive("phiInput", [function() {
             restrict: 'E',
 
             scope: {
-                personId: "@"
+                personId: "@",
+                allowEdit: "="
             },
 
             templateUrl: '/components/elements/phi-notification-settings/phi-notification-settings.html',
@@ -1691,188 +1666,181 @@ angular.module("phidias-angular").directive("phiInput", [function() {
 
         function phiNotificationSettingsController() {
 
-            var vm          = this;
-            var settingsUrl = "people/" + vm.personId + "/notifications/settings";
+            var vm = this;
+            var destinationsUrl = "people/" + vm.personId + "/notification/destinations";
 
-            vm.types    = [];
-            vm.settings = {};
+            vm.transports = [
+                {
+                    name: 'email',
+                    label: 'e-Mail',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    allowEdit: true,
+                    defaultText: 'mi correo principal'
+                },
 
-            vm.getTransportName = getTransportName;
-            vm.toHour           = toHour;
+                {
+                    name: 'sms',
+                    label: 'SMS',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    allowEdit: true,
+                    defaultText: 'mi teléfono principal'
+                },
 
-            vm.toggleScheduling = toggleScheduling;
-            vm.describeSetting  = describeSetting;
+                // {
+                //     name: 'slack',
+                //     label: 'Slack',
+                //     image: phiApi.host + "/icons/fa-envelope.png",
+                //     allowEdit: true
+                // },
 
-            vm.save = save;
+                {
+                    name: 'gcm',
+                    label: 'Android',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    defaultText: 'app móvil'
+                },
+
+                {
+                    name: 'apn',
+                    label: 'Apple',
+                    image: phiApi.host + "/icons/fa-envelope.png",
+                    defaultText: 'app móvil'
+                }
+            ];
+
+            vm.types        = [];
+            vm.destinations = [];
+
+            vm.isLoading = false;
+            vm.save      = save;
+            vm.remove    = remove;
+
+            vm.scheduleHours = [];
+
+            for (var hour = 5; hour <= 23; hour++) {
+                var hour12 = hour > 12 ? hour-12 : hour;
+                var ampm   = hour > 12 ? 'pm' : 'am';
+
+                vm.scheduleHours.push({
+                    label: hour12 + ':00 ' + ampm,
+                    value: hour + '00'
+                }, {
+                    label: hour12 + ':30 ' + ampm,
+                    value: hour + '30'
+                });
+            }
+
 
             initialize();
 
-            ////////////////
+            ///////////
+
+            function save(destination) {
+
+                var request  = null;
+                vm.isLoading = true;
+
+                if (destination.id != undefined) {
+                    request = phiApi.put(destinationsUrl + "/" + destination.id, destination);
+                } else {
+                    request = phiApi.post(destinationsUrl, destination)
+                        .then(function(response) {
+                            vm.destinations.push(sanitizeDestination(response.data));
+                        });
+                }
+
+                request.finally(function() {
+                    vm.isLoading = false;
+                });
+
+            }
+
+            function remove(destination) {
+                if (!confirm('eliminar este destinatario?')) {
+                    return;
+                }
+
+                phiApi.remove(destinationsUrl + "/" + destination.id)
+                    .then(function() {
+                        vm.destinations.splice(vm.destinations.indexOf(destination), 1);
+                    });
+            }
+
 
             function initialize() {
                 phiApi.get("types/post")
                     .then(function(response) {
                         vm.types = response.data;
-                        phiApi.get(settingsUrl)
+                        phiApi.get(destinationsUrl)
                             .then(function(response) {
-                                vm.settings = response.data.map(sanitizeSetting);
+                                vm.destinations = response.data.map(sanitizeDestination);
                             });
                     });
             }
 
-            function getTransportName(transport) {
-                switch (transport) {
-                    case 'mobile':
-                        return 'aplicación móvil';
-                    break;
-                    default:
-                        return transport;
-                    break;
+
+
+            function sanitizeDestination(destination) {
+
+                sanitizeSchedule(destination);
+
+                /* Fill preferences */
+                var allPreferences = [];
+
+                if (destination.preferences == undefined) {
+                    destination.preferences = [];
                 }
-            }
-
-            function sanitizeSetting(setting) {
-                setting.hasSchedule = !!setting.schedule;
-                if (setting.hasSchedule) {
-                    setting.scheduleDate = new Date(null, null, null, setting.schedule.slice(0, 2), setting.schedule.slice(-2));
-                }
-                fillMissingTypes(setting);
-                return setting;
-            }
-
-            function fillMissingTypes(setting) {
-
-                // if this setting is already a type setting, ignore
-                if (setting.type != undefined) {
-                    return setting;
-                }
-
-                var typeSettings = [];
 
                 for (var cont = 0; cont < vm.types.length; cont++) {
 
-                    var type        = vm.types[cont];
-                    var typeSetting = findTypeSetting(setting.types, type.singular);
+                    var type       = vm.types[cont];
+                    var preference = findPreference(destination.preferences, type.singular);
 
-                    if (typeSetting) {
-                        typeSettings.push(sanitizeSetting(typeSetting));
+                    if (preference) {
+                        allPreferences.push(sanitizeSchedule(preference));
                     } else {
                         // settings for this type are not explicitly declared.  Crete default:
-                        typeSettings.push({
+                        allPreferences.push({
                             type: type.singular,
                             isEnabled: true
                         });
                     }
                 }
 
-                setting.types = typeSettings;
-                return setting;
+                destination.preferences = allPreferences;
+
+                return destination;
             }
 
-            function findTypeSetting(settingArray, typeName) {
 
-                if (settingArray == undefined) {
+
+            function sanitizeSchedule(preference) {
+
+                preference.isEnabled = preference.isEnabled == "1";
+
+                preference.hasSchedule = !!preference.schedule;
+                if (preference.hasSchedule) {
+                    preference.scheduleDate = new Date(null, null, null, preference.schedule.slice(0, 2), preference.schedule.slice(-2));
+                }
+                return preference;
+            }
+
+
+            function findPreference(preferences, typeName) {
+
+                if (preferences == undefined) {
                     return null;
                 }
 
-                for (var cont = 0; cont < settingArray.length; cont++) {
-                    var typeSetting = settingArray[cont];
-                    if (typeSetting.type == typeName) {
-                        return typeSetting;
+                for (var cont = 0; cont < preferences.length; cont++) {
+                    var preference = preferences[cont];
+                    if (preference.type == typeName) {
+                        return preference;
                     }
                 }
 
                 return null;
-
             }
-
-
-
-            function toHour(date) {
-                var hours   = ("00"+String(date.getHours())).slice(-2);
-                var minutes = ("00"+String(date.getMinutes())).slice(-2);
-                return hours+minutes;
-            }
-
-
-            function save() {
-                phiApi.post(settingsUrl, vm.settings)
-                    .then(function(response) {
-                        initialize(); // reload everything
-                    });
-            }
-
-            function toggleScheduling(setting, isEnabled) {
-                if (!setting.scheduleDate) {
-                    setting.scheduleDate = new Date(null, null, null, 17, 0);
-                }
-                setting.schedule = isEnabled ? vm.toHour(setting.scheduleDate) : null;
-            }
-
-            function describeSetting(setting) {
-
-                var notices = [];
-
-                if (!setting.isEnabled) {
-                    notices.push('desactivado');
-                    return notices;
-                }
-
-                if (setting.hasSchedule) {
-                    var hours   = setting.scheduleDate.getHours();
-                    var minutes = ('00' + String(setting.scheduleDate.getMinutes())).slice(-2);
-                    var am      = hours >= 12 ? 'pm' : 'am';
-
-                    if (hours >= 12) {
-                        hours = hours - 12;
-                    }
-
-                    if (hours == 0) {
-                        hours = 12;
-                    }
-
-                    notices.push('se envia un consolidado a las ' + hours + ':' + minutes + ' ' + am);
-                } else {
-                    notices.push('activado');
-                }
-
-                if (setting.types) {
-
-                    var disabledTypes = [];
-
-                    for (var cont = 0; cont < setting.types.length; cont++) {
-
-                        var typeSetting = setting.types[cont];
-                        var type        = getType(typeSetting.type);
-
-                        if (!typeSetting.isEnabled) {
-                            disabledTypes.push(type.plural);
-                            continue;
-                        }
-
-                        if (typeSetting.hasSchedule) {
-                            notices.push((type.gender ? 'los ' : 'las ') + type.plural + ' se consolidan');
-                        }
-                    }
-
-                    if (disabledTypes.length > 0) {
-                        notices.push("excepto " + disabledTypes.join(", "));
-                    }
-                }
-
-                return notices;
-
-            }
-
-            function getType(typeName) {
-                for (var cont = 0; cont < vm.types.length; cont++) {
-                    if (vm.types[cont].singular == typeName) {
-                        return vm.types[cont];
-                    }
-                }
-                return null;
-            }
-
 
 
         }
@@ -2373,7 +2341,7 @@ post = {
 
                 /* Cache handlers */
                 cacheIsEnabled: true,
-                maxCacheTime: 30, // default cache lifetime in seconds
+                maxCacheTime: 20, // default cache lifetime in seconds
                 setCaching: function(value) {
                     service.cacheIsEnabled = value;
                 }
@@ -2674,7 +2642,7 @@ phiApp.broadcast('notification', {
 
     angular
         .module("phidias-angular")
-        .provider('phiApp', phiApp);
+        .provider("phiApp", phiApp);
 
     function phiApp() {
 
@@ -2694,6 +2662,10 @@ phiApp.broadcast('notification', {
                 endpoint: null,
                 logo:     null,
                 loadCode: loadCode,
+                clear:    clear,
+
+                // google client id,
+                googleClientId: null,
 
                 // authentication
                 isAuthenticated: false,
@@ -2731,25 +2703,16 @@ phiApp.broadcast('notification', {
             ///////
 
             function activate() {
-
-                /* Look for stored data */
-                var storedData = phiStorage.local.get('phiApp');
-                if (!storedData) {
-                    storedData = getDataFromMetaTags();
-                }
-
-                load(storedData);
-
+                var data = {};
+                angular.merge(data, getDataFromMetaTags());
+                angular.merge(data, phiStorage.local.get("phiApp"));
+                load(data);
             }
 
-            function loadCode(code, rackUrl, useHttps) {
+            function loadCode(code, rackUrl) {
 
                 if (rackUrl == undefined) {
                     rackUrl = "http://phidias.io/";
-                }
-
-                if (useHttps == undefined) {
-                    useHttps = true;
                 }
 
                 return $http.get(rackUrl + "/code/" + code)
@@ -2757,7 +2720,7 @@ phiApp.broadcast('notification', {
                         load({
                             title:    response.data.title,
                             logo:     response.data.logo,
-                            endpoint: (useHttps ? "https://" : "http://") + response.data.url
+                            endpoint: response.data.url
                         });
                     });
 
@@ -2766,17 +2729,20 @@ phiApp.broadcast('notification', {
 
             function load(appData) {
 
-                if (!appData.endpoint) {
+                if (!appData) {
                     return;
                 }
 
-                service.isLoaded = true;
-                service.title    = appData.title;
-                service.endpoint = appData.endpoint;
-                service.logo     = appData.logo;
-                service.token    = appData.token;
+                service.title          = appData.title          || service.title;
+                service.logo           = appData.logo           || service.logo;
+                service.token          = appData.token          || service.token;
+                service.googleClientId = appData.googleClientId || service.googleClientId;
 
-                phiApi.setHost(service.endpoint);
+                if (appData.endpoint) {
+                    service.isLoaded       = true;
+                    service.endpoint       = appData.endpoint;
+                    phiApi.setHost(service.endpoint);
+                }
 
                 if (service.token) {
                     service.setToken(service.token);
@@ -2786,14 +2752,19 @@ phiApp.broadcast('notification', {
             }
 
             function store() {
-                phiStorage.local.set('phiApp', {
-                    title:    service.title,
-                    endpoint: service.endpoint,
-                    logo:     service.logo,
-                    token:    service.token
+                phiStorage.local.set("phiApp", {
+                    title:          service.title,
+                    endpoint:       service.endpoint,
+                    logo:           service.logo,
+                    token:          service.token,
+                    googleClientId: service.googleClientId
                 });
             }
 
+            function clear() {
+                phiStorage.clear("phiApp");
+                load(getDataFromMetaTags());
+            }
 
             function setToken(strToken) {
                 service.token           = strToken;
@@ -2810,7 +2781,7 @@ phiApp.broadcast('notification', {
             function logout() {
 
                 if (service.user && service.user.id && window.device && window.device.uuid) {
-                    phiApi.delete("people/" + service.authentication.id + "/devices/" + window.device.uuid);
+                    phiApi.delete("people/" + service.user.id + "/devices/" + window.device.uuid);
                 }
 
                 service.token = null;
@@ -2836,7 +2807,7 @@ phiApp.broadcast('notification', {
                     )
                     .then(function(response) {
                         service.setToken(response.data.access_token);
-                        deferred.resolve(service.authentication);
+                        deferred.resolve(service.user);
                     }, function (error) {
                         deferred.reject(error);
                     });
@@ -2856,7 +2827,7 @@ phiApp.broadcast('notification', {
                             })
                             .then(function (response) {
                                 service.setToken(response.data.access_token);
-                                deferred.resolve(service.authentication);
+                                deferred.resolve(service.user);
                             }, function(error) {
                                 deferred.reject(error);
                             });
@@ -2875,7 +2846,7 @@ phiApp.broadcast('notification', {
 
                 var push = PushNotification.init({
                     android: {
-                        senderID: "890266961007"
+                        senderID: service.googleClientId
                     },
                     ios: {
                         alert: "true",
@@ -2891,7 +2862,7 @@ phiApp.broadcast('notification', {
                         return;
                     }
 
-                    phiApi.post("people/" + service.authentication.id + "/devices/", {
+                    phiApi.post("people/" + service.user.id + "/devices/", {
                         token:    data.registrationId,
                         platform: window.device.platform,
                         model:    window.device.model,
@@ -2911,7 +2882,7 @@ phiApp.broadcast('notification', {
                 });
 
                 push.on('error', function(e) {
-                    // e.message
+                    alert(e.message);
                 });
 
             }
@@ -2926,7 +2897,7 @@ phiApp.broadcast('notification', {
                 // https://developers.google.com/identity/protocols/OAuth2UserAgent#formingtheurl
                 var authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" + $httpParamSerializer({
                     "redirect_uri":  "http://www.phidias.co/googlesignin.html",
-                    "client_id":     "890266961007.apps.googleusercontent.com",
+                    "client_id":     service.googleClientId + ".apps.googleusercontent.com",
                     "scope":         "email",
                     "response_type": "code",
                     "prompt":        "select_account"
@@ -2982,6 +2953,7 @@ phiApp.broadcast('notification', {
 
                 /* Obtain data from metatags (in public/index.html) */
                 var metas = $document.find('meta');
+
                 for (var cont = 0; cont < metas.length; cont++) {
 
                     /* Obtain endpoint from "phi-endpoint" metatag */
@@ -2997,6 +2969,11 @@ phiApp.broadcast('notification', {
                     /* Obtain logo from "phi-endpoint" metatag */
                     if (metas[cont].name == "phi-logo") {
                         retval.logo = metas[cont].content;
+                    }
+
+                    /* Obtain googleClientId from "phi-google-client-id" metatag */
+                    if (metas[cont].name == "phi-google-client-id") {
+                        retval.googleClientId = metas[cont].content;
                     }
 
                 }
@@ -3430,6 +3407,247 @@ phiStorage.local.clear(); // clears all
 (function() {
     'use strict';
 
+    angular.module("phidias-angular")
+        .directive('phiAvatar', phiAvatar);
+
+
+    function phiAvatar() {
+
+        return {
+            restrict: 'E',
+            template:
+
+                '<div>' +
+                    '<img ng-src="{{src}}" />' +
+                '</div>',
+
+            scope: {
+                src: "@"
+            }
+
+        };
+
+    };
+
+})();
+(function() {
+    'use strict';
+
+    angular.module("phidias-angular")
+        .directive('phiNotificationSettingsOld', phiNotificationSettings);
+
+    phiNotificationSettings.$inject = ["phiApi"];
+    function phiNotificationSettings(phiApi) {
+
+        return {
+
+            restrict: 'E',
+
+            scope: {
+                personId: "@"
+            },
+
+            templateUrl: '/components/elements/phi-notification-settings/phi-notification-settings.html',
+            controller: phiNotificationSettingsController,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+
+
+        function phiNotificationSettingsController() {
+
+            var vm          = this;
+            var settingsUrl = "people/" + vm.personId + "/notifications/settings";
+
+            vm.types    = [];
+            vm.settings = {};
+
+            vm.getTransportName = getTransportName;
+            vm.toHour           = toHour;
+
+            vm.toggleScheduling = toggleScheduling;
+            vm.describeSetting  = describeSetting;
+
+            vm.save = save;
+
+            initialize();
+
+            ////////////////
+
+            function initialize() {
+                phiApi.get("types/post")
+                    .then(function(response) {
+                        vm.types = response.data;
+                        phiApi.get(settingsUrl)
+                            .then(function(response) {
+                                vm.settings = response.data.map(sanitizeSetting);
+                            });
+                    });
+            }
+
+            function getTransportName(transport) {
+                switch (transport) {
+                    case 'mobile':
+                        return 'aplicación móvil';
+                    break;
+                    default:
+                        return transport;
+                    break;
+                }
+            }
+
+            function sanitizeSetting(setting) {
+                setting.hasSchedule = !!setting.schedule;
+                if (setting.hasSchedule) {
+                    setting.scheduleDate = new Date(null, null, null, setting.schedule.slice(0, 2), setting.schedule.slice(-2));
+                }
+                fillMissingTypes(setting);
+                return setting;
+            }
+
+            function fillMissingTypes(setting) {
+
+                // if this setting is already a type setting, ignore
+                if (setting.type != undefined) {
+                    return setting;
+                }
+
+                var typeSettings = [];
+
+                for (var cont = 0; cont < vm.types.length; cont++) {
+
+                    var type        = vm.types[cont];
+                    var typeSetting = findTypeSetting(setting.types, type.singular);
+
+                    if (typeSetting) {
+                        typeSettings.push(sanitizeSetting(typeSetting));
+                    } else {
+                        // settings for this type are not explicitly declared.  Crete default:
+                        typeSettings.push({
+                            type: type.singular,
+                            isEnabled: true
+                        });
+                    }
+                }
+
+                setting.types = typeSettings;
+                return setting;
+            }
+
+            function findTypeSetting(settingArray, typeName) {
+
+                if (settingArray == undefined) {
+                    return null;
+                }
+
+                for (var cont = 0; cont < settingArray.length; cont++) {
+                    var typeSetting = settingArray[cont];
+                    if (typeSetting.type == typeName) {
+                        return typeSetting;
+                    }
+                }
+
+                return null;
+
+            }
+
+
+
+            function toHour(date) {
+                var hours   = ("00"+String(date.getHours())).slice(-2);
+                var minutes = ("00"+String(date.getMinutes())).slice(-2);
+                return hours+minutes;
+            }
+
+
+            function save() {
+                phiApi.post(settingsUrl, vm.settings)
+                    .then(function(response) {
+                        initialize(); // reload everything
+                    });
+            }
+
+            function toggleScheduling(setting, isEnabled) {
+                if (!setting.scheduleDate) {
+                    setting.scheduleDate = new Date(null, null, null, 17, 0);
+                }
+                setting.schedule = isEnabled ? vm.toHour(setting.scheduleDate) : null;
+            }
+
+            function describeSetting(setting) {
+
+                var notices = [];
+
+                if (!setting.isEnabled) {
+                    notices.push('desactivado');
+                    return notices;
+                }
+
+                if (setting.hasSchedule) {
+                    var hours   = setting.scheduleDate.getHours();
+                    var minutes = ('00' + String(setting.scheduleDate.getMinutes())).slice(-2);
+                    var am      = hours >= 12 ? 'pm' : 'am';
+
+                    if (hours >= 12) {
+                        hours = hours - 12;
+                    }
+
+                    if (hours == 0) {
+                        hours = 12;
+                    }
+
+                    notices.push('se envia un consolidado a las ' + hours + ':' + minutes + ' ' + am);
+                } else {
+                    notices.push('activado');
+                }
+
+                if (setting.types) {
+
+                    var disabledTypes = [];
+
+                    for (var cont = 0; cont < setting.types.length; cont++) {
+
+                        var typeSetting = setting.types[cont];
+                        var type        = getType(typeSetting.type);
+
+                        if (!typeSetting.isEnabled) {
+                            disabledTypes.push(type.plural);
+                            continue;
+                        }
+
+                        if (typeSetting.hasSchedule) {
+                            notices.push((type.gender ? 'los ' : 'las ') + type.plural + ' se consolidan');
+                        }
+                    }
+
+                    if (disabledTypes.length > 0) {
+                        notices.push("excepto " + disabledTypes.join(", "));
+                    }
+                }
+
+                return notices;
+
+            }
+
+            function getType(typeName) {
+                for (var cont = 0; cont < vm.types.length; cont++) {
+                    if (vm.types[cont].singular == typeName) {
+                        return vm.types[cont];
+                    }
+                }
+                return null;
+            }
+
+
+
+        }
+
+    };
+
+})();
+(function() {
+    'use strict';
+
     angular
         .module("phidias-angular")
         .directive("phiApiResourceFiles", phiApiResourceFiles);
@@ -3471,94 +3689,6 @@ phiStorage.local.clear(); // clears all
             .then(function(response) {
                 vm.files = response.data;
             });
-
-    }
-
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module("phidias-angular")
-        .factory("phiBlockFiles", phiBlockFiles);
-
-    phiBlockFiles.$inject = ["phiApi"];
-    function phiBlockFiles(phiApi) {
-
-        return function(phiBlock) {
-
-            return {
-
-                initialize: initialize,
-
-                menu: [
-                    {
-                        label: 'editar',
-                        icon:  'fa-pencil',
-                        state: 'editor'
-                    },
-
-                    {
-                        label: 'eliminar',
-                        icon:  'fa-times',
-                        state: 'delete'
-                    }
-                ],
-
-
-                states: {
-
-                    default: {
-                        template:   '<phi-api-resource-files src="{{phiBlock.ngModel.url}}"></phi-api-resource-files>'
-                    },
-
-                    editor: {
-                        controller:   editorController,
-                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
-                    },
-
-                    delete: {
-                        template:   '<form>' + 
-                                        '<h1>Eliminar esta carpeta ?</h1>' +
-                                        '<footer>' + 
-                                            '<phi-button class="danger" ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
-                                            '<phi-button class="cancel" ng-click="phiBlock.go(\'default\')">cancelar</phi-button>' + 
-                                        '</footer>' + 
-                                    '</form>',
-                    }
-
-                }
-
-            };
-
-            //////////////////////
-
-            function initialize() {
-
-                if ( phiBlock.ngModel.url ) {
-                    phiBlock.go("default");
-                    return;
-                }
-
-                phiBlock.go("editor");
-
-            }
-
-
-            function editorController() {
-
-                if ( !phiBlock.ngModel.url ) {
-                    //make one up I guess!
-                    var random = Math.floor((Math.random() * 10000) + 1);
-
-                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
-                    phiBlock.change();
-                }
-
-            }
-
-        }
-
 
     }
 
@@ -3868,6 +3998,94 @@ phiStorage.local.clear(); // clears all
 
     angular
         .module("phidias-angular")
+        .factory("phiBlockFiles", phiBlockFiles);
+
+    phiBlockFiles.$inject = ["phiApi"];
+    function phiBlockFiles(phiApi) {
+
+        return function(phiBlock) {
+
+            return {
+
+                initialize: initialize,
+
+                menu: [
+                    {
+                        label: 'editar',
+                        icon:  'fa-pencil',
+                        state: 'editor'
+                    },
+
+                    {
+                        label: 'eliminar',
+                        icon:  'fa-times',
+                        state: 'delete'
+                    }
+                ],
+
+
+                states: {
+
+                    default: {
+                        template:   '<phi-api-resource-files src="{{phiBlock.ngModel.url}}"></phi-api-resource-files>'
+                    },
+
+                    editor: {
+                        controller:   editorController,
+                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
+                    },
+
+                    delete: {
+                        template:   '<form>' + 
+                                        '<h1>Eliminar esta carpeta ?</h1>' +
+                                        '<footer>' + 
+                                            '<phi-button class="danger" ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
+                                            '<phi-button class="cancel" ng-click="phiBlock.go(\'default\')">cancelar</phi-button>' + 
+                                        '</footer>' + 
+                                    '</form>',
+                    }
+
+                }
+
+            };
+
+            //////////////////////
+
+            function initialize() {
+
+                if ( phiBlock.ngModel.url ) {
+                    phiBlock.go("default");
+                    return;
+                }
+
+                phiBlock.go("editor");
+
+            }
+
+
+            function editorController() {
+
+                if ( !phiBlock.ngModel.url ) {
+                    //make one up I guess!
+                    var random = Math.floor((Math.random() * 10000) + 1);
+
+                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
+                    phiBlock.change();
+                }
+
+            }
+
+        }
+
+
+    }
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
         .factory("phiBlockGallery", phiBlockGallery);
 
     phiBlockGallery.$inject = ["phiApi"];
@@ -4136,60 +4354,6 @@ phiStorage.local.clear(); // clears all
 
     angular
         .module("phidias-angular")
-        .factory("phiBlockV3", phiBlockV3);
-
-    phiBlockV3.$inject = ["phiApi", "$http", "$sce"];
-    function phiBlockV3(phiApi, $http, $sce) {
-        return function(phiBlock) {
-
-            function initialize() {
-                if ( !phiBlock.ngModel.url ) {
-                    phiBlock.go("error");
-                    return;
-                }
-                phiBlock.go("default");
-            }
-
-            function defaultController() {
-
-                var vm = this;
-
-                $http.get(phiBlock.ngModel.url, {
-                    headers: {'Authorization': 'Bearer ' + phiApi.token}
-                }).then(function(response) {
-                    // vm.body = response.data;
-                    vm.body = $sce.trustAsHtml(response.data);
-                }, function() {
-                    phiBlock.go("error");
-                });
-
-            }
-
-            return {
-                initialize: initialize,
-                states: {
-                    default: {
-                        controller:   defaultController,
-                        controllerAs: 'vm',
-                        template:     '<div ng-bind-html="vm.body"></div>'
-                    },
-                    error: {
-                        template: '<h1>Error cargando datos adjuntos</h1>'
-                    }
-                }
-            };
-
-        }
-
-
-    }
-
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module("phidias-angular")
         .factory("phiBlockYoutube", phiBlockYoutube);
 
     phiBlockYoutube.$inject = ["phiApi"];
@@ -4373,6 +4537,60 @@ phiStorage.local.clear(); // clears all
     }
 
 })();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
+        .factory("phiBlockV3", phiBlockV3);
+
+    phiBlockV3.$inject = ["phiApi", "$http", "$sce"];
+    function phiBlockV3(phiApi, $http, $sce) {
+        return function(phiBlock) {
+
+            function initialize() {
+                if ( !phiBlock.ngModel.url ) {
+                    phiBlock.go("error");
+                    return;
+                }
+                phiBlock.go("default");
+            }
+
+            function defaultController() {
+
+                var vm = this;
+
+                $http.get(phiBlock.ngModel.url, {
+                    headers: {'Authorization': 'Bearer ' + phiApi.token}
+                }).then(function(response) {
+                    // vm.body = response.data;
+                    vm.body = $sce.trustAsHtml(response.data);
+                }, function() {
+                    phiBlock.go("error");
+                });
+
+            }
+
+            return {
+                initialize: initialize,
+                states: {
+                    default: {
+                        controller:   defaultController,
+                        controllerAs: 'vm',
+                        template:     '<div ng-bind-html="vm.body"></div>'
+                    },
+                    error: {
+                        template: '<h1>Error cargando datos adjuntos</h1>'
+                    }
+                }
+            };
+
+        }
+
+
+    }
+
+})();
 /*
 This element provides an interface with a phi filesystem endpoint
 (see phi/filesystem.api)
@@ -4537,6 +4755,7 @@ This element provides an interface with a phi filesystem endpoint
 })();
 angular.module("phidias-angular").run(["$templateCache", function($templateCache) {$templateCache.put("/components/elements/phi-event-editor/phi-event-editor.html","<div class=\"bootstrap\">\n    <div class=\"form-inline date-range\">\n        <div class=\"form-group\">\n            <input bs-datepicker autoclose=\"true\" type=\"text\" name=\"startDate\" ng-model=\"vm.event.startDate\" class=\"form-control\" size=\"10\" placeholder=\"fecha inicial\" ng-change=\"vm.sanitize()\" />\n            <input bs-timepicker autoclose=\"false\" type=\"text\" name=\"startTime\" ng-model=\"vm.event.startDate\" class=\"form-control\" size=\"8\" placeholder=\"hora\" ng-show=\"!vm.event.allDay\" />\n        </div>\n        a\n        <div class=\"form-group\">\n            <input bs-datepicker autoclose=\"true\" type=\"text\" name=\"endDate\" ng-model=\"vm.event.endDate\" class=\"form-control\" size=\"10\" placeholder=\"fecha final\" data-min-date=\"{{vm.minDate}}\" ng-change=\"vm.sanitize()\" />\n            <input bs-timepicker autoclose=\"false\" type=\"text\" name=\"endTime\" ng-model=\"vm.event.endDate\" class=\"form-control\" size=\"8\" placeholder=\"hora\" ng-show=\"!vm.event.allDay\" />\n        </div>\n    </div>\n    <div class=\"form-inline date-options\">\n        <div class=\"form-group\">\n            <input type=\"checkbox\" id=\"allDayChbox\" ng-model=\"vm.event.allDay\" />\n            <label for=\"allDayChbox\">Todo el dia</label>\n        </div>\n        <div class=\"form-group\">\n            <input type=\"checkbox\" id=\"repeatsChbox\" ng-checked=\"!!vm.event.repeat\" ng-click=\"vm.event.repeat = !!vm.event.repeat ? null : vm.defaultRepeat\" />\n            <label for=\"repeatsChbox\">Repetir ...</label>\n        </div>\n    </div>\n    <div class=\"repeat\" ng-if=\"!!vm.event.repeat\">\n        <phi-event-repeat ng-model=\"vm.event.repeat\"></phi-event-repeat>\n    </div>\n</div>");
 $templateCache.put("/components/elements/phi-event-repeat/phi-event-repeat.html","<div>\n\n    <div class=\"every\">\n        <label>se repite</label>\n        <select ng-model=\"vm.repeat.every\">\n            <option value=\"day\">Cada día</option>\n            <option value=\"week\">Cada semana</option>\n            <option value=\"month\">Cada mes</option>\n            <option value=\"year\">Cada año</option>\n        </select>\n    </div>\n\n    <div ng-show=\"vm.repeat.every\" class=\"interval\">\n        <label>Repetir cada</label>\n        <select ng-model=\"vm.repeat.interval\">\n            <option value=\"1\">1</option>\n            <option value=\"2\">2</option>\n            <option value=\"3\">3</option>\n            <option value=\"4\">4</option>\n            <option value=\"5\">5</option>\n            <option value=\"6\">6</option>\n            <option value=\"7\">7</option>\n            <option value=\"8\">8</option>\n            <option value=\"9\">9</option>\n            <option value=\"10\">10</option>\n            <option value=\"11\">11</option>\n            <option value=\"12\">12</option>\n            <option value=\"13\">13</option>\n            <option value=\"14\">14</option>\n            <option value=\"15\">15</option>\n            <option value=\"16\">16</option>\n            <option value=\"17\">17</option>\n            <option value=\"18\">18</option>\n            <option value=\"19\">19</option>\n            <option value=\"20\">20</option>\n            <option value=\"21\">21</option>\n            <option value=\"22\">22</option>\n            <option value=\"23\">23</option>\n            <option value=\"24\">24</option>\n            <option value=\"25\">25</option>\n            <option value=\"26\">26</option>\n            <option value=\"27\">27</option>\n            <option value=\"28\">28</option>\n            <option value=\"29\">29</option>\n            <option value=\"30\">30</option>\n        </select>\n\n        <span ng-switch=\"vm.repeat.every\">\n            <span ng-switch-when=\"day\">días</span>\n            <span ng-switch-when=\"week\">semanas</span>\n            <span ng-switch-when=\"month\">meses</span>\n            <span ng-switch-when=\"year\">años</span>\n        </span>\n    </div>\n\n    <div ng-show=\"vm.repeat.every == \'week\'\" class=\"week\">\n        <label>Día</label>\n        <ul>\n            <li>\n                <input type=\"checkbox\" id=\"event-repeat-day-mo\" ng-model=\"vm.checkedDays[1]\" ng-change=\"vm.toggleDay(1, vm.checkedDays[1])\" />\n                <label for=\"event-repeat-day-mo\">L</label>\n            </li>\n            <li>\n                <input type=\"checkbox\" id=\"event-repeat-day-tu\" ng-model=\"vm.checkedDays[2]\" ng-change=\"vm.toggleDay(2, vm.checkedDays[2])\" />\n                <label for=\"event-repeat-day-tu\">M</label>\n            </li>\n            <li>\n                <input type=\"checkbox\" id=\"event-repeat-day-we\" ng-model=\"vm.checkedDays[3]\" ng-change=\"vm.toggleDay(3, vm.checkedDays[3])\" />\n                <label for=\"event-repeat-day-we\">X</label>\n            </li>\n            <li>\n                <input type=\"checkbox\" id=\"event-repeat-day-th\" ng-model=\"vm.checkedDays[4]\" ng-change=\"vm.toggleDay(4, vm.checkedDays[4])\" />\n                <label for=\"event-repeat-day-th\">J</label>\n            </li>\n            <li>\n                <input type=\"checkbox\" id=\"event-repeat-day-fr\" ng-model=\"vm.checkedDays[5]\" ng-change=\"vm.toggleDay(5, vm.checkedDays[5])\" />\n                <label for=\"event-repeat-day-fr\">V</label>\n            </li>\n            <li>\n                <input type=\"checkbox\" id=\"event-repeat-day-sa\" ng-model=\"vm.checkedDays[6]\" ng-change=\"vm.toggleDay(6, vm.checkedDays[6])\" />\n                <label for=\"event-repeat-day-sa\">S</label>\n            </li>\n            <li>\n                <input type=\"checkbox\" id=\"event-repeat-day-su\" ng-model=\"vm.checkedDays[7]\" ng-change=\"vm.toggleDay(7, vm.checkedDays[7])\" />\n                <label for=\"event-repeat-day-su\">D</label>\n            </li>\n        </ul>\n    </div>\n\n    <div ng-show=\"vm.repeat.every == \'month\'\" class=\"month\">\n        <label>Repetir cada</label>\n        <ul>\n            <li>\n                <input id=\"event-repeat-month-day\" type=\"radio\" value=\"\" ng-model=\"vm.repeat.on\" />\n                <label for=\"event-repeat-month-day\">día del mes</label>\n            </li>\n            <li>\n                <input id=\"event-repeat-month-weekday\" type=\"radio\" value=\"weekday\" ng-model=\"vm.repeat.on\" />\n                <label for=\"event-repeat-month-weekday\">día de la semana</label>\n            </li>\n        </ul>\n    </div>\n\n    <p ng-show=\"vm.repeat.every\" class=\"summary\">\n        <span>Este evento se repetirá </span><span ng-bind=\"vm.getSummary()\"></span>\n    </p>\n\n</div>");
-$templateCache.put("/components/elements/phi-notification-settings/phi-notification-settings.html","<phi-setting ng-repeat=\"setting in vm.settings\" class=\"setting-transport transport-{{setting.transport}}\" ng-class=\"{open: setting.isOpen, closed: !setting.isOpen, enabled: setting.isEnabled, disabled: !setting.isEnabled}\">\n\n    <phi-setting-header ng-click=\"setting.isOpen = !setting.isOpen\">\n        <phi-setting-icon></phi-setting-icon>\n        <phi-setting-contents>\n            <phi-setting-title ng-bind=\"vm.getTransportName(setting.transport)\"></phi-setting-title>\n            <phi-setting-notice ng-repeat=\"notice in vm.describeSetting(setting)\" ng-bind=\"notice\"></phi-setting-notice>\n        </phi-setting-contents>\n    </phi-setting-header>\n\n    <phi-setting-body>\n\n        <phi-checkbox ng-model=\"setting.isEnabled\">recibir notificaciones</phi-checkbox>\n\n        <phi-setting-schedule>\n            <phi-checkbox ng-model=\"setting.hasSchedule\" ng-change=\"vm.toggleScheduling(setting, setting.hasSchedule)\">consolidar en un envio diario</phi-checkbox>\n            <div phi-visible=\"{{!!setting.hasSchedule}}\" phi-visible-animation=\"scale\" class=\"bootstrap\">\n                <!--<uib-timepicker class=\"bootstrap\" ng-model=\"setting.scheduleDate\" minute-step=\"10\" ng-change=\"setting.schedule = vm.toHour(setting.scheduleDate)\"></uib-timepicker>-->\n                <input bs-timepicker autoclose=\"false\" type=\"text\" name=\"endTime\" ng-model=\"setting.scheduleDate\" class=\"form-control\" size=\"8\" placeholder=\"hora\" />\n            </div>\n        </phi-setting-schedule>\n\n        <phi-drawer ng-class=\"{open: setting.drawerIsOpen, closed: !setting.drawerIsOpen}\">\n\n            <phi-drawer-title ng-click=\"setting.drawerIsOpen = !setting.drawerIsOpen\">filtrar por tipo</phi-drawer-title>\n\n            <phi-drawer-body>\n                <phi-setting ng-repeat=\"typeSetting in setting.types\" ng-class=\"{open: typeSetting.isOpen, closed: !typeSetting.isOpen, enabled: typeSetting.isEnabled, disabled: !typeSetting.isEnabled}\">\n                    <phi-setting-header ng-click=\"typeSetting.isOpen = !typeSetting.isOpen\">\n                        <phi-setting-icon>{{type.icon}}</phi-setting-icon>\n                        <phi-setting-contents>\n                            <phi-setting-title ng-bind=\"typeSetting.type\"></phi-setting-title>\n                            <phi-setting-notice ng-repeat=\"notice in vm.describeSetting(typeSetting)\" ng-bind=\"notice\"></phi-setting-notice>\n                        </phi-setting-contents>\n                    </phi-setting-header>\n                    <phi-setting-body>\n                        <phi-checkbox ng-model=\"typeSetting.isEnabled\">recibir notificaciones</phi-checkbox>\n                        <phi-setting-schedule>\n                            <phi-checkbox ng-model=\"typeSetting.hasSchedule\" ng-change=\"vm.toggleScheduling(typeSetting, typeSetting.hasSchedule)\">consolidar en un envio diario</phi-checkbox>\n                            <div phi-visible=\"{{!!typeSetting.hasSchedule}}\" phi-visible-animation=\"scale\" class=\"bootstrap\">\n                                <!--<uib-timepicker class=\"bootstrap\" ng-model=\"typeSetting.scheduleDate\" minute-step=\"10\" ng-change=\"typeSetting.schedule = vm.toHour(typeSetting.scheduleDate)\"></uib-timepicker>-->\n                                <input bs-timepicker autoclose=\"false\" type=\"text\" name=\"endTime\" ng-model=\"typeSetting.scheduleDate\" class=\"form-control\" size=\"8\" placeholder=\"hora\" />\n                            </div>\n                        </phi-setting-schedule>\n                    </phi-setting-body>\n                </phi-setting>\n            </phi-drawer-body>\n\n        </phi-drawer>\n\n    </phi-setting-body>\n</phi-setting>\n\n<phi-button ng-click=\"vm.save()\">Guardar</phi-button>");
+$templateCache.put("/components/elements/phi-notification-settings/phi-notification-settings.html","<!-- Manual list of transports -->\n<section border-box ng-repeat=\"transport in vm.transports\" ng-show=\"!!(vm.destinations|filter:{transport:transport.name}).length || (vm.allowEdit && transport.allowEdit)\" class=\"phi-notification-transport phi-notification-transport-{{transport.name}}\">\n\n    <h1 ng-bind=\"transport.label\"></h1>\n\n    <div ng-repeat=\"destination in vm.destinations | filter: {transport:transport.name}\" ng-class=\"{enabled: destination.isEnabled, disabled: !destination.isEnabled}\">\n\n        <phi-notification-setting>\n\n            <div class=\"face\" ng-click=\"destination.isExpanded = !destination.isExpanded\">\n                <h1 ng-bind=\"destination.destination || transport.defaultText || \'predeterminado\'\" phi-icon-left=\"{{destination.isExpanded ? \'fa-caret-down\' : \'fa-caret-right\'}}\"></h1>\n            </div>\n\n            <div class=\"toggler\">\n                <input id=\"toggle_{{destination.id}}\" type=\"checkbox\" class=\"tgl tgl-ios\" ng-model=\"destination.isEnabled\"  ng-change=\"vm.save(destination)\" />\n                <label for=\"toggle_{{destination.id}}\" class=\"tgl-btn\"></label>\n            </div>\n\n            <div class=\"schedule\" phi-icon=\"fa-clock-o\">\n                <select ng-model=\"destination.schedule\" ng-change=\"vm.save(destination)\" ng-options=\"hour.value as hour.label for hour in vm.scheduleHours\">\n                    <option value=\"\">inmediato</option>\n                </select>\n            </div>\n\n            <button ng-if=\"transport.allowEdit && !!destination.destination\" class=\"menu\" phi-icon=\"fa-trash-o\" ng-click=\"vm.remove(destination)\"></button>\n            <button ng-if=\"!(transport.allowEdit && !!destination.destination)\" class=\"menu\"></button> <!-- placeholder -->\n\n        </phi-notification-setting>\n\n        <div class=\"subpreferences\" phi-visible=\"{{!!destination.isExpanded}}\" phi-visible-animation=\"scale\">\n\n            <phi-notification-setting ng-repeat=\"(key, preference) in destination.preferences\">\n                <div class=\"face\">\n                    <h1 ng-bind=\"preference.type\"></h1>\n                </div>\n                <div class=\"toggler\">\n                    <input id=\"toggle_pref_{{key}}\" type=\"checkbox\" class=\"tgl tgl-ios\" ng-model=\"preference.isEnabled\"  ng-change=\"vm.save(destination)\" />\n                    <label for=\"toggle_pref_{{key}}\" class=\"tgl-btn\"></label>\n                </div>\n                <div class=\"schedule\" phi-icon=\"fa-clock-o\">\n                    <select ng-model=\"preference.schedule\" ng-change=\"vm.save(destination)\" ng-options=\"hour.value as hour.label for hour in vm.scheduleHours\">\n                        <option value=\"\">{{destination.schedule ? \'consolidado\' : \'inmediato\'}}</option>\n                    </select>\n                </div>\n            </phi-notification-setting>\n\n        </div>\n\n    </div>\n\n    <div phi-visible=\"{{transport.isAdding}}\" phi-visible-animation=\"scale\" ng-init=\"transport.new = {transport: transport.name, isEnabled:true, destination: null, schedule: null}\">\n        <phi-notification-setting>\n\n            <div class=\"face\" style=\"display:flex\">\n                <button phi-icon=\"fa-times\" ng-click=\"transport.isAdding = false\"></button>\n                <phi-input ng-model=\"transport.new.destination\"></phi-input>\n            </div>\n\n            <div class=\"toggler\">\n                <input id=\"new_{{transport.name}}\" type=\"checkbox\" class=\"tgl tgl-ios\" ng-model=\"transport.isAdding\"/>\n                <label for=\"new_{{transport.name}}\" class=\"tgl-btn\"></label>\n            </div>\n\n            <div class=\"schedule\" phi-icon=\"fa-clock-o\">\n                <select ng-model=\"transport.new.schedule\" ng-change=\"vm.save(destination)\" ng-options=\"hour.value as hour.label for hour in vm.scheduleHours\">\n                    <option value=\"\">{{destination.schedule ? \'consolidado\' : \'inmediato\'}}</option>\n                </select>\n            </div>\n\n            <button class=\"menu\" ng-click=\"vm.save(transport.new); transport.isAdding = false; transport.new = {transport: transport.name, isEnabled:true, destination: null, schedule: null}\" phi-icon=\"fa-check\"></button>\n\n        </phi-notification-setting>\n    </div>\n\n    <phi-notification-setting class=\"adder\" ng-if=\"vm.allowEdit && transport.allowEdit\" ng-click=\"transport.isAdding = true\" phi-visible=\"{{!transport.isAdding}}\" phi-visible-animation=\"scale\">\n        <div class=\"face\">\n            <h1 phi-icon-left=\"fa-plus\">agregar destinatario</h1>\n        </div>\n    </phi-notification-setting>\n\n</section>");
 $templateCache.put("/components/elements/phi-post/phi-post.html","<phi-post-header>\r\n    <phi-post-icon>\r\n        <iron-image ng-src=\"{{vm.post.author.avatar}}\" sizing=\"cover\"></iron-image>\r\n    </phi-post-icon>\r\n    <phi-post-preview>\r\n        <phi-post-author ng-bind=\"vm.post.author.firstName + \' \' + vm.post.author.lastName\"></phi-post-author>\r\n        <phi-post-date ng-bind=\"vm.post.publishDate\"></phi-post-date>\r\n    </phi-post-preview>\r\n</phi-post-header>\r\n<phi-post-body>\r\n    <!--<phi-post-description ng-bind-html=\"vm.post.description\"></phi-post-description>-->\r\n    <phi-post-blocks>\r\n        <phi-block\r\n            ng-repeat=\"block in vm.post.blocks\"\r\n            ng-model=\"block\">\r\n        </phi-block>\r\n    </phi-post-blocks>\r\n</phi-post-body>");
-$templateCache.put("/components/elements/phi-post-editor/phi-post-editor.html","<div>\n\n    <div sv-root sv-part=\"vm.post.blocks\" sv-on-sort=\"vm.reorder()\">\n\n        <div ng-repeat=\"(key, block) in vm.post.blocks\" ng-init=\"block.ctrl = {}\" class=\"phi-post-editor-block\" sv-element>\n\n            <div class=\"phi-post-editor-block-toolbar\">\n\n                <div class=\"phi-post-editor-block-toolbar-handle\" sv-handle></div>\n\n                <div ng-if=\"block.ctrl.menu\" class=\"phi-post-editor-block-toolbar-menu\">\n\n                    <phi-button\n                        id=\"menu_toggler_{{block.id}}_{{key}}\"\n                        class=\"cancel\"\n                        ng-blur=\"block.menuShown = false\"\n                        ng-show=\"block.ctrl.currentState == \'default\'\"\n                        ng-click=\"block.menuShown = !block.menuShown\"\n                        phi-icon=\"fa-ellipsis-v\">\n                    </phi-button>\n\n                    <phi-button\n                        class=\"cancel\"\n                        ng-blur=\"block.menuShown = false\"\n                        ng-show=\"block.ctrl.currentState != \'default\'\"\n                        ng-click=\"block.ctrl.go(\'default\')\"\n                        phi-icon=\"fa-arrow-left\">\n                    </phi-button>\n\n                    <div\n                        phi-tooltip-for=\"menu_toggler_{{block.id}}_{{key}}\"\n                        phi-tooltip-origin=\"top right\"\n                        phi-tooltip-align=\"bottom right\"\n                        phi-visible=\"{{!!block.menuShown}}\"\n                        phi-visible-animation=\"slide-bottom\">\n\n                        <phi-menu phi-texture=\"paper\">\n                            <phi-menu-item ng-repeat=\"action in block.ctrl.menu\" ng-click=\"block.menuShown = false; block.ctrl.go(action.state)\" phi-icon-left=\"{{action.icon}}\">\n                                {{action.label}}\n                            </phi-menu-item>\n                            <!--<phi-menu-item ng-repeat=\"item in block.ctrl.states\" ng-click=\"block.menuShown = false; block.ctrl.go(item)\">\n                                <phi-icon icon=\"{{item.icon}}\"></phi-icon>\n                                {{item}}\n                            </phi-menu-item>-->\n                        </phi-menu>\n                    </div>\n                </div>\n\n            </div>\n\n            <phi-block\n                ng-model=\"block\"\n                controller-assign=\"block.ctrl\"\n                on-change=\"vm.attachBlock(block)\"\n                on-destroy=\"vm.removeBlock(block)\"\n            >\n            </phi-block>\n\n        </div>\n\n    </div>\n\n\n    <div>\n        <div phi-visible=\"{{!!adderIsOpen}}\" phi-visible-animation=\"scale\">\n            <phi-list-item ng-repeat=\"insertable in vm.insertable\" ng-click=\"$parent.adderIsOpen = false; vm.addBlock(insertable);\" phi-icon-left=\"{{insertable.icon}}\">\n                <span ng-bind=\"insertable.title\"></span>\n            </phi-list-item>\n        </div>\n\n        <phi-list-item ng-click=\"adderIsOpen = !adderIsOpen\" phi-icon-left=\"{{adderIsOpen ? \'fa-times\' : \'fa-plus\'}}\">\n            <span ng-bind=\"adderIsOpen ? \'cancelar\' : \'adjuntar\'\"></span>\n        </phi-list-item>        \n    </div>\n\n\n</div>");}]);
+$templateCache.put("/components/elements/phi-post-editor/phi-post-editor.html","<div>\n\n    <div sv-root sv-part=\"vm.post.blocks\" sv-on-sort=\"vm.reorder()\">\n\n        <div ng-repeat=\"(key, block) in vm.post.blocks\" ng-init=\"block.ctrl = {}\" class=\"phi-post-editor-block\" sv-element>\n\n            <div class=\"phi-post-editor-block-toolbar\">\n\n                <div class=\"phi-post-editor-block-toolbar-handle\" sv-handle></div>\n\n                <div ng-if=\"block.ctrl.menu\" class=\"phi-post-editor-block-toolbar-menu\">\n\n                    <phi-button\n                        id=\"menu_toggler_{{block.id}}_{{key}}\"\n                        class=\"cancel\"\n                        ng-blur=\"block.menuShown = false\"\n                        ng-show=\"block.ctrl.currentState == \'default\'\"\n                        ng-click=\"block.menuShown = !block.menuShown\"\n                        phi-icon=\"fa-ellipsis-v\">\n                    </phi-button>\n\n                    <phi-button\n                        class=\"cancel\"\n                        ng-blur=\"block.menuShown = false\"\n                        ng-show=\"block.ctrl.currentState != \'default\'\"\n                        ng-click=\"block.ctrl.go(\'default\')\"\n                        phi-icon=\"fa-arrow-left\">\n                    </phi-button>\n\n                    <div\n                        phi-tooltip-for=\"menu_toggler_{{block.id}}_{{key}}\"\n                        phi-tooltip-origin=\"top right\"\n                        phi-tooltip-align=\"bottom right\"\n                        phi-visible=\"{{!!block.menuShown}}\"\n                        phi-visible-animation=\"slide-bottom\">\n\n                        <phi-menu phi-texture=\"paper\">\n                            <phi-menu-item ng-repeat=\"action in block.ctrl.menu\" ng-click=\"block.menuShown = false; block.ctrl.go(action.state)\" phi-icon-left=\"{{action.icon}}\">\n                                {{action.label}}\n                            </phi-menu-item>\n                            <!--<phi-menu-item ng-repeat=\"item in block.ctrl.states\" ng-click=\"block.menuShown = false; block.ctrl.go(item)\">\n                                <phi-icon icon=\"{{item.icon}}\"></phi-icon>\n                                {{item}}\n                            </phi-menu-item>-->\n                        </phi-menu>\n                    </div>\n                </div>\n\n            </div>\n\n            <phi-block\n                ng-model=\"block\"\n                controller-assign=\"block.ctrl\"\n                on-change=\"vm.attachBlock(block)\"\n                on-destroy=\"vm.removeBlock(block)\"\n            >\n            </phi-block>\n\n        </div>\n\n    </div>\n\n\n    <div>\n        <div phi-visible=\"{{!!adderIsOpen}}\" phi-visible-animation=\"scale\">\n            <phi-list-item ng-repeat=\"insertable in vm.insertable\" ng-click=\"$parent.adderIsOpen = false; vm.addBlock(insertable);\" phi-icon-left=\"{{insertable.icon}}\">\n                <span ng-bind=\"insertable.title\"></span>\n            </phi-list-item>\n        </div>\n\n        <phi-list-item ng-click=\"adderIsOpen = !adderIsOpen\" phi-icon-left=\"{{adderIsOpen ? \'fa-times\' : \'fa-plus\'}}\">\n            <span ng-bind=\"adderIsOpen ? \'cancelar\' : \'adjuntar\'\"></span>\n        </phi-list-item>        \n    </div>\n\n\n</div>");
+$templateCache.put("/components/elements/phi-notification-settings/phi-notification-settings.orig/phi-notification-settings.html","<phi-setting ng-repeat=\"setting in vm.settings\" class=\"setting-transport transport-{{setting.transport}}\" ng-class=\"{open: setting.isOpen, closed: !setting.isOpen, enabled: setting.isEnabled, disabled: !setting.isEnabled}\">\n\n    <phi-setting-header ng-click=\"setting.isOpen = !setting.isOpen\">\n        <phi-setting-icon></phi-setting-icon>\n        <phi-setting-contents>\n            <phi-setting-title ng-bind=\"vm.getTransportName(setting.transport)\"></phi-setting-title>\n            <phi-setting-notice ng-repeat=\"notice in vm.describeSetting(setting)\" ng-bind=\"notice\"></phi-setting-notice>\n        </phi-setting-contents>\n    </phi-setting-header>\n\n    <phi-setting-body>\n\n        <phi-checkbox ng-model=\"setting.isEnabled\">recibir notificaciones</phi-checkbox>\n\n        <phi-setting-schedule>\n            <phi-checkbox ng-model=\"setting.hasSchedule\" ng-change=\"vm.toggleScheduling(setting, setting.hasSchedule)\">consolidar en un envio diario</phi-checkbox>\n            <div phi-visible=\"{{!!setting.hasSchedule}}\" phi-visible-animation=\"scale\" class=\"bootstrap\">\n                <!--<uib-timepicker class=\"bootstrap\" ng-model=\"setting.scheduleDate\" minute-step=\"10\" ng-change=\"setting.schedule = vm.toHour(setting.scheduleDate)\"></uib-timepicker>-->\n                <input bs-timepicker autoclose=\"false\" type=\"text\" name=\"endTime\" ng-model=\"setting.scheduleDate\" class=\"form-control\" size=\"8\" placeholder=\"hora\" />\n            </div>\n        </phi-setting-schedule>\n\n        <phi-drawer ng-class=\"{open: setting.drawerIsOpen, closed: !setting.drawerIsOpen}\">\n\n            <phi-drawer-title ng-click=\"setting.drawerIsOpen = !setting.drawerIsOpen\">filtrar por tipo</phi-drawer-title>\n\n            <phi-drawer-body>\n                <phi-setting ng-repeat=\"typeSetting in setting.types\" ng-class=\"{open: typeSetting.isOpen, closed: !typeSetting.isOpen, enabled: typeSetting.isEnabled, disabled: !typeSetting.isEnabled}\">\n                    <phi-setting-header ng-click=\"typeSetting.isOpen = !typeSetting.isOpen\">\n                        <phi-setting-icon>{{type.icon}}</phi-setting-icon>\n                        <phi-setting-contents>\n                            <phi-setting-title ng-bind=\"typeSetting.type\"></phi-setting-title>\n                            <phi-setting-notice ng-repeat=\"notice in vm.describeSetting(typeSetting)\" ng-bind=\"notice\"></phi-setting-notice>\n                        </phi-setting-contents>\n                    </phi-setting-header>\n                    <phi-setting-body>\n                        <phi-checkbox ng-model=\"typeSetting.isEnabled\">recibir notificaciones</phi-checkbox>\n                        <phi-setting-schedule>\n                            <phi-checkbox ng-model=\"typeSetting.hasSchedule\" ng-change=\"vm.toggleScheduling(typeSetting, typeSetting.hasSchedule)\">consolidar en un envio diario</phi-checkbox>\n                            <div phi-visible=\"{{!!typeSetting.hasSchedule}}\" phi-visible-animation=\"scale\" class=\"bootstrap\">\n                                <!--<uib-timepicker class=\"bootstrap\" ng-model=\"typeSetting.scheduleDate\" minute-step=\"10\" ng-change=\"typeSetting.schedule = vm.toHour(typeSetting.scheduleDate)\"></uib-timepicker>-->\n                                <input bs-timepicker autoclose=\"false\" type=\"text\" name=\"endTime\" ng-model=\"typeSetting.scheduleDate\" class=\"form-control\" size=\"8\" placeholder=\"hora\" />\n                            </div>\n                        </phi-setting-schedule>\n                    </phi-setting-body>\n                </phi-setting>\n            </phi-drawer-body>\n\n        </phi-drawer>\n\n    </phi-setting-body>\n</phi-setting>\n\n<phi-button ng-click=\"vm.save()\">Guardar</phi-button>");}]);

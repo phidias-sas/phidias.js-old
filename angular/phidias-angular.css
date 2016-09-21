@@ -1,19 +1,5 @@
 @charset "UTF-8";
 @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css";
-[phi-boundary], phi-state phi-state-cover > *,
-phi-state phi-state-navigation > *,
-phi-state phi-state-contents > * {
-  margin: auto;
-  padding: 0;
-  max-width: 1200px; }
-
-@media (max-width: 600px) {
-  [phi-boundary], phi-state phi-state-cover > *,
-  phi-state phi-state-navigation > *,
-  phi-state phi-state-contents > * {
-    max-width: 100%;
-    max-width: calc(100% - 16px); } }
-
 [phi-color-tint] {
   position: relative; }
   [phi-color-tint] > * {
@@ -27,6 +13,20 @@ phi-state phi-state-contents > * {
   width: 100%;
   max-width: none;
   opacity: 0.5; }
+
+[phi-boundary], phi-state phi-state-cover > *,
+phi-state phi-state-navigation > *,
+phi-state phi-state-contents > * {
+  margin: auto;
+  padding: 0;
+  max-width: 1200px; }
+
+@media (max-width: 600px) {
+  [phi-boundary], phi-state phi-state-cover > *,
+  phi-state phi-state-navigation > *,
+  phi-state phi-state-contents > * {
+    max-width: 100%;
+    max-width: calc(100% - 16px); } }
 
 [phi-grid] {
   box-sizing: border-box;
@@ -7478,9 +7478,6 @@ phi-state phi-state-contents > * {
     display: inline;
     display: initial; } }
 
-[phi-inline] {
-  display: inline-block; }
-
 /**
 
 Based on: https://github.com/angular/material/blob/master/src/core/style/layout.scss
@@ -9105,12 +9102,36 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
     flex: 0 0 66.66%;
     max-height: 66.66%; } }
 
+[phi-inline] {
+  display: inline-block; }
+
 [phi-modal] {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%; }
+
+[phi-z], phi-card, phi-button, [phi-texture="paper"] {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4); }
+
+[phi-z="0"], phi-button:active, phi-button.cancel {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4) !important; }
+
+[phi-z="1"] {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4); }
+
+[phi-z="2"], phi-button:hover, phi-button:focus {
+  box-shadow: 0 4px 8px 0 #aaa; }
+
+[phi-z="3"] {
+  box-shadow: 0 7px 16px 0 #9d9d9d; }
+
+[phi-z="4"] {
+  box-shadow: 0 14px 24px 0 #959595; }
+
+[phi-z="5"] {
+  box-shadow: 0 19px 36px 0 #8a8a8a; }
 
 [phi-visible] {
   opacity: 0;
@@ -9131,26 +9152,858 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
   transition: all 310ms; }
 
 /* classes specify the visibility effect (describes how it becomes visible) */
-[phi-z], phi-button, phi-card, [phi-texture="paper"] {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4); }
+phi-block {
+  display: block; }
 
-[phi-z="0"], phi-button:active, phi-button.cancel {
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4) !important; }
+.phi-block-state-delete {
+  text-align: center; }
+  .phi-block-state-delete h1 {
+    margin: 16px 0; }
 
-[phi-z="1"] {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4); }
+phi-card {
+  display: block;
+  background-color: #fff;
+  overflow: hidden; }
+  phi-card phi-card-cover {
+    display: block;
+    background-size: cover;
+    min-height: 120px; }
+  phi-card phi-card-contents {
+    display: block; }
 
-[phi-z="2"], phi-button:hover, phi-button:focus {
-  box-shadow: 0 4px 8px 0 #aaa; }
+phi-button,
+[phi-button] {
+  display: inline-block;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 3px;
+  color: #fff;
+  text-transform: uppercase;
+  font-weight: normal;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-color: #01579b; }
+  phi-button:hover, phi-button:focus,
+  [phi-button]:hover,
+  [phi-button]:focus {
+    outline: 0; }
+  phi-button.danger,
+  [phi-button].danger {
+    background-color: #d9534f;
+    color: #fff; }
+  phi-button.cancel,
+  [phi-button].cancel {
+    background: transparent !important;
+    color: #444; }
+    phi-button.cancel:hover,
+    [phi-button].cancel:hover {
+      color: #900; }
+  phi-button[disabled],
+  [phi-button][disabled] {
+    box-shadow: none;
+    background-color: #444;
+    opacity: 0.6; }
 
-[phi-z="3"] {
-  box-shadow: 0 7px 16px 0 #9d9d9d; }
+phi-checkbox {
+  display: inline-block;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+  height: 18px; }
+  phi-checkbox .phi-checkbox-box {
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #777;
+    border-radius: 2px;
+    transition: 240ms; }
+  phi-checkbox .phi-checkbox-label {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    white-space: normal;
+    pointer-events: none;
+    user-select: text; }
+  phi-checkbox.phi-checked .phi-checkbox-box {
+    border: 2px solid transparent;
+    text-align: center;
+    background-color: #01579b;
+    /* The checkbox tick */ }
+    phi-checkbox.phi-checked .phi-checkbox-box:after {
+      content: ' ';
+      width: 35%;
+      height: 60%;
+      min-width: 6px;
+      min-height: 11px;
+      border: 3px solid #fff;
+      border-top: 0;
+      border-left: 0;
+      margin: auto;
+      margin-top: 6%;
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      display: block;
+      box-sizing: border-box; }
+  phi-checkbox[disabled] {
+    cursor: no-drop;
+    opacity: 0.6; }
+  phi-checkbox:focus .phi-checkbox-label:not(:empty) {
+    border-color: black; }
 
-[phi-z="4"] {
-  box-shadow: 0 14px 24px 0 #959595; }
+phi-content {
+  display: block;
+  height: 100%; }
 
-[phi-z="5"] {
-  box-shadow: 0 19px 36px 0 #8a8a8a; }
+phi-cover {
+  display: block;
+  background-size: cover; }
+
+phi-event-editor {
+  display: block; }
+  phi-event-editor .date-options > div {
+    margin-right: 2em; }
+
+phi-event-repeat .week ul,
+phi-event-repeat .month ul {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 0; }
+  phi-event-repeat .week ul li,
+  phi-event-repeat .month ul li {
+    display: inline-block;
+    margin-right: 1em; }
+
+phi-event-repeat div > label {
+  display: inline-block;
+  min-width: 120px; }
+
+phi-event-repeat .summary {
+  margin: 16px 0; }
+
+phi-gallery {
+  display: block; }
+
+.phi-gallery-modal {
+  background-color: rgba(0, 0, 0, 0.9);
+  text-align: center; }
+  .phi-gallery-modal > .phi-gallery-modal-navigation {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin: 32px auto;
+    max-width: 800px;
+    min-height: 60px;
+    color: #fff; }
+    .phi-gallery-modal > .phi-gallery-modal-navigation span {
+      display: inline-block;
+      padding: 16px 22px; }
+    .phi-gallery-modal > .phi-gallery-modal-navigation a {
+      color: #fff;
+      display: inline-block;
+      cursor: pointer;
+      font-size: 1.2em;
+      padding: 16px 22px;
+      border-radius: 3px; }
+      .phi-gallery-modal > .phi-gallery-modal-navigation a:hover {
+        background-color: rgba(255, 255, 255, 0.1); }
+      .phi-gallery-modal > .phi-gallery-modal-navigation a.disabled {
+        cursor: default;
+        opacity: 0.6; }
+  .phi-gallery-modal > .phi-gallery-modal-contents {
+    position: relative; }
+    .phi-gallery-modal > .phi-gallery-modal-contents > * {
+      position: absolute;
+      max-width: 100%;
+      margin: 0 128px;
+      text-align: center;
+      transition: all 0.3s;
+      transform-origin: center;
+      opacity: 0;
+      transform: scale(0.95); }
+      .phi-gallery-modal > .phi-gallery-modal-contents > *.phi-switch-active {
+        opacity: 1;
+        transform: scale(1); }
+      .phi-gallery-modal > .phi-gallery-modal-contents > * img {
+        width: 100%; }
+
+[phi-input], phi-input {
+  display: inline-block;
+  vertical-align: bottom;
+  border-bottom: 1px solid #ccc;
+  white-space: nowrap; }
+  [phi-input] > div, phi-input > div {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 100%; }
+    [phi-input] > div > label, phi-input > div > label {
+      display: block;
+      pointer-events: none;
+      -webkit-font-smoothing: antialased;
+      transform-origin: bottom left;
+      -webkit-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+      -moz-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+      -o-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+      transform: translate3d(0, 0, 0) scale(0.8);
+      color: #2196F3; }
+    [phi-input] > div > input,
+    [phi-input] > div > textarea, phi-input > div > input,
+    phi-input > div > textarea {
+      background: transparent;
+      border: 0;
+      margin: 0;
+      padding: 2px 0;
+      line-height: 1em;
+      min-height: 1em;
+      height: auto;
+      font-size: 1em;
+      width: 100%;
+      font-weight: normal;
+      outline: 0; }
+      [phi-input] > div > input::-webkit-input-placeholder,
+      [phi-input] > div > textarea::-webkit-input-placeholder, phi-input > div > input::-webkit-input-placeholder,
+      phi-input > div > textarea::-webkit-input-placeholder {
+        /* WebKit browsers */
+        opacity: 0; }
+      [phi-input] > div > input:-moz-placeholder,
+      [phi-input] > div > textarea:-moz-placeholder, phi-input > div > input:-moz-placeholder,
+      phi-input > div > textarea:-moz-placeholder {
+        /* Mozilla Firefox 4 to 18 */
+        opacity: 0; }
+      [phi-input] > div > input::-moz-placeholder,
+      [phi-input] > div > textarea::-moz-placeholder, phi-input > div > input::-moz-placeholder,
+      phi-input > div > textarea::-moz-placeholder {
+        /* Mozilla Firefox 19+ */
+        opacity: 0; }
+      [phi-input] > div > input:-ms-input-placeholder,
+      [phi-input] > div > textarea:-ms-input-placeholder, phi-input > div > input:-ms-input-placeholder,
+      phi-input > div > textarea:-ms-input-placeholder {
+        /* Internet Explorer 10+ */
+        opacity: 0; }
+  [phi-input] > hr, phi-input > hr {
+    display: block;
+    height: 2px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #2196F3;
+    -webkit-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    -moz-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    -o-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    width: 0; }
+  [phi-input]:focus, phi-input:focus {
+    outline: 0; }
+  [phi-input].phi-input-disabled, phi-input.phi-input-disabled {
+    opacity: 0.7; }
+    [phi-input].phi-input-disabled > *, phi-input.phi-input-disabled > * {
+      cursor: no-drop !important; }
+  [phi-input].phi-input-focused, phi-input.phi-input-focused {
+    border-bottom: 1px solid transparent; }
+    [phi-input].phi-input-focused > div > label, phi-input.phi-input-focused > div > label {
+      transform: translate3d(0, 0, 0) scale(0.8) !important; }
+    [phi-input].phi-input-focused > div > input::-webkit-input-placeholder,
+    [phi-input].phi-input-focused > div > textarea::-webkit-input-placeholder, phi-input.phi-input-focused > div > input::-webkit-input-placeholder,
+    phi-input.phi-input-focused > div > textarea::-webkit-input-placeholder {
+      /* WebKit browsers */
+      opacity: 0.7; }
+    [phi-input].phi-input-focused > div > input:-moz-placeholder,
+    [phi-input].phi-input-focused > div > textarea:-moz-placeholder, phi-input.phi-input-focused > div > input:-moz-placeholder,
+    phi-input.phi-input-focused > div > textarea:-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 */
+      opacity: 0.7; }
+    [phi-input].phi-input-focused > div > input::-moz-placeholder,
+    [phi-input].phi-input-focused > div > textarea::-moz-placeholder, phi-input.phi-input-focused > div > input::-moz-placeholder,
+    phi-input.phi-input-focused > div > textarea::-moz-placeholder {
+      /* Mozilla Firefox 19+ */
+      opacity: 0.7; }
+    [phi-input].phi-input-focused > div > input:-ms-input-placeholder,
+    [phi-input].phi-input-focused > div > textarea:-ms-input-placeholder, phi-input.phi-input-focused > div > input:-ms-input-placeholder,
+    phi-input.phi-input-focused > div > textarea:-ms-input-placeholder {
+      /* Internet Explorer 10+ */
+      opacity: 0.7; }
+    [phi-input].phi-input-focused > hr, phi-input.phi-input-focused > hr {
+      width: 100%; }
+  [phi-input].phi-input-empty > div > label, phi-input.phi-input-empty > div > label {
+    transform: translate3d(0, 1.4em, 0) scale(1);
+    color: #999; }
+
+phi-list-item {
+  display: block;
+  position: relative;
+  padding: 16px;
+  padding-left: 64px;
+  min-height: 48px;
+  cursor: pointer;
+  font-size: 16px;
+  white-space: nowrap;
+  font-weight: 400; }
+  phi-list-item > * {
+    display: inline-block;
+    vertical-align: middle; }
+  phi-list-item:before,
+  phi-list-item > img {
+    display: block;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin: 0 !important;
+    font-size: 18px;
+    text-align: center; }
+
+/**
+Elements resulting HTML:
+<phi-menu></phi-menu>
+*/
+phi-menu {
+  display: block;
+  position: relative; }
+
+phi-menu-item,
+[phi-menu-item] {
+  display: block;
+  cursor: pointer;
+  padding: 16px 20px;
+  text-decoration: none;
+  color: #333; }
+  phi-menu-item:hover,
+  [phi-menu-item]:hover {
+    background-color: rgba(0, 0, 0, 0.03); }
+  phi-menu-item:focus,
+  [phi-menu-item]:focus {
+    background-color: rgba(0, 0, 0, 0.03);
+    outline: 0; }
+  phi-menu-item.active,
+  [phi-menu-item].active {
+    background-color: rgba(0, 0, 0, 0.1); }
+
+phi-submenu {
+  display: block; }
+  phi-submenu > .phi-submenu-label {
+    position: relative; }
+    phi-submenu > .phi-submenu-label:before {
+      float: right;
+      display: block;
+      width: 1em;
+      height: 1em;
+      line-height: 1em;
+      text-align: center;
+      color: #666;
+      transform: rotate(0);
+      transform-origin: center; }
+  phi-submenu > .phi-submenu-contents {
+    padding-left: 16px;
+    overflow: hidden;
+    max-height: 0; }
+  phi-submenu[expanded] > .phi-submenu-label:before {
+    transform: rotate(90deg); }
+  phi-submenu[expanded] > .phi-submenu-contents {
+    max-height: 777px; }
+
+phi-notification-settings {
+  display: block; }
+  phi-notification-settings > section {
+    margin-bottom: 24px; }
+    phi-notification-settings > section > h1 {
+      font-size: 1em;
+      color: #666;
+      border-bottom: 1px solid #d7d7d7;
+      padding-bottom: 2px;
+      margin-bottom: 2px; }
+  phi-notification-settings .subpreferences {
+    padding-left: 20px; }
+
+.disabled .subpreferences {
+  opacity: 0.5 !important;
+  pointer-events: none; }
+
+phi-notification-setting {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center; }
+  phi-notification-setting .face {
+    flex: 1;
+    padding: 7px 0;
+    cursor: pointer; }
+    phi-notification-setting .face h1 {
+      font-size: 1.2em; }
+    phi-notification-setting .face phi-input {
+      width: 100%; }
+  phi-notification-setting .toggler,
+  phi-notification-setting .schedule,
+  phi-notification-setting .menu {
+    margin-left: 1em; }
+  phi-notification-setting .schedule select {
+    border: 0;
+    padding: 4px 0; }
+  phi-notification-setting button {
+    background-color: transparent;
+    color: #333;
+    border: 0;
+    font-size: 1.2em;
+    min-width: 2.5em; }
+
+/* 
+Toggler 
+https://codepen.io/mallendeo/pen/eLIiG
+*/
+.tgl {
+  display: none; }
+  .tgl, .tgl:after, .tgl:before,
+  .tgl *,
+  .tgl *:after,
+  .tgl *:before,
+  .tgl + .tgl-btn {
+    box-sizing: border-box; }
+    .tgl::selection, .tgl:after::selection, .tgl:before::selection,
+    .tgl *::selection,
+    .tgl *:after::selection,
+    .tgl *:before::selection,
+    .tgl + .tgl-btn::selection {
+      background: none; }
+  .tgl + .tgl-btn {
+    outline: 0;
+    display: block;
+    width: 4em;
+    height: 2em;
+    position: relative;
+    cursor: pointer;
+    user-select: none; }
+    .tgl + .tgl-btn:after, .tgl + .tgl-btn:before {
+      position: relative;
+      display: block;
+      content: "";
+      width: 50%;
+      height: 100%; }
+    .tgl + .tgl-btn:after {
+      left: 0; }
+    .tgl + .tgl-btn:before {
+      display: none; }
+  .tgl:checked + .tgl-btn:after {
+    left: 50%; }
+
+.tgl-ios + .tgl-btn {
+  background: #aaa;
+  border-radius: 2em;
+  padding: 2px;
+  transition: all .4s ease;
+  border: 1px solid #e8eae9; }
+  .tgl-ios + .tgl-btn:after {
+    border-radius: 2em;
+    background: #fbfbfb;
+    transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease, margin 0.3s ease;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 4px 0 rgba(0, 0, 0, 0.08); }
+  .tgl-ios + .tgl-btn:hover:after {
+    will-change: padding; }
+  .tgl-ios + .tgl-btn:active {
+    box-shadow: inset 0 0 0 2em #e8eae9; }
+    .tgl-ios + .tgl-btn:active:after {
+      padding-right: .8em; }
+
+.tgl-ios:checked + .tgl-btn {
+  background: #01579b; }
+  .tgl-ios:checked + .tgl-btn:active {
+    box-shadow: none; }
+    .tgl-ios:checked + .tgl-btn:active:after {
+      margin-left: -.8em; }
+
+phi-post {
+  display: block; }
+
+phi-post-header {
+  display: block;
+  position: relative;
+  padding: 12px 12px 12px 70px; }
+  phi-post-header phi-post-icon {
+    padding: 12px;
+    position: absolute;
+    top: 0;
+    left: 0; }
+  phi-post-header phi-avatar {
+    width: 36px;
+    height: 36px; }
+  phi-post-header phi-post-preview {
+    display: block; }
+
+phi-post-body {
+  display: block;
+  padding: 0 12px 0 70px; }
+
+phi-post-author {
+  display: block;
+  color: #222;
+  font-weight: bold; }
+
+phi-post-date {
+  display: block;
+  color: #999;
+  font-size: 0.9em; }
+
+phi-post-description {
+  display: block;
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 1em;
+  word-break: break-word;
+  white-space: pre-wrap; }
+
+phi-post-blocks {
+  display: block; }
+  phi-post-blocks > * {
+    display: block;
+    margin-bottom: 1em; }
+
+phi-post-editor {
+  display: block; }
+  phi-post-editor .phi-post-editor-block {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    padding: 4px; }
+    phi-post-editor .phi-post-editor-block-toolbar {
+      display: flex;
+      height: 42px;
+      border-radius: 4px;
+      background-color: rgba(0, 0, 0, 0.065); }
+      phi-post-editor .phi-post-editor-block-toolbar-handle {
+        flex: 1;
+        cursor: move;
+        height: 42px; }
+      phi-post-editor .phi-post-editor-block-toolbar-menu {
+        flex: none; }
+        phi-post-editor .phi-post-editor-block-toolbar-menu phi-menu-item {
+          text-transform: capitalize; }
+          phi-post-editor .phi-post-editor-block-toolbar-menu phi-menu-item:before {
+            font-size: 1.3em;
+            color: #666; }
+        phi-post-editor .phi-post-editor-block-toolbar-menu button {
+          background: transparent;
+          border: 0;
+          padding: 6px 22px;
+          height: 42px; }
+  phi-post-editor iron-collapse {
+    transition-duration: 190ms; }
+  phi-post-editor paper-card {
+    display: block !important; }
+
+/* !!! Editor Hacks */
+/* "Disable" form block submit's button when inside an editor */
+phi-post-editor phi-block.phi-block-type-form footer > button {
+  cursor: default;
+  pointer-events: none;
+  color: #c0c0c0;
+  background-color: #ffffff; }
+
+phi-select {
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  outline: 0;
+  min-width: 160px; }
+  phi-select > .phi-select-face {
+    position: relative;
+    cursor: text;
+    padding: 0 26px 0 0;
+    border-bottom: 1px solid #ccc; }
+    phi-select > .phi-select-face:after {
+      position: absolute;
+      top: 0;
+      right: 7px;
+      opacity: 0.7; }
+    phi-select > .phi-select-face input {
+      background: transparent;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      outline: 0;
+      width: 100%; }
+  phi-select > phi-menu {
+    min-width: 160px;
+    max-height: 320px;
+    overflow: auto; }
+
+phi-option {
+  display: block; }
+  phi-option a {
+    display: block;
+    padding: 8px 12px;
+    cursor: pointer; }
+
+phi-sidebar {
+  width: 80%;
+  min-width: 200px;
+  max-width: 400px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100%; }
+  phi-sidebar[phi-visible] {
+    transform: translate3d(-100%, 0, 0);
+    -webkit-transform: translate3d(-100%, 0, 0); }
+  phi-sidebar[phi-visible="true"] {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0); }
+
+phi-state {
+  display: block;
+  position: relative;
+  height: 100%; }
+
+phi-state-contents {
+  display: block; }
+
+phi-state-cover {
+  display: block;
+  overflow: hidden;
+  padding-top: 46px;
+  color: #fff;
+  background-size: cover;
+  background-position-x: 50%;
+  background-position-y: 0;
+  transition: all 300ms;
+  /* transition when changing class .collapsed */
+  /* tweaks for when phi-state-navigation is inside the cover */ }
+  phi-state-cover.collapsed {
+    background-position-y: -30px; }
+  phi-state-cover > phi-state-navigation {
+    max-width: none; }
+
+phi-state-navigation {
+  display: block;
+  position: relative;
+  white-space: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: rgba(0, 0, 0, 0.2); }
+  phi-state-navigation phi-menu phi-menu-item,
+  phi-state-navigation phi-menu [phi-menu-item] {
+    display: inline-block;
+    box-sizing: border-box;
+    height: 46px;
+    padding: 12px 24px;
+    color: #fff;
+    font-weight: 500; }
+    phi-state-navigation phi-menu phi-menu-item.active,
+    phi-state-navigation phi-menu [phi-menu-item].active {
+      border-bottom: 4px solid #fff;
+      background-color: rgba(255, 255, 255, 0.2); }
+
+/*
+Full thread markup reference:
+
+<phi-thread class="read|unread|selected">
+    <phi-thread-header>
+        <phi-thread-icon>
+            <iron-image ng-src="{{thread.author.avatar|trustAsResourceUrl}}" sizing="cover" class="avatar"></iron-image>
+            <iron-icon icon="check|unchecked"></iron-icon>
+        </phi-thread-icon>
+
+        <phi-thread-preview>
+            <phi-thread-title></phi-thread-title>
+            <phi-thread-author></phi-thread-author>
+            <phi-thread-description></phi-thread-description>
+            <phi-thread-date></phi-thread-date>
+        </phi-thread-preview>
+    </phi-thread-header>
+
+    <phi-thread-body>
+
+        <phi-post>
+
+            <phi-post-header>
+                <phi-post-icon>
+                    <iron-image ng-src="{{post.author.avatar|trustAsResourceUrl}}" sizing="cover" class="avatar"></iron-image>
+                </phi-post-icon>
+
+                <phi-post-preview>
+                    <phi-post-author></phi-post-author>
+                    <phi-post-title></phi-post-title>
+                    <phi-post-date></phi-post-date>
+                </phi-post-preview>
+            </phi-post-header>
+
+            <phi-post-body>
+
+                <phi-post-description></phi-post-description>
+
+                <phi-post-blocks>
+                    <phi-object></phi-object>
+                    ...
+                </phi-post-blocks>
+            </phi-post-body>
+        </phi-post>
+        ...
+
+
+
+
+        <phi-thread-reply>
+
+            <div class="face" ng-click="thread.isReplying = true" ng-show="!thread.isReplying && thread.type.singular == 'mensaje'">Responder</div>
+
+            <phi-post ng-show="!!thread.isReplying">
+                <phi-post-header>
+                    <phi-post-icon>
+                        <iron-image src ="{/literal}{$person->getPictureUrl(true)}{literal}" sizing="cover" class="avatar"></iron-image>
+                    </phi-post-icon>
+
+                    <phi-post-preview>
+                        <phi-post-author>{/literal}{$person->firstname} {$person->lastname}{literal}</phi-post-author>
+                    </phi-post-preview>
+                </phi-post-header>
+
+                <phi-post-body>
+                    <textarea ng-model="thread.replyBody"></textarea>
+                    <footer>
+                        <phi-button class="submit" ng-click="folder.sendReply(thread)">enviar</phi-button>
+                        <phi-button class="cancel" ng-click="thread.isReplying = false">cancelar</phi-button>
+                    </footer>
+                </phi-post-body>
+            </phi-post>
+
+        </phi-thread-reply>
+
+
+
+    </phi-thread-body>
+
+</phi-thread>
+
+*/
+/* !!! <paper-checkbox> is causing bugs inside ng-repeats. ugly hack to "fix":  */
+#checkboxLabel > #checkboxContainer {
+  display: none; }
+
+phi-thread {
+  display: block; }
+
+phi-thread-header {
+  cursor: pointer;
+  display: flex; }
+  phi-thread-header phi-thread-icon {
+    outline: none;
+    display: block;
+    flex: 0 0 38px;
+    box-sizing: content-box;
+    padding: 16px;
+    text-align: center;
+    align-self: center; }
+    phi-thread-header phi-thread-icon > * {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      z-index: 1; }
+  phi-thread-header phi-thread-preview {
+    outline: none;
+    display: block;
+    flex: 1;
+    padding: 16px;
+    padding-left: 0; }
+    phi-thread-header phi-thread-preview phi-thread-title {
+      display: block;
+      margin: 0;
+      font-size: 1.2em;
+      font-weight: 500;
+      max-width: 100%;
+      word-break: break-word; }
+    phi-thread-header phi-thread-preview phi-thread-author,
+    phi-thread-header phi-thread-preview phi-thread-description {
+      display: inline-block;
+      color: #555; }
+    phi-thread-header phi-thread-preview phi-thread-description {
+      max-width: 100%;
+      word-break: break-word; }
+    phi-thread-header phi-thread-preview phi-thread-author:after {
+      content: ' - '; }
+    phi-thread-header phi-thread-preview phi-thread-date {
+      display: none; }
+  phi-thread-header phi-thread-actions {
+    display: flex; }
+    phi-thread-header phi-thread-actions button {
+      border: 0;
+      margin: 0;
+      padding: 0 12px;
+      background: transparent;
+      color: #666;
+      font-size: 1em;
+      min-width: 56px; }
+
+/* States */
+phi-thread.selected phi-thread-header {
+  background-color: rgba(255, 255, 136, 0.35); }
+
+phi-thread.unread phi-thread-title {
+  font-weight: bold; }
+
+phi-thread.unread phi-thread-title,
+phi-thread.unread phi-thread-author,
+phi-thread.unread phi-thread-description {
+  color: #111; }
+
+phi-thread-body {
+  display: block; }
+
+phi-toolbar {
+  background-color: #444;
+  display: block;
+  height: 56px;
+  line-height: 56px; }
+  phi-toolbar > * {
+    display: inline-block;
+    vertical-align: middle;
+    height: 56px;
+    min-width: 56px; }
+  phi-toolbar > button {
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    color: #fff;
+    padding: 14px 16px;
+    font-size: 18px; }
+  phi-toolbar > h3 {
+    color: #fff;
+    font-weight: normal;
+    margin: 0 1em; }
+
+.ta-toolbar {
+  background-color: rgba(0, 0, 0, 0.065);
+  padding: 6px 0; }
+  .ta-toolbar .btn-group {
+    display: inline-block;
+    margin: 0 6px; }
+    .ta-toolbar .btn-group .btn {
+      position: relative;
+      float: left;
+      margin-left: -1px; }
+  .ta-toolbar .btn {
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #444;
+    padding: 6px 12px; }
+
+.ta-editor {
+  background-color: #fff; }
 
 @font-face {
   font-family: 'Glyphicons Halflings';
@@ -14216,876 +15069,6 @@ Based on: https://github.com/angular/material/blob/master/src/core/style/layout.
 .phi-rounded, phi-card {
   border-radius: 3px; }
 
-phi-avatar {
-  display: inline-block;
-  width: 42px;
-  height: 42px; }
-  phi-avatar > div {
-    display: inline-block;
-    overflow: hidden;
-    border-radius: 50%;
-    width: 100%;
-    height: 100%; }
-    phi-avatar > div > img {
-      width: 100%; }
-
-phi-block {
-  display: block; }
-
-.phi-block-state-delete {
-  text-align: center; }
-  .phi-block-state-delete h1 {
-    margin: 16px 0; }
-
-phi-button,
-[phi-button] {
-  display: inline-block;
-  padding: 12px 20px;
-  border: 0;
-  border-radius: 3px;
-  color: #fff;
-  text-transform: uppercase;
-  font-weight: normal;
-  cursor: pointer;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  background-color: #01579b; }
-  phi-button:hover, phi-button:focus,
-  [phi-button]:hover,
-  [phi-button]:focus {
-    outline: 0; }
-  phi-button.danger,
-  [phi-button].danger {
-    background-color: #d9534f;
-    color: #fff; }
-  phi-button.cancel,
-  [phi-button].cancel {
-    background: transparent !important;
-    color: #444; }
-    phi-button.cancel:hover,
-    [phi-button].cancel:hover {
-      color: #900; }
-  phi-button[disabled],
-  [phi-button][disabled] {
-    box-shadow: none;
-    background-color: #444;
-    opacity: 0.6; }
-
-phi-card {
-  display: block;
-  background-color: #fff;
-  overflow: hidden; }
-  phi-card phi-card-cover {
-    display: block;
-    background-size: cover;
-    min-height: 120px; }
-  phi-card phi-card-contents {
-    display: block; }
-
-phi-checkbox {
-  display: inline-block;
-  white-space: nowrap;
-  cursor: pointer;
-  outline: none;
-  user-select: none;
-  height: 18px; }
-  phi-checkbox .phi-checkbox-box {
-    display: inline-block;
-    vertical-align: middle;
-    box-sizing: border-box;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #777;
-    border-radius: 2px;
-    transition: 240ms; }
-  phi-checkbox .phi-checkbox-label {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 10px;
-    white-space: normal;
-    pointer-events: none;
-    user-select: text; }
-  phi-checkbox.phi-checked .phi-checkbox-box {
-    border: 2px solid transparent;
-    text-align: center;
-    background-color: #01579b;
-    /* The checkbox tick */ }
-    phi-checkbox.phi-checked .phi-checkbox-box:after {
-      content: ' ';
-      width: 35%;
-      height: 60%;
-      min-width: 6px;
-      min-height: 11px;
-      border: 3px solid #fff;
-      border-top: 0;
-      border-left: 0;
-      margin: auto;
-      margin-top: 6%;
-      transform: rotate(45deg);
-      -webkit-transform: rotate(45deg);
-      display: block;
-      box-sizing: border-box; }
-  phi-checkbox[disabled] {
-    cursor: no-drop;
-    opacity: 0.6; }
-  phi-checkbox:focus .phi-checkbox-label:not(:empty) {
-    border-color: black; }
-
-phi-content {
-  display: block;
-  height: 100%; }
-
-phi-cover {
-  display: block;
-  background-size: cover; }
-
-phi-event-editor {
-  display: block; }
-  phi-event-editor .date-options > div {
-    margin-right: 2em; }
-
-phi-event-repeat .week ul,
-phi-event-repeat .month ul {
-  display: inline-block;
-  list-style: none;
-  margin: 0;
-  padding: 0; }
-  phi-event-repeat .week ul li,
-  phi-event-repeat .month ul li {
-    display: inline-block;
-    margin-right: 1em; }
-
-phi-event-repeat div > label {
-  display: inline-block;
-  min-width: 120px; }
-
-phi-event-repeat .summary {
-  margin: 16px 0; }
-
-phi-gallery {
-  display: block; }
-
-.phi-gallery-modal {
-  background-color: rgba(0, 0, 0, 0.9);
-  text-align: center; }
-  .phi-gallery-modal > .phi-gallery-modal-navigation {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    margin: 32px auto;
-    max-width: 800px;
-    min-height: 60px;
-    color: #fff; }
-    .phi-gallery-modal > .phi-gallery-modal-navigation span {
-      display: inline-block;
-      padding: 16px 22px; }
-    .phi-gallery-modal > .phi-gallery-modal-navigation a {
-      color: #fff;
-      display: inline-block;
-      cursor: pointer;
-      font-size: 1.2em;
-      padding: 16px 22px;
-      border-radius: 3px; }
-      .phi-gallery-modal > .phi-gallery-modal-navigation a:hover {
-        background-color: rgba(255, 255, 255, 0.1); }
-      .phi-gallery-modal > .phi-gallery-modal-navigation a.disabled {
-        cursor: default;
-        opacity: 0.6; }
-  .phi-gallery-modal > .phi-gallery-modal-contents {
-    position: relative; }
-    .phi-gallery-modal > .phi-gallery-modal-contents > * {
-      position: absolute;
-      max-width: 100%;
-      margin: 0 128px;
-      text-align: center;
-      transition: all 0.3s;
-      transform-origin: center;
-      opacity: 0;
-      transform: scale(0.95); }
-      .phi-gallery-modal > .phi-gallery-modal-contents > *.phi-switch-active {
-        opacity: 1;
-        transform: scale(1); }
-      .phi-gallery-modal > .phi-gallery-modal-contents > * img {
-        width: 100%; }
-
-[phi-input], phi-input {
-  display: inline-block;
-  vertical-align: bottom;
-  border-bottom: 1px solid #ccc;
-  white-space: nowrap; }
-  [phi-input] > div, phi-input > div {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    width: 100%; }
-    [phi-input] > div > label, phi-input > div > label {
-      display: block;
-      pointer-events: none;
-      -webkit-font-smoothing: antialased;
-      transform-origin: bottom left;
-      -webkit-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-      -moz-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-      -o-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-      transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-      transform: translate3d(0, 0, 0) scale(0.8);
-      color: #2196F3; }
-    [phi-input] > div > input,
-    [phi-input] > div > textarea, phi-input > div > input,
-    phi-input > div > textarea {
-      background: transparent;
-      border: 0;
-      margin: 0;
-      padding: 2px 0;
-      line-height: 1em;
-      min-height: 1em;
-      height: auto;
-      font-size: 1em;
-      width: 100%;
-      font-weight: normal;
-      outline: 0; }
-      [phi-input] > div > input::-webkit-input-placeholder,
-      [phi-input] > div > textarea::-webkit-input-placeholder, phi-input > div > input::-webkit-input-placeholder,
-      phi-input > div > textarea::-webkit-input-placeholder {
-        /* WebKit browsers */
-        opacity: 0; }
-      [phi-input] > div > input:-moz-placeholder,
-      [phi-input] > div > textarea:-moz-placeholder, phi-input > div > input:-moz-placeholder,
-      phi-input > div > textarea:-moz-placeholder {
-        /* Mozilla Firefox 4 to 18 */
-        opacity: 0; }
-      [phi-input] > div > input::-moz-placeholder,
-      [phi-input] > div > textarea::-moz-placeholder, phi-input > div > input::-moz-placeholder,
-      phi-input > div > textarea::-moz-placeholder {
-        /* Mozilla Firefox 19+ */
-        opacity: 0; }
-      [phi-input] > div > input:-ms-input-placeholder,
-      [phi-input] > div > textarea:-ms-input-placeholder, phi-input > div > input:-ms-input-placeholder,
-      phi-input > div > textarea:-ms-input-placeholder {
-        /* Internet Explorer 10+ */
-        opacity: 0; }
-  [phi-input] > hr, phi-input > hr {
-    display: block;
-    height: 2px;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background-color: #2196F3;
-    -webkit-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-    -moz-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-    -o-transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) 0s;
-    width: 0; }
-  [phi-input]:focus, phi-input:focus {
-    outline: 0; }
-  [phi-input].phi-input-disabled, phi-input.phi-input-disabled {
-    opacity: 0.7; }
-    [phi-input].phi-input-disabled > *, phi-input.phi-input-disabled > * {
-      cursor: no-drop !important; }
-  [phi-input].phi-input-focused, phi-input.phi-input-focused {
-    border-bottom: 1px solid transparent; }
-    [phi-input].phi-input-focused > div > label, phi-input.phi-input-focused > div > label {
-      transform: translate3d(0, 0, 0) scale(0.8) !important; }
-    [phi-input].phi-input-focused > div > input::-webkit-input-placeholder,
-    [phi-input].phi-input-focused > div > textarea::-webkit-input-placeholder, phi-input.phi-input-focused > div > input::-webkit-input-placeholder,
-    phi-input.phi-input-focused > div > textarea::-webkit-input-placeholder {
-      /* WebKit browsers */
-      opacity: 0.7; }
-    [phi-input].phi-input-focused > div > input:-moz-placeholder,
-    [phi-input].phi-input-focused > div > textarea:-moz-placeholder, phi-input.phi-input-focused > div > input:-moz-placeholder,
-    phi-input.phi-input-focused > div > textarea:-moz-placeholder {
-      /* Mozilla Firefox 4 to 18 */
-      opacity: 0.7; }
-    [phi-input].phi-input-focused > div > input::-moz-placeholder,
-    [phi-input].phi-input-focused > div > textarea::-moz-placeholder, phi-input.phi-input-focused > div > input::-moz-placeholder,
-    phi-input.phi-input-focused > div > textarea::-moz-placeholder {
-      /* Mozilla Firefox 19+ */
-      opacity: 0.7; }
-    [phi-input].phi-input-focused > div > input:-ms-input-placeholder,
-    [phi-input].phi-input-focused > div > textarea:-ms-input-placeholder, phi-input.phi-input-focused > div > input:-ms-input-placeholder,
-    phi-input.phi-input-focused > div > textarea:-ms-input-placeholder {
-      /* Internet Explorer 10+ */
-      opacity: 0.7; }
-    [phi-input].phi-input-focused > hr, phi-input.phi-input-focused > hr {
-      width: 100%; }
-  [phi-input].phi-input-empty > div > label, phi-input.phi-input-empty > div > label {
-    transform: translate3d(0, 1.4em, 0) scale(1);
-    color: #999; }
-
-phi-list-item {
-  display: block;
-  position: relative;
-  padding: 16px;
-  padding-left: 64px;
-  min-height: 48px;
-  cursor: pointer;
-  font-size: 16px;
-  white-space: nowrap;
-  font-weight: 400; }
-  phi-list-item > * {
-    display: inline-block;
-    vertical-align: middle; }
-  phi-list-item:before,
-  phi-list-item > img {
-    display: block;
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
-    margin: 0 !important;
-    font-size: 18px;
-    text-align: center; }
-
-/**
-Elements resulting HTML:
-<phi-menu></phi-menu>
-*/
-phi-menu {
-  display: block;
-  position: relative; }
-
-phi-menu-item,
-[phi-menu-item] {
-  display: block;
-  cursor: pointer;
-  padding: 16px 20px;
-  text-decoration: none;
-  color: #333; }
-  phi-menu-item:hover,
-  [phi-menu-item]:hover {
-    background-color: rgba(0, 0, 0, 0.03); }
-  phi-menu-item:focus,
-  [phi-menu-item]:focus {
-    background-color: rgba(0, 0, 0, 0.03);
-    outline: 0; }
-  phi-menu-item.active,
-  [phi-menu-item].active {
-    background-color: rgba(0, 0, 0, 0.1); }
-
-phi-submenu {
-  display: block; }
-  phi-submenu > .phi-submenu-label {
-    position: relative; }
-    phi-submenu > .phi-submenu-label:before {
-      float: right;
-      display: block;
-      width: 1em;
-      height: 1em;
-      line-height: 1em;
-      text-align: center;
-      color: #666;
-      transform: rotate(0);
-      transform-origin: center; }
-  phi-submenu > .phi-submenu-contents {
-    padding-left: 16px;
-    overflow: hidden;
-    max-height: 0; }
-  phi-submenu[expanded] > .phi-submenu-label:before {
-    transform: rotate(90deg); }
-  phi-submenu[expanded] > .phi-submenu-contents {
-    max-height: 777px; }
-
-phi-notification-settings {
-  display: block; }
-  phi-notification-settings > button {
-    display: block;
-    margin-top: 24px; }
-
-phi-setting {
-  display: block;
-  /* Setting states */
-  /* Specific transports */ }
-  phi-setting phi-setting-header {
-    cursor: pointer;
-    display: block;
-    position: relative;
-    outline: none; }
-    phi-setting phi-setting-header:hover {
-      background-color: rgba(0, 0, 0, 0.04); }
-    phi-setting.open > phi-setting-header {
-      background-color: rgba(0, 0, 0, 0.04); }
-    phi-setting phi-setting-header phi-setting-icon {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 72px;
-      padding: 16px;
-      box-sizing: border-box;
-      height: 100%;
-      text-align: center; }
-      phi-setting phi-setting-header phi-setting-icon:before {
-        font-family: FontAwesome;
-        content: "";
-        cursor: inherit;
-        font-style: normal;
-        font-size: 22px;
-        color: #666; }
-      phi-setting phi-setting-header phi-setting-icon > *, phi-setting phi-setting-header phi-setting-icon:before {
-        display: block;
-        text-align: center;
-        max-width: 22px; }
-    phi-setting phi-setting-header phi-setting-contents {
-      display: block;
-      outline: none;
-      padding: 16px;
-      padding-left: 0;
-      margin-left: 72px; }
-      phi-setting phi-setting-header phi-setting-contents phi-setting-title {
-        display: block;
-        margin: 0;
-        font-size: 1.5em;
-        font-weight: normal;
-        max-width: 100%;
-        word-break: break-word; }
-      phi-setting phi-setting-header phi-setting-contents phi-setting-notice {
-        display: block;
-        color: #444; }
-  phi-setting phi-setting-body {
-    display: block;
-    padding: 16px 0;
-    margin-left: 72px; }
-    phi-setting phi-setting-body > phi-checkbox {
-      display: block;
-      margin: 0 0 24px 0; }
-    phi-setting phi-setting-body phi-setting-schedule {
-      display: block; }
-      phi-setting phi-setting-body phi-setting-schedule phi-checkbox {
-        display: block;
-        margin-bottom: 12px; }
-  phi-setting.open > phi-setting-body {
-    display: block; }
-  phi-setting.closed > phi-setting-body {
-    display: none; }
-  phi-setting.disabled > phi-setting-body > phi-setting-schedule,
-  phi-setting.disabled > phi-setting-body > phi-drawer {
-    opacity: 0.5; }
-  phi-setting.setting-transport > phi-setting-header > phi-setting-contents > phi-setting-title {
-    text-transform: uppercase; }
-  phi-setting.transport-email phi-setting-icon:before {
-    font-family: FontAwesome;
-    content: "";
-    cursor: inherit;
-    font-style: normal; }
-  phi-setting.transport-mobile phi-setting-icon:before {
-    font-family: FontAwesome;
-    content: "";
-    cursor: inherit;
-    font-style: normal; }
-
-phi-drawer {
-  display: block;
-  margin: 12px 0; }
-  phi-drawer-title {
-    display: block;
-    padding: 8px;
-    cursor: pointer; }
-    phi-drawer-title:before {
-      display: inline-block;
-      margin-right: 1em; }
-  phi-drawer-body {
-    display: block; }
-  phi-drawer.open > phi-drawer-title:before {
-    font-family: FontAwesome;
-    content: "";
-    cursor: inherit;
-    font-style: normal; }
-  phi-drawer.open > phi-drawer-body {
-    display: block; }
-  phi-drawer.closed > phi-drawer-title:before {
-    font-family: FontAwesome;
-    content: "";
-    cursor: inherit;
-    font-style: normal; }
-  phi-drawer.closed > phi-drawer-body {
-    display: none; }
-
-phi-post-editor {
-  display: block; }
-  phi-post-editor .phi-post-editor-block {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 12px;
-    padding: 4px; }
-    phi-post-editor .phi-post-editor-block-toolbar {
-      display: flex;
-      height: 42px;
-      border-radius: 4px;
-      background-color: rgba(0, 0, 0, 0.065); }
-      phi-post-editor .phi-post-editor-block-toolbar-handle {
-        flex: 1;
-        cursor: move;
-        height: 42px; }
-      phi-post-editor .phi-post-editor-block-toolbar-menu {
-        flex: none; }
-        phi-post-editor .phi-post-editor-block-toolbar-menu phi-menu-item {
-          text-transform: capitalize; }
-          phi-post-editor .phi-post-editor-block-toolbar-menu phi-menu-item:before {
-            font-size: 1.3em;
-            color: #666; }
-        phi-post-editor .phi-post-editor-block-toolbar-menu button {
-          background: transparent;
-          border: 0;
-          padding: 6px 22px;
-          height: 42px; }
-  phi-post-editor iron-collapse {
-    transition-duration: 190ms; }
-  phi-post-editor paper-card {
-    display: block !important; }
-
-/* !!! Editor Hacks */
-/* "Disable" form block submit's button when inside an editor */
-phi-post-editor phi-block.phi-block-type-form footer > button {
-  cursor: default;
-  pointer-events: none;
-  color: #c0c0c0;
-  background-color: #ffffff; }
-
-phi-post {
-  display: block; }
-
-phi-post-header {
-  display: block;
-  position: relative;
-  padding: 12px 12px 12px 70px; }
-  phi-post-header phi-post-icon {
-    padding: 12px;
-    position: absolute;
-    top: 0;
-    left: 0; }
-  phi-post-header phi-avatar {
-    width: 36px;
-    height: 36px; }
-  phi-post-header phi-post-preview {
-    display: block; }
-
-phi-post-body {
-  display: block;
-  padding: 0 12px 0 70px; }
-
-phi-post-author {
-  display: block;
-  color: #222;
-  font-weight: bold; }
-
-phi-post-date {
-  display: block;
-  color: #999;
-  font-size: 0.9em; }
-
-phi-post-description {
-  display: block;
-  font-size: 1.2em;
-  color: #333;
-  margin-bottom: 1em;
-  word-break: break-word;
-  white-space: pre-wrap; }
-
-phi-post-blocks {
-  display: block; }
-  phi-post-blocks > * {
-    display: block;
-    margin-bottom: 1em; }
-
-phi-select {
-  position: relative;
-  display: inline-block;
-  vertical-align: bottom;
-  margin: 0;
-  padding: 0;
-  white-space: nowrap;
-  outline: 0;
-  min-width: 160px; }
-  phi-select > .phi-select-face {
-    position: relative;
-    cursor: text;
-    padding: 0 26px 0 0;
-    border-bottom: 1px solid #ccc; }
-    phi-select > .phi-select-face:after {
-      position: absolute;
-      top: 0;
-      right: 7px;
-      opacity: 0.7; }
-    phi-select > .phi-select-face input {
-      background: transparent;
-      border: 0;
-      margin: 0;
-      padding: 0;
-      outline: 0;
-      width: 100%; }
-  phi-select > phi-menu {
-    min-width: 160px;
-    max-height: 320px;
-    overflow: auto; }
-
-phi-option {
-  display: block; }
-  phi-option a {
-    display: block;
-    padding: 8px 12px;
-    cursor: pointer; }
-
-phi-sidebar {
-  width: 80%;
-  min-width: 200px;
-  max-width: 400px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  height: 100%; }
-  phi-sidebar[phi-visible] {
-    transform: translate3d(-100%, 0, 0);
-    -webkit-transform: translate3d(-100%, 0, 0); }
-  phi-sidebar[phi-visible="true"] {
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0); }
-
-phi-state {
-  display: block;
-  position: relative;
-  height: 100%; }
-
-phi-state-contents {
-  display: block; }
-
-phi-state-cover {
-  display: block;
-  overflow: hidden;
-  padding-top: 46px;
-  color: #fff;
-  background-size: cover;
-  background-position-x: 50%;
-  background-position-y: 0;
-  transition: all 300ms;
-  /* transition when changing class .collapsed */
-  /* tweaks for when phi-state-navigation is inside the cover */ }
-  phi-state-cover.collapsed {
-    background-position-y: -30px; }
-  phi-state-cover > phi-state-navigation {
-    max-width: none; }
-
-phi-state-navigation {
-  display: block;
-  position: relative;
-  white-space: nowrap;
-  overflow-y: hidden;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  background-color: rgba(0, 0, 0, 0.2); }
-  phi-state-navigation phi-menu phi-menu-item,
-  phi-state-navigation phi-menu [phi-menu-item] {
-    display: inline-block;
-    box-sizing: border-box;
-    height: 46px;
-    padding: 12px 24px;
-    color: #fff;
-    font-weight: 500; }
-    phi-state-navigation phi-menu phi-menu-item.active,
-    phi-state-navigation phi-menu [phi-menu-item].active {
-      border-bottom: 4px solid #fff;
-      background-color: rgba(255, 255, 255, 0.2); }
-
-/*
-Full thread markup reference:
-
-<phi-thread class="read|unread|selected">
-    <phi-thread-header>
-        <phi-thread-icon>
-            <iron-image ng-src="{{thread.author.avatar|trustAsResourceUrl}}" sizing="cover" class="avatar"></iron-image>
-            <iron-icon icon="check|unchecked"></iron-icon>
-        </phi-thread-icon>
-
-        <phi-thread-preview>
-            <phi-thread-title></phi-thread-title>
-            <phi-thread-author></phi-thread-author>
-            <phi-thread-description></phi-thread-description>
-            <phi-thread-date></phi-thread-date>
-        </phi-thread-preview>
-    </phi-thread-header>
-
-    <phi-thread-body>
-
-        <phi-post>
-
-            <phi-post-header>
-                <phi-post-icon>
-                    <iron-image ng-src="{{post.author.avatar|trustAsResourceUrl}}" sizing="cover" class="avatar"></iron-image>
-                </phi-post-icon>
-
-                <phi-post-preview>
-                    <phi-post-author></phi-post-author>
-                    <phi-post-title></phi-post-title>
-                    <phi-post-date></phi-post-date>
-                </phi-post-preview>
-            </phi-post-header>
-
-            <phi-post-body>
-
-                <phi-post-description></phi-post-description>
-
-                <phi-post-blocks>
-                    <phi-object></phi-object>
-                    ...
-                </phi-post-blocks>
-            </phi-post-body>
-        </phi-post>
-        ...
-
-
-
-
-        <phi-thread-reply>
-
-            <div class="face" ng-click="thread.isReplying = true" ng-show="!thread.isReplying && thread.type.singular == 'mensaje'">Responder</div>
-
-            <phi-post ng-show="!!thread.isReplying">
-                <phi-post-header>
-                    <phi-post-icon>
-                        <iron-image src ="{/literal}{$person->getPictureUrl(true)}{literal}" sizing="cover" class="avatar"></iron-image>
-                    </phi-post-icon>
-
-                    <phi-post-preview>
-                        <phi-post-author>{/literal}{$person->firstname} {$person->lastname}{literal}</phi-post-author>
-                    </phi-post-preview>
-                </phi-post-header>
-
-                <phi-post-body>
-                    <textarea ng-model="thread.replyBody"></textarea>
-                    <footer>
-                        <phi-button class="submit" ng-click="folder.sendReply(thread)">enviar</phi-button>
-                        <phi-button class="cancel" ng-click="thread.isReplying = false">cancelar</phi-button>
-                    </footer>
-                </phi-post-body>
-            </phi-post>
-
-        </phi-thread-reply>
-
-
-
-    </phi-thread-body>
-
-</phi-thread>
-
-*/
-/* !!! <paper-checkbox> is causing bugs inside ng-repeats. ugly hack to "fix":  */
-#checkboxLabel > #checkboxContainer {
-  display: none; }
-
-phi-thread {
-  display: block; }
-
-phi-thread-header {
-  cursor: pointer;
-  display: flex; }
-  phi-thread-header phi-thread-icon {
-    outline: none;
-    display: block;
-    flex: 0 0 38px;
-    box-sizing: content-box;
-    padding: 16px; }
-    phi-thread-header phi-thread-icon img {
-      width: 24px;
-      height: 24px; }
-  phi-thread-header phi-thread-preview {
-    outline: none;
-    display: block;
-    flex: 1;
-    padding: 16px;
-    padding-left: 0; }
-    phi-thread-header phi-thread-preview phi-thread-title {
-      display: block;
-      margin: 0;
-      font-size: 1.2em;
-      font-weight: 500;
-      max-width: 100%;
-      word-break: break-word; }
-    phi-thread-header phi-thread-preview phi-thread-author,
-    phi-thread-header phi-thread-preview phi-thread-description {
-      display: inline-block;
-      color: #555; }
-    phi-thread-header phi-thread-preview phi-thread-description {
-      max-width: 100%;
-      word-break: break-word; }
-    phi-thread-header phi-thread-preview phi-thread-author:after {
-      content: ' - '; }
-    phi-thread-header phi-thread-preview phi-thread-date {
-      display: none; }
-  phi-thread-header phi-thread-actions {
-    display: flex; }
-    phi-thread-header phi-thread-actions button {
-      border: 0;
-      margin: 0;
-      padding: 0 12px;
-      background: transparent;
-      color: #666;
-      font-size: 1em;
-      min-width: 56px; }
-
-/* States */
-phi-thread.selected phi-thread-header {
-  background-color: rgba(255, 255, 136, 0.35); }
-
-phi-thread.unread phi-thread-title {
-  font-weight: bold; }
-
-phi-thread.unread phi-thread-title,
-phi-thread.unread phi-thread-author,
-phi-thread.unread phi-thread-description {
-  color: #111; }
-
-phi-thread-body {
-  display: block; }
-
-phi-toolbar {
-  background-color: #444;
-  display: block;
-  height: 56px;
-  line-height: 56px; }
-  phi-toolbar > * {
-    display: inline-block;
-    vertical-align: middle;
-    height: 56px;
-    min-width: 56px; }
-  phi-toolbar > button {
-    cursor: pointer;
-    background: transparent;
-    border: 0;
-    color: #fff;
-    padding: 14px 16px;
-    font-size: 18px; }
-  phi-toolbar > h3 {
-    color: #fff;
-    font-weight: normal;
-    margin: 0 1em; }
-
-.ta-toolbar {
-  background-color: rgba(0, 0, 0, 0.065);
-  padding: 6px 0; }
-  .ta-toolbar .btn-group {
-    display: inline-block;
-    margin: 0 6px; }
-    .ta-toolbar .btn-group .btn {
-      position: relative;
-      float: left;
-      margin-left: -1px; }
-  .ta-toolbar .btn {
-    border: 1px solid #ccc;
-    background: #fff;
-    color: #444;
-    padding: 6px 12px; }
-
-.ta-editor {
-  background-color: #fff; }
-
 [phi-icon-animation="spin"][phi-icon-left]:before, [phi-icon-animation="spin"][phi-icon-right]:after {
   display: inline-block;
   -webkit-animation: phi-animation-spin 750ms infinite linear;
@@ -15208,8 +15191,136 @@ phi-toolbar {
   -ms-transform: scale(1);
   transform: scale(1); }
 
+phi-avatar {
+  display: inline-block;
+  width: 42px;
+  height: 42px; }
+  phi-avatar > div {
+    display: inline-block;
+    overflow: hidden;
+    border-radius: 50%;
+    width: 100%;
+    height: 100%; }
+    phi-avatar > div > img {
+      width: 100%; }
+
 phi-menu[phi-texture=xray] a:hover {
   background: rgba(255, 255, 255, 0.3); }
+
+phi-notification-settings {
+  display: block; }
+  phi-notification-settings > button {
+    display: block;
+    margin-top: 24px; }
+
+phi-setting {
+  display: block;
+  /* Setting states */
+  /* Specific transports */ }
+  phi-setting phi-setting-header {
+    cursor: pointer;
+    display: block;
+    position: relative;
+    outline: none; }
+    phi-setting phi-setting-header:hover {
+      background-color: rgba(0, 0, 0, 0.04); }
+    phi-setting.open > phi-setting-header {
+      background-color: rgba(0, 0, 0, 0.04); }
+    phi-setting phi-setting-header phi-setting-icon {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 72px;
+      padding: 16px;
+      box-sizing: border-box;
+      height: 100%;
+      text-align: center; }
+      phi-setting phi-setting-header phi-setting-icon:before {
+        font-family: FontAwesome;
+        content: "";
+        cursor: inherit;
+        font-style: normal;
+        font-size: 22px;
+        color: #666; }
+      phi-setting phi-setting-header phi-setting-icon > *, phi-setting phi-setting-header phi-setting-icon:before {
+        display: block;
+        text-align: center;
+        max-width: 22px; }
+    phi-setting phi-setting-header phi-setting-contents {
+      display: block;
+      outline: none;
+      padding: 16px;
+      padding-left: 0;
+      margin-left: 72px; }
+      phi-setting phi-setting-header phi-setting-contents phi-setting-title {
+        display: block;
+        margin: 0;
+        font-size: 1.5em;
+        font-weight: normal;
+        max-width: 100%;
+        word-break: break-word; }
+      phi-setting phi-setting-header phi-setting-contents phi-setting-notice {
+        display: block;
+        color: #444; }
+  phi-setting phi-setting-body {
+    display: block;
+    padding: 16px 0;
+    margin-left: 72px; }
+    phi-setting phi-setting-body > phi-checkbox {
+      display: block;
+      margin: 0 0 24px 0; }
+    phi-setting phi-setting-body phi-setting-schedule {
+      display: block; }
+      phi-setting phi-setting-body phi-setting-schedule phi-checkbox {
+        display: block;
+        margin-bottom: 12px; }
+  phi-setting.open > phi-setting-body {
+    display: block; }
+  phi-setting.closed > phi-setting-body {
+    display: none; }
+  phi-setting.disabled > phi-setting-body > phi-setting-schedule,
+  phi-setting.disabled > phi-setting-body > phi-drawer {
+    opacity: 0.5; }
+  phi-setting.setting-transport > phi-setting-header > phi-setting-contents > phi-setting-title {
+    text-transform: uppercase; }
+  phi-setting.transport-email phi-setting-icon:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+  phi-setting.transport-mobile phi-setting-icon:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+
+phi-drawer {
+  display: block;
+  margin: 12px 0; }
+  phi-drawer-title {
+    display: block;
+    padding: 8px;
+    cursor: pointer; }
+    phi-drawer-title:before {
+      display: inline-block;
+      margin-right: 1em; }
+  phi-drawer-body {
+    display: block; }
+  phi-drawer.open > phi-drawer-title:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+  phi-drawer.open > phi-drawer-body {
+    display: block; }
+  phi-drawer.closed > phi-drawer-title:before {
+    font-family: FontAwesome;
+    content: "";
+    cursor: inherit;
+    font-style: normal; }
+  phi-drawer.closed > phi-drawer-body {
+    display: none; }
 
 .phi-group > [phi-texture="emboss"] {
   border-radius: 0; }

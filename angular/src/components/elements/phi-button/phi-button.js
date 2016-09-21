@@ -11,7 +11,7 @@
         return {
             restrict:   "E",
             transclude: true,
-            template:   "<button phi-button ng-transclude></button>",
+            template:   "<button phi-button type=\"button\" ng-transclude></button>",
             replace:    true
         }
 
