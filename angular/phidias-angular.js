@@ -213,6 +213,80 @@ visibility can be established with the phi-visible attribute
     };
 
 })();
+angular.module("phidias-angular").directive("phiPosition", ["phiCoordinates", function(phiCoordinates) {
+
+    return {
+
+        restrict: "A",
+
+        scope: {},
+
+        link: function(scope, element, attributes)  {
+
+            element.parent().css("position", "relative");
+            element.css("position", "absolute");
+
+            scope.reposition = function(positionString) {
+
+                var boundingRect = phiCoordinates.getBounds(element);
+                var alignment    = phiCoordinates.parseAlignmentString(positionString) || {vertical: "top", horizontal: "left"};
+
+                var coordinates  = {
+                    top:        "auto",
+                    left:       "auto",
+                    bottom:     "auto",
+                    right:      "auto",
+                    marginTop:  0,
+                    marginLeft: 0
+                };
+
+                switch (alignment.vertical) {
+
+                    case "top":
+                        coordinates.top = "10px";
+                    break;
+
+                    case "center":
+                        coordinates.top       = "50%";
+                        coordinates.marginTop = (boundingRect.height * -0.5) + "px";
+                    break;
+
+                    case "bottom":
+                        coordinates.bottom = "10px";
+                    break;
+
+                }
+
+                switch (alignment.horizontal) {
+
+                    case "left":
+                        coordinates.left = "10px";
+                    break;
+
+                    case "center":
+                        coordinates.left       = "50%";
+                        coordinates.marginLeft = (boundingRect.width * -0.5) + "px";
+                    break;
+
+                    case "right":
+                        coordinates.right = "10px";
+                    break;
+
+                }
+
+                element.css(coordinates);
+
+            };
+
+            attributes.$observe("phiPosition", function(positionString) {
+                scope.reposition(positionString);
+            });
+
+        }
+    };
+
+}]);
+
 /*
 This directive will simply set the "phi-switch-active" class (and optionally the class you specify via phi-switch-active-class="") to one child element at a time 
 and provide controls to select the active item.  All styling should be defined in your stylesheets
@@ -330,80 +404,6 @@ Usage:
     };
 
 })();
-
-angular.module("phidias-angular").directive("phiPosition", ["phiCoordinates", function(phiCoordinates) {
-
-    return {
-
-        restrict: "A",
-
-        scope: {},
-
-        link: function(scope, element, attributes)  {
-
-            element.parent().css("position", "relative");
-            element.css("position", "absolute");
-
-            scope.reposition = function(positionString) {
-
-                var boundingRect = phiCoordinates.getBounds(element);
-                var alignment    = phiCoordinates.parseAlignmentString(positionString) || {vertical: "top", horizontal: "left"};
-
-                var coordinates  = {
-                    top:        "auto",
-                    left:       "auto",
-                    bottom:     "auto",
-                    right:      "auto",
-                    marginTop:  0,
-                    marginLeft: 0
-                };
-
-                switch (alignment.vertical) {
-
-                    case "top":
-                        coordinates.top = "10px";
-                    break;
-
-                    case "center":
-                        coordinates.top       = "50%";
-                        coordinates.marginTop = (boundingRect.height * -0.5) + "px";
-                    break;
-
-                    case "bottom":
-                        coordinates.bottom = "10px";
-                    break;
-
-                }
-
-                switch (alignment.horizontal) {
-
-                    case "left":
-                        coordinates.left = "10px";
-                    break;
-
-                    case "center":
-                        coordinates.left       = "50%";
-                        coordinates.marginLeft = (boundingRect.width * -0.5) + "px";
-                    break;
-
-                    case "right":
-                        coordinates.right = "10px";
-                    break;
-
-                }
-
-                element.css(coordinates);
-
-            };
-
-            attributes.$observe("phiPosition", function(positionString) {
-                scope.reposition(positionString);
-            });
-
-        }
-    };
-
-}]);
 
 (function() {
     'use strict';
@@ -3698,6 +3698,94 @@ phiStorage.local.clear(); // clears all
 
     angular
         .module("phidias-angular")
+        .factory("phiBlockFiles", phiBlockFiles);
+
+    phiBlockFiles.$inject = ["phiApi"];
+    function phiBlockFiles(phiApi) {
+
+        return function(phiBlock) {
+
+            return {
+
+                initialize: initialize,
+
+                menu: [
+                    {
+                        label: 'editar',
+                        icon:  'fa-pencil',
+                        state: 'editor'
+                    },
+
+                    {
+                        label: 'eliminar',
+                        icon:  'fa-times',
+                        state: 'delete'
+                    }
+                ],
+
+
+                states: {
+
+                    default: {
+                        template:   '<phi-api-resource-files src="{{phiBlock.ngModel.url}}"></phi-api-resource-files>'
+                    },
+
+                    editor: {
+                        controller:   editorController,
+                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
+                    },
+
+                    delete: {
+                        template:   '<form>' + 
+                                        '<h1>Eliminar esta carpeta ?</h1>' +
+                                        '<footer>' + 
+                                            '<phi-button class="danger" ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
+                                            '<phi-button class="cancel" ng-click="phiBlock.go(\'default\')">cancelar</phi-button>' + 
+                                        '</footer>' + 
+                                    '</form>',
+                    }
+
+                }
+
+            };
+
+            //////////////////////
+
+            function initialize() {
+
+                if ( phiBlock.ngModel.url ) {
+                    phiBlock.go("default");
+                    return;
+                }
+
+                phiBlock.go("editor");
+
+            }
+
+
+            function editorController() {
+
+                if ( !phiBlock.ngModel.url ) {
+                    //make one up I guess!
+                    var random = Math.floor((Math.random() * 10000) + 1);
+
+                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
+                    phiBlock.change();
+                }
+
+            }
+
+        }
+
+
+    }
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
         .factory("phiBlockForm", phiBlockForm);
 
     phiBlockForm.$inject = ["phiApi", "phiApp"];
@@ -3998,207 +4086,6 @@ phiStorage.local.clear(); // clears all
 
     angular
         .module("phidias-angular")
-        .factory("phiBlockFiles", phiBlockFiles);
-
-    phiBlockFiles.$inject = ["phiApi"];
-    function phiBlockFiles(phiApi) {
-
-        return function(phiBlock) {
-
-            return {
-
-                initialize: initialize,
-
-                menu: [
-                    {
-                        label: 'editar',
-                        icon:  'fa-pencil',
-                        state: 'editor'
-                    },
-
-                    {
-                        label: 'eliminar',
-                        icon:  'fa-times',
-                        state: 'delete'
-                    }
-                ],
-
-
-                states: {
-
-                    default: {
-                        template:   '<phi-api-resource-files src="{{phiBlock.ngModel.url}}"></phi-api-resource-files>'
-                    },
-
-                    editor: {
-                        controller:   editorController,
-                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
-                    },
-
-                    delete: {
-                        template:   '<form>' + 
-                                        '<h1>Eliminar esta carpeta ?</h1>' +
-                                        '<footer>' + 
-                                            '<phi-button class="danger" ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
-                                            '<phi-button class="cancel" ng-click="phiBlock.go(\'default\')">cancelar</phi-button>' + 
-                                        '</footer>' + 
-                                    '</form>',
-                    }
-
-                }
-
-            };
-
-            //////////////////////
-
-            function initialize() {
-
-                if ( phiBlock.ngModel.url ) {
-                    phiBlock.go("default");
-                    return;
-                }
-
-                phiBlock.go("editor");
-
-            }
-
-
-            function editorController() {
-
-                if ( !phiBlock.ngModel.url ) {
-                    //make one up I guess!
-                    var random = Math.floor((Math.random() * 10000) + 1);
-
-                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
-                    phiBlock.change();
-                }
-
-            }
-
-        }
-
-
-    }
-
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module("phidias-angular")
-        .factory("phiBlockGallery", phiBlockGallery);
-
-    phiBlockGallery.$inject = ["phiApi"];
-    function phiBlockGallery(phiApi) {
-
-        return function(phiBlock) {
-
-            return {
-
-                initialize: initialize,
-
-                menu: [
-                    {
-                        label: 'editar',
-                        icon:  'fa-pencil',
-                        state: 'editor'
-                    },
-
-                    {
-                        label: 'eliminar',
-                        icon:  'fa-times',
-                        state: 'delete'
-                    }
-                ],
-
-
-                states: {
-
-                    default: {
-                        controller: defaultController,
-                        controllerAs: "vm",
-                        template:   '<div>' + 
-                                        '<ul class="phi-gallery-thumbnails">' + 
-                                            '<li ng-repeat="image in vm.images" ng-click="vm.control.select($index)"><img ng-src="{{image.thumbnail}}" alt="{{image.name}}" /></li>' + 
-                                        '</ul>' + 
-                                        '<phi-gallery control="vm.control">' + 
-                                            '<div ng-repeat="image in vm.images">' + 
-                                                '<img ng-src="{{image.url}}" alt="{{image.name}}" />' + 
-                                            '</div>' + 
-                                        '</phi-gallery>' + 
-                                    '</div>'
-                    },
-
-                    editor: {
-                        controller:   editorController,
-                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
-                    },
-
-                    delete: {
-                        template:   '<form>' + 
-                                        '<h1>Eliminar esta galería ?</h1>' +
-                                        '<footer>' + 
-                                            '<phi-button class="danger" ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
-                                            '<phi-button class="cancel" ng-click="phiBlock.go(\'default\')">cancelar</phi-button>' + 
-                                        '</footer>' + 
-                                    '</form>',
-                    }
-
-                }
-
-            };
-
-            //////////////////////
-
-            function initialize() {
-
-                if (phiBlock.ngModel.url) {
-                    phiBlock.go("default");
-                    return;
-                }
-
-                phiBlock.go("editor");
-
-            }
-
-
-            function defaultController() {
-
-                var vm     = this;
-                vm.images  = [];
-                vm.control = {};
-
-                phiApi.get(phiBlock.ngModel.url + '/files')
-                    .then(function(response) {
-                        vm.images = response.data;
-                    });
-
-            }
-
-
-            function editorController() {
-
-                if ( !phiBlock.ngModel.url ) {
-                    //make one up I guess!
-                    var random = Math.floor((Math.random() * 10000) + 1);
-
-                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
-                    phiBlock.change();
-                }
-
-            }
-
-        }
-
-
-    }
-
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module("phidias-angular")
         .factory("phiBlockHtml", phiBlockHtml);
 
     phiBlockHtml.$inject = ["phiApi"];
@@ -4341,6 +4228,314 @@ phiStorage.local.clear(); // clears all
 
                 }
 
+            };
+
+        }
+
+
+    }
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
+        .factory("phiBlockGallery", phiBlockGallery);
+
+    phiBlockGallery.$inject = ["phiApi"];
+    function phiBlockGallery(phiApi) {
+
+        return function(phiBlock) {
+
+            return {
+
+                initialize: initialize,
+
+                menu: [
+                    {
+                        label: 'editar',
+                        icon:  'fa-pencil',
+                        state: 'editor'
+                    },
+
+                    {
+                        label: 'eliminar',
+                        icon:  'fa-times',
+                        state: 'delete'
+                    }
+                ],
+
+
+                states: {
+
+                    default: {
+                        controller: defaultController,
+                        controllerAs: "vm",
+                        template:   '<div>' + 
+                                        '<ul class="phi-gallery-thumbnails">' + 
+                                            '<li ng-repeat="image in vm.images" ng-click="vm.control.select($index)"><img ng-src="{{image.thumbnail}}" alt="{{image.name}}" /></li>' + 
+                                        '</ul>' + 
+                                        '<phi-gallery control="vm.control">' + 
+                                            '<div ng-repeat="image in vm.images">' + 
+                                                '<img ng-src="{{image.url}}" alt="{{image.name}}" />' + 
+                                            '</div>' + 
+                                        '</phi-gallery>' + 
+                                    '</div>'
+                    },
+
+                    editor: {
+                        controller:   editorController,
+                        template:     '<phi-api-resource-files-editor src="{{phiBlock.ngModel.url}}"></phi-api-resource-files-editor>'
+                    },
+
+                    delete: {
+                        template:   '<form>' + 
+                                        '<h1>Eliminar esta galería ?</h1>' +
+                                        '<footer>' + 
+                                            '<phi-button class="danger" ng-click="phiBlock.destroy()">eliminar</phi-button>' + 
+                                            '<phi-button class="cancel" ng-click="phiBlock.go(\'default\')">cancelar</phi-button>' + 
+                                        '</footer>' + 
+                                    '</form>',
+                    }
+
+                }
+
+            };
+
+            //////////////////////
+
+            function initialize() {
+
+                if (phiBlock.ngModel.url) {
+                    phiBlock.go("default");
+                    return;
+                }
+
+                phiBlock.go("editor");
+
+            }
+
+
+            function defaultController() {
+
+                var vm     = this;
+                vm.images  = [];
+                vm.control = {};
+
+                phiApi.get(phiBlock.ngModel.url + '/files')
+                    .then(function(response) {
+                        vm.images = response.data;
+                    });
+
+            }
+
+
+            function editorController() {
+
+                if ( !phiBlock.ngModel.url ) {
+                    //make one up I guess!
+                    var random = Math.floor((Math.random() * 10000) + 1);
+
+                    phiBlock.ngModel.url = phiBlock.ngModel.collectionUrl + "/block" + random;
+                    phiBlock.change();
+                }
+
+            }
+
+        }
+
+
+    }
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
+        .factory("phiBlockImage", phiBlockImage);
+
+    phiBlockImage.$inject = ["phiApi"];
+    function phiBlockImage(phiApi) {
+        return function(phiBlock) {
+
+            function initialize() {
+
+                if ( phiBlock.ngModel.url ) {
+                    phiBlock.go("default");
+                    return;
+                }
+
+                phiBlock.go("editor");
+
+            }
+
+            function defaultController() {
+                var vm = this;
+            }
+
+
+            editorController.$inject = ["$scope"];
+            function editorController($scope) {
+
+                var vm    = this;
+                vm.save   = save;
+                vm.cancel = cancel;
+
+                /////////////////
+
+                function save() {
+                    phiBlock.change();
+                    phiBlock.go("default");
+                }
+
+                function cancel() {
+                    phiBlock.go("default");
+                }
+            }
+
+            function deleteController() {
+
+                var vm     = this;
+                vm.confirm = confirm;
+                vm.cancel  = cancel;
+
+                /////////////////
+
+                function confirm() {
+                    phiBlock.destroy();
+                }
+
+                function cancel() {
+                    phiBlock.go("default");
+                }
+
+            }
+
+
+            return {
+
+                initialize: initialize,
+
+                menu: [
+                    {
+                        label: 'editar',
+                        icon:  'fa-pencil',
+                        state: 'editor'
+                    },
+
+                    {
+                        label: 'eliminar',
+                        icon:  'fa-times',
+                        state: 'delete'
+                    }
+                ],
+
+                states: {
+
+                    default: {
+                        controller:     defaultController,
+                        controllerAs:   'vm',
+                        template:       '<img ng-src="!!phiBlock.ngModel.url" width="100%" />'
+                    },
+
+                    editor: {
+                        controller:   editorController,
+                        controllerAs: 'vm',
+                        template:   '<form>' +
+                                        '<fieldset>' +
+
+                                            '<phi-input ng-model="phiBlock.ngModel.url" label="URL de youtube"></phi-input>' +
+
+                                            '<p ng-show="!!phiBlock.ngModel.isInvalid">Debes ingresar una direcci&oacute;n v&aacute;lida de YouTube</p>' +
+
+                                            '<div ng-show="!!phiBlock.ngModel.url" class="description">' +
+                                                '<img ng-if="!!phiBlock.ngModel.url" ng-src="{{phiBlock.ngModel.url}}" width="100%" />' +
+                                            '</div>' +
+
+                                            '<footer>' +
+                                                '<phi-button ng-show="!!phiBlock.ngModel.url" ng-click="vm.save()">aceptar</phi-button>' +
+                                                '<phi-button ng-click="vm.cancel()" class="cancel">cancelar</phi-button>' +
+                                            '</footer>' +
+
+                                        '</fieldset>' +
+                                    '</form>'
+                    },
+
+                    delete: {
+                        controller:   deleteController,
+                        controllerAs: 'vm',
+                        template:   '<form>' +
+                                        '<h1>Quitar esta imágen ?</h1>' +
+                                        '<footer>' +
+                                            '<phi-button class="danger" ng-click="vm.confirm()">eliminar</phi-button>' +
+                                            '<phi-button class="cancel" ng-click="vm.cancel()">cancelar</phi-button>' +
+                                        '</footer>' +
+                                    '</form>',
+                    },
+
+                    error: {
+                        template: '<h1>error!</h1>'
+                    }
+
+                }
+
+            };
+
+
+        };
+
+
+    }
+
+})();
+(function() {
+    'use strict';
+
+    angular
+        .module("phidias-angular")
+        .factory("phiBlockV3", phiBlockV3);
+
+    phiBlockV3.$inject = ["phiApi", "$http", "$sce"];
+    function phiBlockV3(phiApi, $http, $sce) {
+        return function(phiBlock) {
+
+            function initialize() {
+                if ( !phiBlock.ngModel.url ) {
+                    phiBlock.go("error");
+                    return;
+                }
+                phiBlock.go("default");
+            }
+
+            function defaultController() {
+
+                var vm = this;
+
+                $http.get(phiBlock.ngModel.url, {
+                    headers: {'Authorization': 'Bearer ' + phiApi.token}
+                }).then(function(response) {
+                    // vm.body = response.data;
+                    vm.body = $sce.trustAsHtml(response.data);
+                }, function() {
+                    phiBlock.go("error");
+                });
+
+            }
+
+            return {
+                initialize: initialize,
+                states: {
+                    default: {
+                        controller:   defaultController,
+                        controllerAs: 'vm',
+                        template:     '<div ng-bind-html="vm.body"></div>'
+                    },
+                    error: {
+                        template: '<h1>Error cargando datos adjuntos</h1>'
+                    }
+                }
             };
 
         }
@@ -4532,60 +4727,6 @@ phiStorage.local.clear(); // clears all
 
 
         };
-
-
-    }
-
-})();
-(function() {
-    'use strict';
-
-    angular
-        .module("phidias-angular")
-        .factory("phiBlockV3", phiBlockV3);
-
-    phiBlockV3.$inject = ["phiApi", "$http", "$sce"];
-    function phiBlockV3(phiApi, $http, $sce) {
-        return function(phiBlock) {
-
-            function initialize() {
-                if ( !phiBlock.ngModel.url ) {
-                    phiBlock.go("error");
-                    return;
-                }
-                phiBlock.go("default");
-            }
-
-            function defaultController() {
-
-                var vm = this;
-
-                $http.get(phiBlock.ngModel.url, {
-                    headers: {'Authorization': 'Bearer ' + phiApi.token}
-                }).then(function(response) {
-                    // vm.body = response.data;
-                    vm.body = $sce.trustAsHtml(response.data);
-                }, function() {
-                    phiBlock.go("error");
-                });
-
-            }
-
-            return {
-                initialize: initialize,
-                states: {
-                    default: {
-                        controller:   defaultController,
-                        controllerAs: 'vm',
-                        template:     '<div ng-bind-html="vm.body"></div>'
-                    },
-                    error: {
-                        template: '<h1>Error cargando datos adjuntos</h1>'
-                    }
-                }
-            };
-
-        }
 
 
     }
