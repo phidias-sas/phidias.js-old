@@ -303,7 +303,7 @@ phiApp.broadcast('notification', {
                 });
 
                 // Open the OAuth consent page in the InAppBrowser
-                var authWindow = window.open(authUrl, '_blank', 'location=no,toolbar=no');
+                var authWindow = window.open(authUrl, '_blank');
 
                 // Listen (one time) for messages sent from authWindow
                 var listenMessage = function(event) {

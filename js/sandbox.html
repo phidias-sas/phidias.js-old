@@ -3,11 +3,97 @@
     <head>
         <title>phidias.js sandbox</title>
         <meta charset="utf-8">
+
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+        <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+        <script src="http://rc.vuejs.org/js/vue.js"></script>
+
         <script src="phidias/client.js"></script>
         <script src="phidias/jwt.js"></script>
+        <script src="phidias/collection.js"></script>
+
+        <script src="sandbox.js"></script>
+
+        <style>
+            .threads {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .thread {
+                cursor: pointer;
+
+                display: block;
+                padding: 8px;
+            }
+
+            .thread:hover {
+                background: #f1f1f1;
+            }
+
+            .thread.active {
+                background: #ff8;
+            }
+
+            input.search {
+                width: 100%;
+                margin-bottom: 12px;
+            }
+        </style>
+
     </head>
 
     <body>
+        <div id="app">
+
+            <h1 v-text="api.isAuthenticated ? api.token.data.firstName : 'login'">Testing</h1>
+
+            <form v-if="!api.isAuthenticated">
+                <input type="text" v-model="username" />
+                <input type="password" v-model="password" />
+                <button type="button" @click="authenticate()"> Enter </button>
+            </form>
+
+            <div v-if="api.isAuthenticated">
+
+                <button @click="fetch()"> Fetch </button>
+                <button @click="clear()"> Clear </button>
+                <button @click="api.logout()"> Logout </button>
+
+                <hr>
+
+                <div style="display:flex">
+
+                    <div style="width: 500px; padding: 16px; max-height: 500px; overflow-y: auto">
+
+                        <div style="display: flex">
+                            <input style="flex: 1; height: 100%" type="text" v-model="search" class="search" />
+                            <button type="button" @click="fetch()" style="margin-left: 12px">search</button>
+                        </div>
+
+                        <ul class="threads">
+                            <li v-for="thread in threads" @click="read(thread)" :class="{active: !!current && current.id == thread.id, thread: true}">
+                                {{ thread.id }}
+                                {{ thread.title }}
+                                <small v-text="thread._state"></small>
+                            </li>
+                        </ul>
+                        <button v-if="hasNextPage" @click="fetch(++page)"> Next page! </button>
+                    </div>
+
+                    <div style="flex:1; padding: 0 12px">
+                        <h1 v-text="current ? current.title : '...'">...</h1>
+                        <div>{{ current }}</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+        </div>
     </body>
 </html>

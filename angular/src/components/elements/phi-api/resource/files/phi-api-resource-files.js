@@ -18,14 +18,14 @@
             bindToController: true,
 
             template:   '<ul>' +
-                            '<li ng-repeat="item in vm.files" class="phi-api-resource-files-file" ng-class="{selected: selected.url == item.url}" ng-click="select(item)">' +
-                                '<a class="thumbnail" target="_blank" href="{{item.url}}">' +
+                            '<li ng-repeat="item in vm.files" class="phi-api-resource-files-file" ng-click="vm.download(item)">' +
+                                '<span class="thumbnail">' +
                                     '<img ng-if="!!item.thumbnail" ng-src="{{item.thumbnail}}" />' +
-                                '</a>' +
-                                '<a class="details" target="_blank" href="{{item.url}}">' +
+                                '</span>' +
+                                '<span class="details">' +
                                     '<h3 ng-bind="item.title"></h3>' +
                                     '<p>{{item.size|bytes}} - {{item.name}}</p>' +
-                                '</a>' +
+                                '</span>' +
                             '</li>' +
                         '</ul>'
         };
@@ -37,6 +37,10 @@
 
         var vm   = this;
         vm.files = [];
+
+        vm.download = function(item) {
+            window.open(item.url, "_blank");
+        };
 
         phiApi.get(vm.src)
             .then(function(response) {
