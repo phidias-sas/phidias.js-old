@@ -1,7 +1,6 @@
-import Collection from './collection.js';
-import JWT from './jwt.js';
+var Phidias = Phidias || {};
 
-class Client {
+Phidias.Client = class {
 
     constructor(host) {
 
@@ -22,7 +21,7 @@ class Client {
     }
 
     collection(url) {
-        return new Collection(this, url);
+        return new Phidias.Collection(this, url);
     }
 
     execute(method, url, data, config) {
@@ -109,7 +108,7 @@ class Client {
 
         this.token = {
             string: string,
-            data: JWT.decode(string)
+            data: Phidias.JWT.decode(string)
         };
 
         this.isAuthenticated = true;
@@ -167,8 +166,4 @@ class Client {
 
         return str.join('&');
     }
-
-
-};
-
-export default Client
+}

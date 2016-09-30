@@ -1,4 +1,6 @@
-class Collection {
+var Phidias = Phidias || {};
+
+Phidias.Collection = class {
 
     constructor(client, url) {
 
@@ -95,7 +97,6 @@ class Collection {
             .then(function(response) {
 
                 var iorder = 0;  // incoming order (used for sorting)
-
                 response.data.forEach(function(record) {
                     record._iorder = iorder++;
                     _this.store(record, originKey);
@@ -111,7 +112,6 @@ class Collection {
         record._state = isFinalForm ? "final" : "partial";
 
         this.db.records.put(record);
-
         this.db.origins.put({
             record:    record.id,
             origin:    originKey,
@@ -123,7 +123,4 @@ class Collection {
     static toOriginKey(parameters) {
         return !parameters ? 'default' : JSON.stringify(parameters);
     }
-
-};
-
-export default Collection
+}
