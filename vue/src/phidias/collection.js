@@ -100,6 +100,11 @@ class Collection {
 
                 response.data.forEach(function(record) {
                     record._iorder = iorder++;
+
+                    if (!record.id) {
+                        record.id = record._iorder;
+                    }
+
                     _this.store(record, originKey);
                 });
 

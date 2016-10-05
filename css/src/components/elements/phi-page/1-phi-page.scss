@@ -1,0 +1,51 @@
+/*
+Full example:
+
+<div class="phi-page">
+    <div class="phi-page-toolbar"></div>
+
+    <div class="phi-page-cover"></div>
+
+    <div class="phi-page-navigation">
+        <router-link to="/foo"><ons-ripple color="rgba(0, 0, 0, 0.1)"></ons-ripple>Foo</router-link>
+        <router-link to="/bar"><ons-ripple color="rgba(0, 0, 0, 0.1)"></ons-ripple>Bar</router-link>
+        <router-link to="/Inbox"><ons-ripple color="rgba(0, 0, 0, 0.1)"></ons-ripple>Inbox</router-link>    
+    </div>
+
+    <div class="phi-page-contents"></div>
+</div>
+
+
+Element modifiers:
+Special class names prefixed with _ that denote element behavior
+
+class="phi-page _collapsed" ...
+
+class="phi-page-cover _parallax"
+
+class="phi-page-navigation _hidden _scrollhide"
+
+
+
+*/
+$phi-page-toolbar-height: 64px;
+$phi-page-navigation-height: 46px;
+
+.phi-page, 
+.phi-page * {
+    box-sizing: border-box;
+}
+
+.phi-page {
+    display: block;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+
+    overflow-y: scroll; /* has to be scroll, not auto */
+    -webkit-overflow-scrolling: touch;
+}
+
+.phi-page-contents {
+    padding: 16px;
+}

@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #f3f3f3;
+}
+
+html, body, input, textarea, button {
+  font-family: Roboto, Noto, sans-serif;
+}
+
+h1, h2, h3, h4, h5, p {
+  font-weight: normal;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

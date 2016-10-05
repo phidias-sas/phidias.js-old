@@ -2,17 +2,40 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>vue-test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <style>
-      body {
-        font-family: Helvetica, sans-serif;
-      }      
-    </style>
+    <meta name="phi-endpoint" content="https://phidias.api.phidias.co">
+    <meta name="phi-title" content="Phidias">
+    <meta name="phi-logo" content="https://phidias.phidias.co/interface/xhtml/img/label.png">
+    <meta name="phi-google-client-id" content="890266961007.apps.googleusercontent.com">
+
+    <title>Phidias</title>
+
+    <!-- Phidias CSS -->
+    <link rel="stylesheet" href="dist/phidias.min.css"/>
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css"/>
+
+    <!-- Onsen UI -->
+    <link rel="stylesheet" href="node_modules/onsenui/css/onsenui.css"/>
+    <link rel="stylesheet" href="node_modules/onsenui/css/onsen-css-components.css"/>
+    <script src="node_modules/onsenui/js/onsenui.js"></script>
+    <script type="text/javascript">
+      // Force onsen platform theme (overrides auto-detect)
+      ons.platform.select('android') // or 'ios'
+    </script>
+
+    <!-- Quill text editor -->
+    <link href="node_modules/quill/dist/quill.core.css" rel="stylesheet">
+    <link href="node_modules/quill/dist/quill.snow.css" rel="stylesheet">
+    <link href="node_modules/quill/dist/quill.bubble.css" rel="stylesheet">
 
   </head>
+
   <body>
     <div id="app"></div>
     <script src="dist/build.js"></script>
   </body>
+
 </html>

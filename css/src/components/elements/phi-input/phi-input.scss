@@ -1,0 +1,62 @@
+.phi-input {
+
+	display: inline-block;
+	min-width: 128px;
+	position: relative;
+
+	input,
+	label {
+		padding: 3px 0;
+		font-size: inherit;
+	}
+
+	label {
+		display: block;
+		text-align: left;
+		color: #888;
+
+		transform-origin: 0 0;
+		transition: transform 200ms ease;		
+	}
+
+	input {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+
+		border: 0;
+		background: transparent;
+		border-bottom: 1px solid #ccc;
+
+		color: #212121;
+	}
+
+	/* underline */
+	&::after {
+		content: "";
+		display: block;
+		position: absolute;
+		bottom: -1px;
+		left: 0;
+		right: 0;
+		z-index: 3;
+
+		border-bottom: 2px solid #2196F3;
+		transform-origin: 50% 50%;
+		transform: scale(0, 1);
+		transition: transform 200ms ease;
+	}
+
+	&._focused::after {
+		transform: scale(1, 1);
+	}	
+
+	/* displaced label */
+	&._dirty label,
+	&._focused label {
+		color: #2196F3;
+		transform: translate3d(0, -1em, 0) scale(0.8, 0.8);
+	}
+}

@@ -1,0 +1,11 @@
+.phi-avatar {
+	display: inline-block;
+	border-radius: 50%;
+	max-width: 52px;
+	max-height: 52px;
+	overflow: hidden;
+
+	& > * {
+		width: 100%;
+	}
+}

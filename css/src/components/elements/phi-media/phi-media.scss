@@ -1,0 +1,45 @@
+$phi-media-spacing: 16px;
+$phi-media-figure-size: 36px;
+
+.phi-media {
+
+	display: flex;
+	box-sizing: border-box;
+	padding: $phi-media-spacing;
+
+	text-decoration: none;
+	color: #444;
+
+	.phi-media-figure,
+	.phi-media-body {
+		box-sizing: border-box;
+	}
+
+	.phi-media-figure {
+		order: 1;
+		width: $phi-media-figure-size;
+		height: $phi-media-figure-size;
+
+		margin-right: $phi-media-spacing;
+	}
+
+	.phi-media-body {
+		order: 2;
+		flex: 1;
+	}
+
+
+	/* Opinionated media body default styles */
+	.phi-media-body {
+		h1 {
+			font-size: 1.2em;
+			font-weight: 500;
+			margin: 0;
+		}
+
+		p {
+			margin: 0;
+			font-weight: 400;
+		}
+	}
+}

@@ -1,0 +1,56 @@
+.phi-button {
+
+    @extend ._z;
+
+	display: inline-block;
+	padding: $phi-spacing-padding;
+    border: 0;
+	border-radius: $phi-spacing-radius;
+
+    color: #fff;
+    font-size: 1em;
+    font-weight: 300;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    background-color: #5091e0;
+
+    &:hover, &:focus {
+        @extend ._z-2;
+        outline: 0;
+    }
+
+    &:active {
+        @extend ._z-0;
+    }
+
+    &.danger {
+        background-color: #d9534f;
+        color: #fff;
+    }
+
+    &.cancel {
+        @extend ._z-0;
+        background: transparent !important;
+        color: #444;
+
+        &:hover {
+            color: #900;
+        }
+    }
+
+    &[disabled] {
+        box-shadow: none;
+        background-color: #444;
+        opacity: 0.6;
+    }
+
+}
