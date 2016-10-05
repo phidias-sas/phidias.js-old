@@ -1,4 +1,6 @@
-var JWT = {
+var Phidias = Phidias || {};
+
+Phidias.JWT = {
 
     decode: function(token) {
         var parts = token.split('.');
@@ -6,7 +8,7 @@ var JWT = {
             throw new Error('JWT must have 3 parts');
         }
 
-        var decoded = JWT.urlBase64Decode(parts[1]);
+        var decoded = Phidias.JWT.urlBase64Decode(parts[1]);
         if (!decoded) {
             throw new Error('Cannot decode the token');
         }
@@ -15,7 +17,7 @@ var JWT = {
     },
 
     isExpired: function(token) {
-        var d = JWT.getExpirationDate(token);
+        var d = Phidias.JWT.getExpirationDate(token);
         if (!d) {
             return false;
         }
@@ -25,7 +27,7 @@ var JWT = {
 
     getExpirationDate: function(token) {
         var decoded;
-        decoded = JWT.decode(token);
+        decoded = Phidias.JWT.decode(token);
         if (!decoded.exp) {
             return null;
         }
@@ -45,10 +47,6 @@ var JWT = {
                 throw 'Illegal base64url string!';
             }
         }
-
         return decodeURIComponent(escape(window.atob(output)));   // polifyll at https://github.com/davidchambers/Base64.js
     }
-
-};
-
-export default JWT
+}
