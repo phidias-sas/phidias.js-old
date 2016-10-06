@@ -1,6 +1,7 @@
 import Dexie from 'dexie'
+import Client from './client.js'
 
-class Collection {
+export default class Collection {
 
     constructor(client, url) {
 
@@ -56,8 +57,12 @@ class Collection {
                             var record     = response.data;
                             record._iorder = result ? result._iorder : 0;
 
-                            _this.store(response.data, "get", true);
-                            return response.data;
+                            if (result) {
+                                record = Object.assign(result, record);
+                            }
+
+                            _this.store(record, "get", true);
+                            return record;
                         });
                 }
 
@@ -91,21 +96,20 @@ class Collection {
     refresh(parameters) {
 
         var originKey = this.constructor.toOriginKey(parameters);
-        var _this     = this;
 
-        return _this.client.get(_this.url, parameters)
-            .then(function(response) {
+        return this.client.get(this.url, parameters)
+            .then((response) => {
 
                 var iorder = 0;  // incoming order (used for sorting)
 
-                response.data.forEach(function(record) {
+                response.data.forEach((record) => {
                     record._iorder = iorder++;
 
                     if (!record.id) {
                         record.id = record._iorder;
                     }
 
-                    _this.store(record, originKey);
+                    this.store(record, originKey);
                 });
 
                 return response.data;
@@ -128,9 +132,7 @@ class Collection {
     }
 
     static toOriginKey(parameters) {
-        return !parameters ? 'default' : JSON.stringify(parameters);
+        return !parameters ? 'default' : Client.serialize(parameters);
     }
 
-};
-
-export default Collection
+}

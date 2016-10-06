@@ -2,7 +2,7 @@
 
 	<div class="phi-page">
 		<ons-progress-bar indeterminate v-show="isLoading"></ons-progress-bar>
-		<div class="phi-page-toolbar">
+		<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
 			<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
 			<h1></h1>
 			<div class="phi-tooltip">
@@ -59,7 +59,6 @@ export default {
 	},
 
 	mounted () {
-
     // https://codepen.io/IliaSky/pen/VjgBqQ?editors=0110
     var page        = this.$el;
     var scrollValue = 0;
@@ -67,7 +66,7 @@ export default {
     page.addEventListener('scroll', (e) => {
       var delta = page.scrollTop - scrollValue;
       if (Math.abs(delta) > 8) {
-        this.toolbarIsHidden = delta > 0 && scrollValue > 36;
+        this.toolbarIsHidden = delta > 0 && scrollValue > 64;
         scrollValue = page.scrollTop;
       }
     });		
@@ -108,6 +107,7 @@ export default {
 
 .phi-page-toolbar {
 	color: #fff;
+	background-color: #1C89B8;
 }
 
 .phi-tooltip .phi-menu {

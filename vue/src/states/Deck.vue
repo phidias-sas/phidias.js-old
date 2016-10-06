@@ -42,7 +42,7 @@
 				<router-link to="/bar">Bar</router-link>
 				<hr>
 
-				<router-link to="/login">Logout</router-link>
+				<div @click="logout()">Cerrar sesión</div>
 			</div>
 
 		</ons-splitter-side>
@@ -71,6 +71,11 @@ export default {
 	},
 
 	methods: {
+
+		logout () {
+			this.app.logout();
+			this.$router.push('login');
+		},
 
 		toggleMenu () {
 			this.$el.left.toggle();

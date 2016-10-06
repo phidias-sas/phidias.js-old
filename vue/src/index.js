@@ -25,24 +25,49 @@ import Bar from './tests/bar.vue'
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-  routes: [
-    { path: '/', redirect: '/foo' },
+	routes: [
+		{ path: '/', redirect: '/dashboard' },
 
-    { path: '/code',  component: Code },
-    { path: '/login', component: Login },
-    { path: '/deck',  component: Deck,
-      children: [
-        { path: '/dashboard', component: Dashboard, meta: {order: 1} },
-        { path: '/folder/:folder', component: Folder, meta: {order: 2}, name: 'folder' },
-        { path: '/read/:threadId', component: Read, meta: {order: 3}, name: 'read' },
+		{ path: '/code',  component: Code, name: 'code', meta: {isPublic: true} },
+		{ path: '/login', component: Login, name: 'login', meta: {isPublic: true} },
 
-        { path: '/foo',   component: Foo,   meta: {order: 8} },
-        { path: '/bar',   component: Bar,   meta: {order: 9} }
-      ]
-    },
+		{ path: '/deck',  component: Deck,
+			children: [
+				{ path: '/dashboard', component: Dashboard, meta: {order: 1} },
+				{ path: '/folder/:folder', component: Folder, meta: {order: 2}, name: 'folder' },
+				{ path: '/read/:threadId', component: Read, meta: {order: 3}, name: 'read' },
 
-  ]
-})
+				{ path: '/foo',   component: Foo,   meta: {order: 8} },
+				{ path: '/bar',   component: Bar,   meta: {order: 9} }
+			]
+		},
+
+	]
+});
+
+
+/* 
+Navigation guards: 
+redirect to /code if app is not initialized,
+redirect to /login if user is not authenticated 
+*/
+
+import app from './store/app.js';
+
+router.beforeEach((to, from, next) => {
+
+	if (to.name != 'code' && !app.isLoaded) {
+		next({name: 'code'});
+		return;
+	}
+
+	if (!to.meta.isPublic && !app.isAuthenticated) {
+		next({name: 'login'});
+		return;		
+	}
+
+	next();
+});
 
 
 /* Global components */
@@ -57,7 +82,7 @@ Vue.component("phi-block", Block);
 import App from './App.vue'
 
 new Vue({
-  el: '#app',
-  render: h => h(App),
-  router
-})
+	el: '#app',
+	render: h => h(App),
+	router
+});

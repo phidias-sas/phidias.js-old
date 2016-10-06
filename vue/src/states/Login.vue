@@ -1,7 +1,7 @@
 <template>
 	<div id="state-login">
 
-		<form class="phi-card" @submit="login()">
+		<form class="phi-card" @submit.prevent="login()">
 			<img :src="app.settings.logo" :alt="app.settings.title">
 
 			<div class="phi-card-contents">
@@ -64,6 +64,7 @@ export default {
 		},
 
 		redirect () {
+			this.username = this.password = null;
 			this.$router.push("/dashboard");
 		}
 	}

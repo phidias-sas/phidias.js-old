@@ -42,9 +42,9 @@ export default class App {
 		this.api      = new Client(this.settings.endpoint);
 
 		/* Restore session */
-        if ( window.sessionStorage[this.storageKey] ) {
-            this.setToken(window.sessionStorage[this.storageKey]);
-        }
+		if ( window.sessionStorage[this.storageKey] ) {
+			this.setToken(window.sessionStorage[this.storageKey]);
+		}
 
 		this.isLoaded = true;
 		this.persist();

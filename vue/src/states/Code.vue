@@ -1,7 +1,7 @@
 <template>
 	<div id="state-code">
 
-		<form @submit="submit()">
+		<form @submit.prevent="submit()">
 
 			<phi-input v-model="inputCode" label="código de la institución" autocorrect="off" autocapitalize="off" spellcheck="false"></phi-input>
 
