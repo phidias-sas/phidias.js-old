@@ -31,16 +31,14 @@ export default {
 		/* Copy all attributes into <input> element */
 		if (this.$el.hasAttributes()) {
 			for (var i = 0; i < this.$el.attributes.length; i++) {
+				if (this.$el.attributes[i].name == "class") {
+					continue;
+				}
 				input.setAttribute(this.$el.attributes[i].name, this.$el.attributes[i].value);
 			}
 		}
+
 	}
 }
 
 </script>
-
-<style>
-.phi-input input {
-	color: inherit;
-}
-</style>

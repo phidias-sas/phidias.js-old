@@ -21,6 +21,7 @@
 
         cursor: pointer;
 
+        &.router-link-active,
         &._active {
             border-bottom: 4px solid #fff;
             background-color: rgba(255, 255, 255, 0.2);

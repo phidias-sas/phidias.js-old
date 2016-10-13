@@ -5,7 +5,7 @@
 
 		<div class="phi-page-toolbar">
 			<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
-			<h1 v-text="app.settings.title"></h1>
+			<h1 v-text="app.title"></h1>
 		</div>
 
 		<div class="phi-page-contents">
@@ -38,6 +38,8 @@ import app from '../store/app.js';
 
 export default {
 
+	name: "dashboard",
+
 	data () {
 		return {
 			app,
@@ -58,7 +60,7 @@ export default {
 
 			var baseUrl       = `people/${app.user.id}/posts/types`;
 			var collection    = app.api.collection(baseUrl);
-  		var billboardUrl = `people/${app.user.id}/posts/inbox?tags = highlight&limit = 1`;
+			var billboardUrl = `people/${app.user.id}/posts/inbox?tags=highlight&limit=1`;
 
 			this.isLoading = true;
 
@@ -76,7 +78,7 @@ export default {
 			/* Fetch billboard */
 			this.app.api.get(billboardUrl)
 				.then((response) => {
-					this.billboard = response.data.length && !response.data[0].stub.readDate ? response.data[0] : null;
+					this.billboard = response.length && !response[0].stub.readDate ? response[0] : null;
 				});
 
 		}

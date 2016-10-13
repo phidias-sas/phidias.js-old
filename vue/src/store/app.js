@@ -1,3 +1,32 @@
-import App from "../phidias/app.js";
+import {App} from "../phidias/Phidias.js"; 
 
-export default new App("phidias-vue-1");
+var app = new App;
+
+/* Manage local storage persistense */
+var appKey    = "phidias-vue-app";
+var storedApp = window.localStorage[appKey];
+if (storedApp) {
+    app.load(JSON.parse(storedApp));
+}
+
+app.on("load", () => {
+    window.localStorage[appKey] = JSON.stringify(app.options);
+});
+
+
+/* Load session from localStorage */
+var tokenKey    = appKey+":token";
+var storedToken = window.sessionStorage[tokenKey];
+if (storedToken) {
+    app.setToken(storedToken);
+}
+
+app.on("login", () => {
+    window.sessionStorage[tokenKey] = app.token;
+});
+
+app.on("logout", () => {
+    window.sessionStorage.removeItem(tokenKey);
+});
+
+export default app;

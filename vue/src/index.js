@@ -10,6 +10,29 @@ moment.locale("es");
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+/* Import custom vue components */
+import Quill from './components/Quill.vue';
+import PhiInput from './components/Phi/Input.vue';
+import PhiBlock from './components/Phi/Block.vue';
+import PhiPostEditor from './components/Phi/Post/Editor.vue';
+
+Vue.component("quill", Quill);
+Vue.component("phi-input", PhiInput);
+Vue.component("phi-block", PhiBlock);
+Vue.component("phi-post-editor", PhiPostEditor);
+
+/* Global filters */
+Vue.filter("date", (value) => moment(value * 1000).calendar());
+
+Vue.filter("bytes", (bytes, precision) => {
+	if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
+	if (typeof precision === 'undefined') precision = 1;
+	var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
+	var	number = Math.floor(Math.log(bytes) / Math.log(1024));
+	return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
+});
+
+
 /* Set up routes */
 import Code from './states/Code.vue'
 import Login from './states/Login.vue'
@@ -21,6 +44,15 @@ import Read from './states/thread/Read.vue'
 
 import Foo from './tests/foo.vue'
 import Bar from './tests/bar.vue'
+
+import Root from './states/Root.vue'
+import Node from './states/Node/Node.vue'
+import People from './states/People.vue'
+import Person from './states/Person.vue'
+
+import NodePosts from './states/Node/Posts.vue'
+import NodePeople from './states/Node/People.vue'
+import NodeCompose from './states/Node/Compose.vue'
 
 Vue.use(VueRouter);
 
@@ -35,23 +67,35 @@ const router = new VueRouter({
 			children: [
 				{ path: '/dashboard', component: Dashboard, meta: {order: 1} },
 				{ path: '/folder/:folder', component: Folder, meta: {order: 2}, name: 'folder' },
-				{ path: '/read/:threadId', component: Read, meta: {order: 3}, name: 'read' },
+				{ path: '/read/:threadId', component: Read, meta: {order: 99}, name: 'read' },
 
 				{ path: '/foo',   component: Foo,   meta: {order: 8} },
-				{ path: '/bar',   component: Bar,   meta: {order: 9} }
+				{ path: '/bar',   component: Bar,   meta: {order: 9} },
+
+				{ path: '/people',   component: People,   meta: {order: 10}, name: 'people' },
+				{ path: '/person/:personId', component: Person, meta: {order: 11}, name: 'person' },
+				{ path: '/root',   component: Root,   meta: {order: 12}, name: 'root' },
+
+				{ path: '/nodes/:nodeId', component: Node, meta: {order: 13},
+					children: [
+						{ path: 'posts', component: NodePosts, meta: {order: 14}, name: 'node' },
+						{ path: 'people', component: NodePeople, meta: {order: 15}, name: 'node-people' }
+					]
+				},
+
+				{ path: '/nodes/:nodeId/compose', component: NodeCompose, meta: {order: 16}, name: 'node-compose' },
+
 			]
 		},
 
 	]
 });
 
-
-/* 
-Navigation guards: 
+/*
+Navigation guards:
 redirect to /code if app is not initialized,
-redirect to /login if user is not authenticated 
+redirect to /login if user is not authenticated
 */
-
 import app from './store/app.js';
 
 router.beforeEach((to, from, next) => {
@@ -63,26 +107,17 @@ router.beforeEach((to, from, next) => {
 
 	if (!to.meta.isPublic && !app.isAuthenticated) {
 		next({name: 'login'});
-		return;		
+		return;
 	}
 
 	next();
 });
 
-
-/* Global components */
-import Input from './components/Phi/Input.vue';
-Vue.component("phi-input", Input);
-
-import Block from './components/Phi/Block.vue';
-Vue.component("phi-block", Block);
-
-
-/* Initialize the main app (via the App component) */
-import App from './App.vue'
+/* Initialize the app (via the Index component) */
+import Index from './states/Index.vue'
 
 new Vue({
 	el: '#app',
-	render: h => h(App),
+	render: h => h(Index),
 	router
 });

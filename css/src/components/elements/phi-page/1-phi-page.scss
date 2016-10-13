@@ -53,8 +53,10 @@ $phi-page-navigation-height: 46px;
 	display: flex;
 	align-items: center;
 
-	position: fixed;
-	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
 	z-index: 2;
 
 	/* The next element must make room for the toolbar */

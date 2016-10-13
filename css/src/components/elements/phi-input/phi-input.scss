@@ -8,12 +8,15 @@
 	label {
 		padding: 3px 0;
 		font-size: inherit;
+		color: inherit;
+		font-weight: inherit;
 	}
 
 	label {
 		display: block;
 		text-align: left;
-		color: #888;
+		color: inherit;
+		opacity: 0.8;
 
 		transform-origin: 0 0;
 		transition: transform 200ms ease;		
@@ -30,7 +33,7 @@
 		background: transparent;
 		border-bottom: 1px solid #ccc;
 
-		color: #212121;
+		z-index: 2;
 	}
 
 	/* underline */

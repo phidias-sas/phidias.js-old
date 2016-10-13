@@ -4,7 +4,7 @@
 
 		<ons-splitter-content id="main-view" :class="'move-'+transitionDirection">
 
-			<transition 
+			<transition
 				name="slide"
 				@before-enter="beforeEnter"
 				@before-leave="beforeLeave"
@@ -29,13 +29,15 @@
 				<div class="phi-avatar">
 					<img :src="app.user.avatar" :alt="app.user.firstName">
 				</div>
-				
+
 				<h1 v-text="app.user.firstName + ' ' + app.user.lastName"></h1>
 			</header>
 
 			<div class="phi-menu" @click="toggleMenu">
-				<router-link to="/dashboard" v-text="app.settings.title"></router-link>
+				<router-link to="/dashboard" v-text="app.title"></router-link>
 				<router-link to="/folder/archive">Archivados</router-link>
+				<router-link to="/people">Personas</router-link>
+				<router-link to="/root">Grupos</router-link>
 
 				<hr>
 				<router-link to="/foo">Foo</router-link>
@@ -53,7 +55,6 @@
 
 
 <script>
-import Client from '../phidias/client.js'
 import app from '../store/app.js'
 
 var incomingCover = null;
@@ -61,7 +62,7 @@ var outgoingCover = null;
 
 export default {
 
-	name: "app",
+	name: "deck",
 
 	data () {
 		return {
@@ -88,23 +89,26 @@ export default {
 		beforeLeave (el) {
 			outgoingCover = el.querySelector('.phi-page-cover');
 
-			if (incomingCover) {
-				incomingCover.initialHeight = incomingCover.clientHeight;
-			}
+			setTimeout(() => {
+				incomingCover && (incomingCover.initialHeight = incomingCover.clientHeight);
 
-			var newCoverHeight = outgoingCover ? outgoingCover.clientHeight : 0;
-			incomingCover && (incomingCover.style.height = newCoverHeight + "px");
-			outgoingCover && (outgoingCover.style.height = newCoverHeight + "px");
+				var newCoverHeight = outgoingCover ? outgoingCover.clientHeight : 64; // 64 = default toolbar height
+				incomingCover && (incomingCover.style.height = newCoverHeight + "px");
+				outgoingCover && (outgoingCover.style.height = newCoverHeight + "px");
 
-			// force repaint
-			incomingCover && incomingCover.offsetHeight;
-			outgoingCover && outgoingCover.offsetHeight;
+				// force repaint
+				incomingCover && incomingCover.offsetHeight;
+				outgoingCover && outgoingCover.offsetHeight;
+			}, 0);
+
 		},
 
 		enter (el) {
-			var newCoverHeight = incomingCover ? incomingCover.initialHeight : 0;
-			incomingCover && (incomingCover.style.height = newCoverHeight + "px");
-			outgoingCover && (outgoingCover.style.height = newCoverHeight + "px");
+			setTimeout(() => {
+				var newCoverHeight = incomingCover ? incomingCover.initialHeight : 64;
+				incomingCover && (incomingCover.style.height = newCoverHeight + "px");
+				outgoingCover && (outgoingCover.style.height = newCoverHeight + "px");
+			}, 0);
 		},
 
 		afterLeave (el) {
@@ -189,8 +193,8 @@ ons-splitter-side {
 .slide-enter,
 .slide-leave-active {
 	.phi-page-cover {
-		padding: 0;
-	}	
+		/*padding: 0;*/
+	}
 }
 
 

@@ -2,7 +2,7 @@
 	<div id="state-login">
 
 		<form class="phi-card" @submit.prevent="login()">
-			<img :src="app.settings.logo" :alt="app.settings.title">
+			<img :src="app.logo" :alt="app.title">
 
 			<div class="phi-card-contents">
 				<phi-input v-model="username" label="usuario" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></phi-input>

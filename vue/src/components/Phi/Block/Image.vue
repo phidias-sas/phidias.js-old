@@ -7,6 +7,16 @@
 <script>
 export default {
     name: "phi-block-image",
-    props: ["block"]
+    props: ["block", "action"],
+
+    'phi-actions': {
+        default: {
+            title: "ver imagen"
+        },
+
+        edit: {
+            title: "modificar imagen"
+        }
+    }    
 }
 </script>

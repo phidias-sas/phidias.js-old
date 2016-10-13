@@ -1,7 +1,7 @@
 <template>
 
 	<div class="phi-page">
-		<ons-progress-bar indeterminate v-show="isLoading"></ons-progress-bar>
+		<ons-progress-bar indeterminate v-show="collection.isLoading"></ons-progress-bar>
 		<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
 			<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
 			<h1></h1>
@@ -29,7 +29,7 @@
 					<h1 v-text="post.author.firstName + ' ' + post.author.lastName"></h1>
 					<div class="description" v-text="post.description"></div>
 					<phi-block v-for="block in post.blocks" :block="block"></phi-block>
-					<div class="date">{{ post.publishDate | test }}</div>
+					<div class="date">{{ post.publishDate | date }}</div>
 				</div>
 			</div>
 
@@ -39,67 +39,66 @@
 </template>
 
 <script>
-import moment from 'moment'
 import app from '../../store/app.js'
 
-export default {
+let collection = app.api.collection(`/people/${app.user.id}/threads/inbox`);
 
+export default {
 	data () {
 		return {
 			app,
+			collection,
 			thread: null,
-			isLoading: false,
 			toolbarIsHidden: false
 		}
 	},
 
-	created () {
-		this.collection = this.app.api.collection(`/people/${this.app.user.id}/threads/inbox`);
-		this.fetch();
-	},
-
 	mounted () {
-    // https://codepen.io/IliaSky/pen/VjgBqQ?editors=0110
-    var page        = this.$el;
-    var scrollValue = 0;
+		// https://codepen.io/IliaSky/pen/VjgBqQ?editors=0110
+		var page        = this.$el;
+		var scrollValue = 0;
 
-    page.addEventListener('scroll', (e) => {
-      var delta = page.scrollTop - scrollValue;
-      if (Math.abs(delta) > 8) {
-        this.toolbarIsHidden = delta > 0 && scrollValue > 64;
-        scrollValue = page.scrollTop;
-      }
-    });		
+		var toolbar = this.$el.querySelector(".phi-page-toolbar");
+
+		['scroll', 'touchmove'].forEach((eventName) => {   // apparently 'touchmove' event is also needed for iOS
+			page.addEventListener(eventName, () => {
+				var delta = page.scrollTop - scrollValue;
+				if (Math.abs(delta) > 8) {
+					this.toolbarIsHidden = delta > 0  && scrollValue > toolbar.clientHeight;
+					scrollValue = page.scrollTop;
+				}
+
+				// toolbar.style.top = page.scrollTop + "px";
+			});
+		});
 	},
 
 	methods: {
-
-		fetch () {
-			this.isLoading = true;
-			this.collection.get(this.$route.params.threadId)
+		refresh () {
+			return this.collection.get(this.$route.params.threadId)
 				.then((thread) => {
 					this.thread = thread;
-					this.isLoading = false;
 				});
 		}
-
 	},
 
-	filters: {
-		test (value) {
-			return moment(value * 1000).calendar();
-		}
+
+	// called before the route that renders this component is confirmed.
+	// does NOT have access to `this` component instance,
+	// because it has not been created yet when this guard is called!
+	beforeRouteEnter (to, from, next) {
+		collection.get(to.params.threadId)
+			.then(thread => {
+				next(vm => {
+					vm.thread = thread;
+				});
+			});
 	}
-
 }
-
-
-
 </script>
 
 
 <style lang="sass" scoped>
-
 .phi-page-contents {
 	padding: 0;
 	position: relative;
@@ -122,7 +121,6 @@ export default {
 		font-weight: 300;
 	}
 }
-
 
 .post {
 	width: 768px;
@@ -158,5 +156,4 @@ export default {
 		color: #999;
 	}
 }
-
 </style>

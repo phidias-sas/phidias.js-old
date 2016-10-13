@@ -1,54 +1,73 @@
-import Client from './client.js';
-import JWT from './jwt.js';
+import Client from './Client/Client.js';
+import JWT from './JWT.js';
 
 export default class App {
 
-	constructor (id) {
-
-		this.id = id;
-
-		this.settings = {
+	constructor (options) {
+		this.options = {
 			endpoint:       null,
 			title:          null,
 			logo:           null,
 			googleClientId: null
 		};
 
-		this.api            = null;
-		this.token          = null;
-		this.user           = null;
+		this.api       = null;
+		this.token     = null;
+		this.user      = null;
+		this.isLoaded  = false;
 
-		this.isLoaded       = false;
-		this.storageKey     = "phidias.app:" + this.id;
+		this.listeners = {};
 
-		this.retrieve();
+		this.load(options);
 	}
 
-
-	/* Local storage options */
-	persist () {
-		window.localStorage[this.storageKey] = JSON.stringify(this.settings);
+	/* Option getters */
+	get endpoint () {
+		return this.options.endpoint;
 	}
 
-	retrieve () {
-		if (window.localStorage[this.storageKey]) {
-			this.load(JSON.parse(window.localStorage[this.storageKey]));
+	get title () {
+		return this.options.title;
+	}
+
+	get logo () {
+		return this.options.logo;
+	}
+
+	load (options) {
+		if (!options) {
+			return;
+		}
+
+		this.options = Object.assign(this.options, options);
+
+		if (this.options.endpoint) {
+			this.api = new Client(this.options.endpoint);
+			this.isLoaded = true;
+			this.emit("load");
 		}
 	}
 
-	load (settings) {
+	/* Event handling */
+	on (eventName, callback) {
+		eventName = eventName.toLowerCase();
+		if (!this.listeners[eventName]) {
+			this.listeners[eventName] = [];
+		}
+		this.listeners[eventName].push(callback);
+	}
 
-		this.settings = Object.assign(this.settings, settings);
-		this.api      = new Client(this.settings.endpoint);
-
-		/* Restore session */
-		if ( window.sessionStorage[this.storageKey] ) {
-			this.setToken(window.sessionStorage[this.storageKey]);
+	emit (eventName, args) {
+		eventName = eventName.toLowerCase();
+		if (!this.listeners[eventName]) {
+			return;
 		}
 
-		this.isLoaded = true;
-		this.persist();
+		this.listeners[eventName].forEach((callback) => {
+			callback(args);
+		});
 	}
+
 
 	loadCode (code, rackUrl) {
 
@@ -60,48 +79,48 @@ export default class App {
 			.get("/code/" + code)
 			.then((response) => {
 				this.load({
-					title:    response.data.title,
-					logo:     response.data.logo,
-					endpoint: response.data.url
+					title:    response.title,
+					logo:     response.logo,
+					endpoint: response.url
 				});
 			});
 	}
-
-
-	/* Session management */
 
 	get isAuthenticated () {
 		return this.token != null;
 	}
 
-	setToken(string) {
-		this.user  = JWT.decode(string);
-		this.token = string;
-
+	setToken (tokenString) {
+		this.token = tokenString;
+		this.user  = JWT.decode(this.token);
 		this.api.setToken(this.token);
 
-		// Store token in session
-		window.sessionStorage[this.storageKey] = this.token;
+		this.emit("login", this.user);
+
 		return this.user;
 	}
 
-	logout() {
-		this.user  = null;
+	logout () {
+		this.user = null;
 		this.token = null;
-		window.sessionStorage.removeItem(this.storageKey);
+		this.api.setToken(null);
+
+		this.emit("logout");
 	}
 
 	login (username, password) {
-		return this.api.post("oauth/token",
-			{ grant_type: "client_credentials" },
-			{
-				headers: {
-					Authorization: 'Basic ' + btoa(username + ':' + password)
-				}
-			})
-			.then((response) => {
-				return this.setToken(response.data.access_token);
-			});
+		return this.api.fetch("oauth/token", {
+			method: "post",
+			headers: {
+				Authorization: 'Basic ' + btoa(username + ':' + password)
+			},
+			body: {
+				grant_type: "client_credentials"
+			}
+		})
+		.then((response) => {
+			return this.setToken(response.access_token);
+		});		
 	}
 
 	googleLogin () {
@@ -110,14 +129,14 @@ export default class App {
 				.then((googleCode) => {
 					this.api.post("oauth/google", {code: googleCode})
 						.then((response) => {
-							this.setToken(response.data.access_token);
+							this.setToken(response.access_token);
 							resolve(this.user);
 						}, reject);
 				}, reject);
 		});
 	}
 
-	getGoogleAuthorizationCode() {
+	getGoogleAuthorizationCode () {
 		// https://developers.google.com/identity/protocols/OAuth2UserAgent#formingtheurl
 		var authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" + Client.serialize({
 			"redirect_uri":  "http://www.phidias.co/googlesignin.html",
@@ -206,7 +225,7 @@ export default class App {
 	}
 
 
-	registerPushNotifications(googleClientId) {
+	registerPushNotifications (googleClientId) {
 
 		if (typeof PushNotification == "undefined") {
 			return;
@@ -238,7 +257,6 @@ export default class App {
 			});
 
 		});
-
 
 		push.on('notification', function(data) {
 			// data.message,
