@@ -1,5 +1,7 @@
 <template>
-	<div></div>
+	<div>
+		<div class="editor"></div>
+	</div>
 </template>
 
 <script>
@@ -16,7 +18,7 @@ export default {
 
 	mounted () {
 
-		this.quill = new Quill(this.$el, {
+		this.quill = new Quill(this.$el.querySelector('.editor'), {
 			modules: {
 				toolbar: [
 					[{ header: [1, 2, false] }],
@@ -24,7 +26,6 @@ export default {
 					['image', 'code-block']
 				]
 			},
-			// placeholder: 'Compose an epic...',
 			theme: 'snow' // 'snow' or 'bubble'
 		});
 

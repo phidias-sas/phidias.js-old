@@ -140,7 +140,7 @@ export default class App {
 		// https://developers.google.com/identity/protocols/OAuth2UserAgent#formingtheurl
 		var authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" + Client.serialize({
 			"redirect_uri":  "http://www.phidias.co/googlesignin.html",
-			"client_id":     this.googleClientId,
+			"client_id":     this.options.googleClientId,
 			"scope":         "email",
 			"response_type": "code",
 			"prompt":        "select_account"

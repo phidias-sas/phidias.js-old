@@ -21,6 +21,18 @@
 
 		<div class="phi-page-contents" v-if="thread" >
 
+			<header class="phi-card _z-0">
+				<div class="phi-media">
+					<div class="phi-media-figure phi-avatar">
+						<img :src="thread.author.avatar" alt="thread.author.firstName">
+					</div>
+					<div class="phi-media-body">
+						<div class="thread-author" v-text="`${thread.author.firstName} ${thread.author.lastName}`"></div>
+						<div class="thread-description" v-text="thread.description"></div>	
+					</div>
+				</div>
+			</header>
+
 			<div v-for="post in thread.replies" class="phi-media post">
 				<div class="phi-media-figure phi-avatar">
 					<img :src="post.author.avatar" :alt="post.author.firstName">
@@ -41,7 +53,7 @@
 <script>
 import app from '../../store/app.js'
 
-let collection = app.api.collection(`/people/${app.user.id}/threads/inbox`);
+var collection;
 
 export default {
 	data () {
@@ -87,6 +99,9 @@ export default {
 	// does NOT have access to `this` component instance,
 	// because it has not been created yet when this guard is called!
 	beforeRouteEnter (to, from, next) {
+
+		collection = app.api.collection(`/people/${app.user.id}/threads/inbox`);
+
 		collection.get(to.params.threadId)
 			.then(thread => {
 				next(vm => {
@@ -99,6 +114,18 @@ export default {
 
 
 <style lang="sass" scoped>
+
+.thread-author {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.thread-description {
+	white-space: pre-wrap;
+	padding: 12px 0;
+	margin-top: 12px;
+}
+
 .phi-page-contents {
 	padding: 0;
 	position: relative;

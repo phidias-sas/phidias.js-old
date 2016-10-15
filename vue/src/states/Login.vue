@@ -5,14 +5,15 @@
 			<img :src="app.logo" :alt="app.title">
 
 			<div class="phi-card-contents">
-				<phi-input v-model="username" label="usuario" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></phi-input>
-				<phi-input v-model="password" label="contraseña" type="password"></phi-input>
+				<phi-input @input="error = null" v-model="username" label="usuario" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></phi-input>
+				<phi-input @input="error = null" v-model="password" label="contraseña" type="password"></phi-input>
 			</div>
 
 			<div class="phi-card-actions">
-				<button class="phi-button login">
-					<span v-show="!isLoading">ingresar</span>
+				<button class="phi-button login" :class="{danger: !!error}">
 					<span v-show="isLoading">ingresando</span>
+					<span v-show="!isLoading && !error">ingresar</span>
+					<span v-show="!isLoading && error" v-text="error"></span>
 				</button>
 				<button class="phi-button google" type="button" @click="googleLogin()">ingresar con google</button>
 			</div>
@@ -33,28 +34,31 @@ export default {
 			username: null,
 			password: null,
 			error: null,
-			isLoading: false,
 			canChangeCode: true
 		}
 	},
 
+	computed: {
+		isLoading () {
+			return app.api.isLoading;
+		}
+	},
+
 	methods: {
-
-		hasFocus (selector) {
-			return false;
-			return this.$el && this.$el.querySelector(selector).hasFocus();
-		},
-
 		login () {
-			this.isLoading = true;
+			this.error = null;
+
+			if (!this.username || !this.password) {
+				this.error = "debes escribir tu usuario y contraseña";
+				return;
+			} 
 
 			this.app.login(this.username, this.password)
 				.then(() => {
-					this.isLoading = false;
 					this.redirect();
 				})
 				.catch((error) => {
-					this.isLoading = false;
+					this.error = "usuario o contraseña incorrectos";
 				});
 		},
 
@@ -67,6 +71,10 @@ export default {
 			this.username = this.password = null;
 			this.$router.push("/dashboard");
 		}
+	},
+
+	mounted () {
+		this.$el.querySelector("input").focus();
 	}
 }
 

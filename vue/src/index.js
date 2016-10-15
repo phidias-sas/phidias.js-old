@@ -42,9 +42,6 @@ import Dashboard from './states/Dashboard.vue'
 import Folder from './states/thread/Folder.vue'
 import Read from './states/thread/Read.vue'
 
-import Foo from './tests/foo.vue'
-import Bar from './tests/bar.vue'
-
 import Root from './states/Root.vue'
 import Node from './states/Node/Node.vue'
 import People from './states/People.vue'
@@ -68,22 +65,19 @@ const router = new VueRouter({
 				{ path: '/dashboard', component: Dashboard, meta: {order: 1} },
 				{ path: '/folder/:folder', component: Folder, meta: {order: 2}, name: 'folder' },
 				{ path: '/read/:threadId', component: Read, meta: {order: 99}, name: 'read' },
-
-				{ path: '/foo',   component: Foo,   meta: {order: 8} },
-				{ path: '/bar',   component: Bar,   meta: {order: 9} },
-
 				{ path: '/people',   component: People,   meta: {order: 10}, name: 'people' },
 				{ path: '/person/:personId', component: Person, meta: {order: 11}, name: 'person' },
 				{ path: '/root',   component: Root,   meta: {order: 12}, name: 'root' },
 
 				{ path: '/nodes/:nodeId', component: Node, meta: {order: 13},
 					children: [
-						{ path: 'posts', component: NodePosts, meta: {order: 14}, name: 'node' },
-						{ path: 'people', component: NodePeople, meta: {order: 15}, name: 'node-people' }
+						{ path: 'dashboard', component: Root, meta: {order: 14}, name: 'node' }, /// !!! 2DO
+						{ path: 'posts/:type', component: NodePosts, meta: {order: 15}, name: 'node-posts' },
+						{ path: 'people', component: NodePeople, meta: {order: 16}, name: 'node-people' }
 					]
 				},
 
-				{ path: '/nodes/:nodeId/compose', component: NodeCompose, meta: {order: 16}, name: 'node-compose' },
+				{ path: '/nodes/:nodeId/posts/compose/:postId', component: NodeCompose, meta: {order: 17}, name: 'node-compose' },
 
 			]
 		},

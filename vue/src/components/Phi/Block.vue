@@ -1,5 +1,13 @@
 <template>
-	<component :is="'phi-block-' + block.type" :block="block" :action="action" class="phi-block"></component>
+	<component
+		class="phi-block"
+		:is="'phi-block-' + block.type"
+		:block="block"
+		:action="action"
+		@change="change()"
+		@destroy="destroy()"
+		@reset="reset()">
+	</component>
 </template>
 
 <script>
@@ -9,7 +17,7 @@ import Html from './Block/Html.vue';
 import Image from './Block/Image.vue';
 import Files from './Block/Files.vue';
 
-var types = { 
+var types = {
 	html:    Html,
 	youtube: Youtube,
 	image:   Image,
@@ -18,7 +26,7 @@ var types = {
 
 var components = {};
 for (var type in types) {
-	components["phi-block-"+type] = types[type];
+	components["phi-block-" + type] = types[type];
 }
 
 export default {
@@ -34,15 +42,26 @@ export default {
 		}
 	},
 
-	created () {
-		var type = this.block.type.toLowerCase();
-		if ((typeof types[type] == "undefined") || (typeof types[type]['phi-actions'] == "undefined")) {
-			return;
-		}
+	methods: {
+		change () {
+			this.$emit("change", this.block);
+		},
 
-		this.$emit("ready", {
-			actions: types[type]['phi-actions']
-		});
+		destroy () {
+			this.$emit("destroy", this.block);
+		},
+
+		reset () {
+			this.$emit("reset", this.block);
+		}
+	},
+
+	/* testing */
+	getActions (type) {
+		if ((typeof types[type] == "undefined") || (typeof types[type]['phi-actions'] == "undefined")) {
+			return {};
+		}
+		return types[type]['phi-actions'];	
 	}
 }
 

@@ -1,40 +1,48 @@
 <template>
     <div class="phi-post-editor">
 
-		<h1 v-text="post.title"></h1>
-		<div class="phi-media">
-			<div class="phi-media-figure phi-avatar">
-				<img :src="post.author.avatar" :alt="post.author.firstName">
-			</div>
-			<h3 class="phi-media-body" v-text="post.author.firstName + ' ' + post.author.lastName"></h3>
-		</div>
-		<div v-text="post.description"></div>
-
 		<div class="phi-post-editor-blocks">
 
-			<div v-for="block in post.blocks">
-				<div class="phi-block-toolbar phi-media">
-					<div class="phi-media-body"></div>
-					<div class="phi-media-right">
-						<div class="phi-tooltip">
-							<button> <i class="fa fa-ellipsis-v"></i></button>
-							<ul class="phi-menu _texture-paper">
-								<li v-for="(action, actionName) in block._actions" v-text="action.title" @click="block._action = actionName == 'default' ? null : actionName"></li>
-							</ul>
+			<div v-for="editable in editables" :data-id="editable.block.id">
+				<div v-if="!editable.deleted" class="editable-block">
+
+					<div class="phi-block-toolbar phi-media">
+						<div class="phi-media-body"></div>
+						<div class="phi-media-right">
+							<div class="phi-tooltip">
+								<button> <i class="fa fa-ellipsis-v"></i></button>
+								<ul class="phi-menu _texture-paper">
+									<li v-for="(action, actionName) in editable.actions" v-text="action.title" @click="editable.setAction(actionName)"></li>
+								</ul>
+							</div>
 						</div>
 					</div>
+
+					<phi-block
+						:block="editable.block"
+						:action="editable.currentAction"
+						@change="editable.save(arguments[0])"
+						@destroy="editable.destroy()"
+						@reset="editable.setAction()"
+						>
+					</phi-block>
 				</div>
-				<phi-block :block="block" :action="block._action" @ready="block._actions = arguments[0].actions"></phi-block>
 			</div>
 
 		</div>
 
-		<div class="phi-post-editor-adder">
-			<ul class="phi-menu">
-				<li>Foo</li>
-				<li>Bar</li>
-				<li>Shoo</li>
-			</ul>
+		<div class="phi-post-editor-adder phi-card">
+			<div class="type-list" v-show="false">
+				<div v-for="(typedata, typename) in types" class="phi-media" :class="'type-'+typename" @click="createBlock(typename)">
+					<i class="phi-media-figure fa" :class="typedata.icon"></i>
+					<p class="phi-media-body" v-text="typedata.title"></p>
+				</div>
+			</div>
+
+			<div class="toggler phi-media" @click="toggleAdder()">
+				<i class="phi-media-figure fa fa-plus"></i>
+				<p class="phi-media-body">adjuntar</p>
+			</div>
 		</div>
 
     </div>
@@ -42,111 +50,117 @@
 
 <script>
 import Sortable from 'sortablejs';
+import Velocity from 'velocity-animate';
+import Block from '../Block.vue';
+import app from '../../../store/app.js';
+
 
 export default {
 
 	name: "phi-post-editor",
 
 	props: {
-		// post: {
-		// 	type: Object,
-		// 	required: true
-		// }
-	},
-
-	mounted () {
-		this.sortable = Sortable.create(this.$el.querySelector('.phi-post-editor-blocks'), {
-			handle:        '.phi-media-body',
-			animation:     150,
-			forceFallback: true // it will not work otherwise
-		});
+		post: {
+			type: Object,
+			required: true
+		}
 	},
 
 	data () {
 		return {
+			editables: [],
 
-			sortable: null,
-
-			post: {
-				"id": "6g0gu96d",
-				"type": "mensaje",
-				"title": "Santiago",
-				"description": "http:\/\/bestanimations.com\/Military\/Explosions\/explosion-animation.gif",
-				"creationDate": null,
-				"publishDate": "1474949648",
-				"sendDate": null,
-				"deleteDate": null,
-				"author": {
-					"id": "6",
-					"email": null,
-					"gender": "1",
-					"firstName": "Esteban",
-					"lastName": "Diaz",
-					"lastName2": "Cardona",
-					"birthDay": null,
-					"document": null,
-					"documentType": null,
-					"avatar": "https:\/\/phidias-storage-1.s3.amazonaws.com\/phidias\/pictures\/current\/picture_e7441dc9dd5140c26865ec2951dc7559.jpg",
-					"mobile": null
+			types: {
+				html: {
+					title: "Texto HTML",
+					icon: "fa-font"
 				},
-				"audience": null,
-				"node": null,
-				"thread": null,
-				"replyTo": null,
-				"forwardOf": null,
-				"blocks": [
-					{
-						"id": "6g0gu98j",
-						"post": "6g0gu96d",
-						"type": "image",
-						"url": "http://pre08.deviantart.net/acef/th/pre/i/2016/286/c/d/inquisitor_by_hydraevil-daku6a8.jpg",
-						"title": null,
-						"description": null,
-						"creationDate": "0",
-						"publishDate": null,
-						"deleteDate": null,
-						"order": "0",
-						"highlight": "0",
-						_actions: null,
-						_action: null
-
-					},
-
-					{
-						type: 'youtube',
-						url: 'https://www.youtube.com/watch?v=DWtXwzQHV80',
-						_actions: null,
-						_action: null
-					},
-
-					{
-						"id": "6g0gu98j",
-						"post": "6g0gu96d",
-						"type": "image",
-						"url": "http:\/\/bestanimations.com\/Military\/Explosions\/explosion-animation.gif",
-						"title": null,
-						"description": null,
-						"creationDate": "0",
-						"publishDate": null,
-						"deleteDate": null,
-						"order": "0",
-						"highlight": "0",
-						_actions: null,
-						_action: null
-					}
-				],
-				"stub": {
-					"id": "6g0gu9f5",
-					"post": "6g0gu96d",
-					"person": "6",
-					"creationDate": "1474949648",
-					"readDate": "1474949648",
-					"archiveDate": null,
-					"deleteDate": null,
-					"starDate": null
+				youtube: {
+					title: "Youtube",
+					icon: "fa-youtube-play"
+				},
+				files: {
+					title: "Archivos",
+					icon: "fa-files-o"
+				},
+				form: {
+					title: "Formulario",
+					icon: "fa-pencil-square-o"
 				}
 			}
 		}
+	},
+
+	methods: {
+
+		toEditable (block, initialAction) {
+			var vm = this;
+			return {
+				block,
+				actions: Block.getActions(block.type),
+				currentAction: initialAction,
+				deleted: false,
+
+				setAction (actionName) {
+					this.currentAction = actionName == 'default' ? null : actionName;
+				},
+
+				save () {
+					var blocksUrl = "/posts/" + vm.post.id + "/blocks";
+					if (this.block.id) {
+						app.api.put(blocksUrl + "/" + this.block.id, this.block);
+					} else {
+						app.api.post(blocksUrl, this.block)
+							.then(createdBlock => this.block.id = createdBlock.id);
+					}
+				},
+
+				destroy () {
+					this.deleted = true;
+					vm.post.blocks.splice(vm.post.blocks.indexOf(this.block), 1);
+					if (this.block.id) {
+						app.api.delete("/posts/" + vm.post.id + "/blocks/" + this.block.id);
+					}
+				}
+			};
+		},
+
+		createBlock (type) {
+			var newBlock = {type, url: null, order: this.post.blocks.length + 1};
+			this.post.blocks.push(newBlock);
+			this.editables.push(this.toEditable(newBlock, "edit"));
+		},
+
+		toggleAdder () {
+			var el        = this.$el.querySelector('.type-list');
+			var isVisible = getComputedStyle(el).display != "none";
+
+			if (isVisible) {
+				Velocity(el, "slideUp", {
+					duration: 280,
+					easing: [.42, 0, 0.2, 1]
+				});
+			} else {
+				Velocity(el, "slideDown", {
+					duration: 840,
+					easing: [500, 20]
+				});
+			}
+		}
+	},
+
+	mounted () {
+		var vm         = this;
+		this.editables = this.post.blocks.map(block => this.toEditable(block));
+
+		Sortable.create(this.$el.querySelector('.phi-post-editor-blocks'), {
+			handle: '.phi-media-body',
+			animation: 150,
+			forceFallback: true, // it will not work otherwise.  This took me HOURS to discover :(
+			onUpdate () {
+				app.api.put("/posts/" + vm.post.id + "/blocks", this.toArray());
+			}
+		});
 	}
 }
 
@@ -154,48 +168,68 @@ export default {
 
 <style scoped lang="sass">
 
-/*.sortable-fallback {
-	border: 3px solid red;
-	iframe {
-		display: none;
+.sortable-ghost {
+	opacity: 0;
+}
+
+.phi-post-editor-adder {
+	.phi-media {
+		align-items: center;
+		cursor: pointer;
+		padding: 8px 12px;
+
+		&:hover {
+			background: rgba(0, 0, 0, 0.1);
+		}
 	}
-}*/
+
+	.phi-media-figure {
+		font-size: 1.4em;
+		line-height: 1.7em;
+		text-align: center;
+	}
+}
+
+.type-list {
+	.type-youtube .phi-media-figure {
+		color: #e62117;
+	}
+}
 
 .phi-post-editor {
 	max-width: 768px;
 }
 
+.editable-block {
 
-.phi-post-editor-blocks > div {
 	margin-bottom: 24px;
-}
+	background: #fff;
+	padding: 6px;
 
+	.phi-block-toolbar {
+		margin-bottom: 6px;
+		padding: 0;
+		background: rgba(0, 0, 0, 0.1);
+		border-radius: 4px;
 
-.phi-block-toolbar {
-
-	padding: 0;
-	background: rgba(0, 0, 0, 0.1);
-	border-radius: 4px;
-
-	.phi-media-body {
-		cursor: move;
-	}
-
-	.phi-media-right {
-
-		button {
-			margin: 3px;
-			padding: 8px 12px;
-			background: transparent;
-			border: none;
+		.phi-media-body {
+			cursor: move;
 		}
 
-		.phi-menu {
-			min-width: 120px;
-			text-align: left;
+		.phi-media-right {
+			button {
+				margin: 3px;
+				padding: 8px 12px;
+				background: transparent;
+				border: none;
+			}
+
+			.phi-menu {
+				min-width: 120px;
+				text-align: left;
+			}
 		}
 	}
-
 }
 
 </style>

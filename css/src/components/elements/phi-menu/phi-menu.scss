@@ -15,7 +15,7 @@ Elements resulting HTML:
         cursor: pointer;
         padding: $phi-spacing-padding;
         text-decoration: none;
-        color: #333;
+        color: inherit;
 
         &:hover {
             background-color: rgba(0, 0, 0, 0.1);
@@ -46,6 +46,13 @@ Elements resulting HTML:
     }
 }
 
+.phi-menu-label {
+    padding: 8px 24px;
+    font-size: 0.9em;
+    opacity: 0.8;
+    font-weight: 300;
+    pointer-events: none;
+}
 
 
 .phi-submenu {

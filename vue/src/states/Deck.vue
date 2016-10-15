@@ -1,9 +1,7 @@
 <template>
-
 	<ons-splitter>
 
 		<ons-splitter-content id="main-view" :class="'move-'+transitionDirection">
-
 			<transition
 				name="slide"
 				@before-enter="beforeEnter"
@@ -13,46 +11,41 @@
 				>
 				<router-view></router-view>
 			</transition>
-
 		</ons-splitter-content>
-
 
 		<ons-splitter-side
 			swipe-target-width="64"
 			side="left"
-			width="280px"
+			width="260px"
 			collapse="portrait"
 			swipeable
 			>
-
-			<header>
-				<div class="phi-avatar">
+			<header class="phi-media">
+				<div class="phi-media-figure phi-avatar">
 					<img :src="app.user.avatar" :alt="app.user.firstName">
 				</div>
-
-				<h1 v-text="app.user.firstName + ' ' + app.user.lastName"></h1>
+				<h1 class="phi-media-body" v-text="app.user.firstName + ' ' + app.user.lastName"></h1>
 			</header>
-
 			<div class="phi-menu" @click="toggleMenu">
-				<router-link to="/dashboard" v-text="app.title"></router-link>
+				<router-link to="/dashboard">Bandeja de entrada</router-link>
 				<router-link to="/folder/archive">Archivados</router-link>
+				<hr>
+
+				<label class="phi-menu-label">años lectivos</label>
+				<router-link v-for="node in nodes.items" :to="{name:'node-posts', params:{nodeId:node.id, type:'comunicado'}}" v-text="node.name"></router-link>
+				<hr>
+
+				<label class="phi-menu-label">pruebas</label>
 				<router-link to="/people">Personas</router-link>
 				<router-link to="/root">Grupos</router-link>
-
-				<hr>
-				<router-link to="/foo">Foo</router-link>
-				<router-link to="/bar">Bar</router-link>
 				<hr>
 
 				<div @click="logout()">Cerrar sesión</div>
 			</div>
-
 		</ons-splitter-side>
 
 	</ons-splitter>
-
 </template>
-
 
 <script>
 import app from '../store/app.js'
@@ -61,18 +54,22 @@ var incomingCover = null;
 var outgoingCover = null;
 
 export default {
-
 	name: "deck",
 
 	data () {
 		return {
 			app,
+			nodes: null,
 			transitionDirection: 'left'
 		}
 	},
 
-	methods: {
+	created () {
+		this.nodes = app.api.collection("nodes");
+		this.nodes.fetch();
+	},
 
+	methods: {
 		logout () {
 			this.app.logout();
 			this.$router.push('login');
@@ -100,7 +97,6 @@ export default {
 				incomingCover && incomingCover.offsetHeight;
 				outgoingCover && outgoingCover.offsetHeight;
 			}, 0);
-
 		},
 
 		enter (el) {
@@ -127,7 +123,6 @@ export default {
 </script>
 
 <style lang="sass">
-
 $transition-duration:     .420s;
 $transition-displacement: 420px;
 
@@ -137,21 +132,28 @@ ons-splitter-mask {
 
 ons-splitter-side {
 	background: #fff;
+	background: #4D5250; /* slack's */
+	background: #4D5050;
+	color: #eaeaea;
+
+	overflow: hidden;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+
+	hr {
+		opacity: 0;
+	}
 
 	header {
-
 		text-align: left;
-
-		background: #f9f9f9 url('../assets/covers/phidias.jpg') no-repeat 0 0;
-		background-size: cover;
-
-		padding: 16px;
-		padding-top: 56px;
+		margin: 12px 0;
 
 		& > h1 {
 			color: #fff;
+			opacity: 0.8;
 			font-size: 1.2em;
 			text-shadow: 0 2px 2px rgba(0, 0, 0, 0.6);
+			align-self: center;
 		}
 
 	}
@@ -162,7 +164,6 @@ ons-splitter-side {
 
 .slide-enter-active,
 .slide-leave-active {
-
 	transition: opacity $transition-duration;
 
 	position: absolute;
@@ -218,8 +219,6 @@ ons-splitter-side {
 		transform: translate3d(0, -100%, 0);
 	}
 }
-
-
 
 
 .move-left {
@@ -282,6 +281,5 @@ ons-splitter-side {
 #main-page .navigation-bar--material + .page__background + .page__content {
 	padding-top: 56px;
 }
-
 
 </style>

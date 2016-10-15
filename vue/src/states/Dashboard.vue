@@ -58,8 +58,8 @@ export default {
 	methods: {
 		fetch () {
 
-			var baseUrl       = `people/${app.user.id}/posts/types`;
-			var collection    = app.api.collection(baseUrl);
+			var baseUrl      = `people/${app.user.id}/posts/types`;
+			var collection   = app.api.collection(baseUrl);
 			var billboardUrl = `people/${app.user.id}/posts/inbox?tags=highlight&limit=1`;
 
 			this.isLoading = true;

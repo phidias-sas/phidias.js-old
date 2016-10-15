@@ -54,11 +54,14 @@ export default class Client {
 			promise = fetch(request);
 		}
 
-		return promise.then((response) => {
-			this.isLoading = false;
-			return response.json();
-		});
-
+		return promise
+			.then(response => {
+				this.isLoading = false;
+				if (!response.ok) {
+					throw Error(response.statusText);
+				}
+				return response.json();
+			});
 	}
 
 	/* Clear the cache for the given URL */

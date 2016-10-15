@@ -13,7 +13,6 @@ app.on("load", () => {
     window.localStorage[appKey] = JSON.stringify(app.options);
 });
 
-
 /* Load session from localStorage */
 var tokenKey    = appKey+":token";
 var storedToken = window.sessionStorage[tokenKey];
@@ -28,5 +27,11 @@ app.on("login", () => {
 app.on("logout", () => {
     window.sessionStorage.removeItem(tokenKey);
 });
+
+
+/* Google Client ID */
+app.options.googleClientId = "890266961007.apps.googleusercontent.com";
+
+// app.api.cacheIsEnabled = false;
 
 export default app;
