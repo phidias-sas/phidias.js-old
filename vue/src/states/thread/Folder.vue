@@ -4,9 +4,11 @@
 		<ons-progress-bar indeterminate v-show="folder.isLoading"></ons-progress-bar>
 
 		<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
-			<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
+			
+			<button v-if="$route.params.folder == 'archive'" class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
+			<button v-if="$route.params.folder != 'archive'" class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
 
-			<h1 v-text="type.plural"></h1>
+			<h1 v-text="$route.params.folder == 'archive' ? 'archivados' : type.plural"></h1>
 
 			<button v-if="$route.params.folder != 'archive'" @click="moveTo('archive')" class="phi-button selection-count" v-show="selection.length > 0">
 				<span v-text="selection.length"></span>

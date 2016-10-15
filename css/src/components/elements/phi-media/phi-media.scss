@@ -19,13 +19,20 @@ $phi-media-figure-size: 36px;
 	.phi-media-figure {
 		order: 1;
 		width: $phi-media-figure-size;
-		height: $phi-media-figure-size;
+		// height: $phi-media-figure-size;
 
 		margin-right: $phi-media-spacing;
 
 		& > * {
 			max-width: 100%;
 		}
+	}
+
+	img.phi-media-figure {
+		width: $phi-media-figure-size;
+		height: auto;
+		align-self: center;
+		// max-height: $phi-media-figure-size;
 	}
 
 	.phi-media-body {

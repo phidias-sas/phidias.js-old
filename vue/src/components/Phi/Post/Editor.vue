@@ -7,7 +7,7 @@
 				<div v-if="!editable.deleted" class="editable-block">
 
 					<div class="phi-block-toolbar phi-media">
-						<div class="phi-media-body"></div>
+						<div class="phi-media-body sortable-handle"></div>
 						<div class="phi-media-right">
 							<div class="phi-tooltip">
 								<button> <i class="fa fa-ellipsis-v"></i></button>
@@ -19,6 +19,7 @@
 					</div>
 
 					<phi-block
+						:post="post"
 						:block="editable.block"
 						:action="editable.currentAction"
 						@change="editable.save(arguments[0])"
@@ -32,7 +33,7 @@
 		</div>
 
 		<div class="phi-post-editor-adder phi-card">
-			<div class="type-list" v-show="false">
+			<div class="type-list" v-show="false" @click="toggleAdder()">
 				<div v-for="(typedata, typename) in types" class="phi-media" :class="'type-'+typename" @click="createBlock(typename)">
 					<i class="phi-media-figure fa" :class="typedata.icon"></i>
 					<p class="phi-media-body" v-text="typedata.title"></p>
@@ -154,7 +155,7 @@ export default {
 		this.editables = this.post.blocks.map(block => this.toEditable(block));
 
 		Sortable.create(this.$el.querySelector('.phi-post-editor-blocks'), {
-			handle: '.phi-media-body',
+			handle: '.sortable-handle',
 			animation: 150,
 			forceFallback: true, // it will not work otherwise.  This took me HOURS to discover :(
 			onUpdate () {

@@ -5,7 +5,7 @@
 
 		<div class="phi-page-toolbar">
 			<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
-			<h1 v-text="app.title"></h1>
+			<h1>Bandeja de entrada</h1>
 		</div>
 
 		<div class="phi-page-contents">

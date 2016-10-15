@@ -2,6 +2,7 @@
 	<component
 		class="phi-block"
 		:is="'phi-block-' + block.type"
+		:post="post"
 		:block="block"
 		:action="action"
 		@change="change()"
@@ -37,6 +38,11 @@ export default {
 			type: Object,
 			required: true
 		},
+
+		post: {
+			type: Object
+		},
+
 		action: {
 			type: String
 		}

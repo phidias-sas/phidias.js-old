@@ -1,8 +1,16 @@
+$phi-avatar-size: 42px;
+
 .phi-avatar {
 	display: inline-block;
 	border-radius: 50%;
-	max-width: 52px;
-	max-height: 52px;
+
+	width: $phi-avatar-size;
+	height: $phi-avatar-size;
+	min-width: $phi-avatar-size;
+	min-height: $phi-avatar-size;
+	max-width: $phi-avatar-size;
+	max-height: $phi-avatar-size;	
+
 	overflow: hidden;
 
 	& > * {

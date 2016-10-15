@@ -32,6 +32,7 @@ app.on("logout", () => {
 /* Google Client ID */
 app.options.googleClientId = "890266961007.apps.googleusercontent.com";
 
-// app.api.cacheIsEnabled = false;
+
+app.api.cacheIsEnabled = false;
 
 export default app;

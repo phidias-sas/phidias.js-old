@@ -5,21 +5,22 @@
 			<h1>Redactar</h1>
 		</div>
 		<div class="phi-page-cover">
-			<phi-input label="Título" v-model="post.title"></phi-input>
+			<phi-input label="Título" v-model="post.title" @input="save()"></phi-input>
 		</div>
 		<div class="phi-page-contents">
 
 			<div v-if="post.id">
-				<div class="phi-media">
+				<div class="phi-media" style="align-items:center">
 					<div class="phi-media-figure phi-avatar">
 						<img :src="post.author.avatar" :alt="post.author.firstName">
 					</div>
 					<div class="phi-media-body">
-						<p>{{post.author.firstName}} {{post.author.lastName}}</p>
-						<textarea v-model="post.description"></textarea>
-						<phi-post-editor :post="post"></phi-post-editor>
+						<h3>{{post.author.firstName}} {{post.author.lastName}}</h3>
 					</div>
-				</div>			
+				</div>
+				<textarea v-model="post.description" @input="save()"></textarea>
+
+				<phi-post-editor :post="post"></phi-post-editor>
 			</div>
 
 		</div>
@@ -34,6 +35,7 @@ export default {
 		return {
 			nodeId: this.$route.params.nodeId,
 			postId: this.$route.params.postId,
+
 			post: {
 				title: null,
 				description: null
@@ -45,6 +47,13 @@ export default {
 		fetch () {
 			return app.api.get(`posts/${this.postId}`)
 				.then(post => this.post = post);
+		},
+
+		save () {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+				app.api.put(`posts/${this.postId}`, this.post);
+            }, 500);
 		}
 	},
 

@@ -8,6 +8,22 @@
 			<ons-icon icon="md-plus"></ons-icon>
 		</ons-fab>
 
+		<section v-if="drafts.items.length" class="drafts">
+			<label for="">borradores</label>
+			<div>
+				<router-link :to="{name: 'node-compose', params:{nodeId: $parent.nodeId, postId: post.id}}" v-for="post in drafts.items" class="phi-media">
+					<div class="phi-media-figure">
+						<img :src="post.type.icon" :alt="post.type.singular">
+					</div>
+					<div class="phi-media-body">
+						<h1 v-text="post.title || 'sin asunto'"></h1>
+						<p v-text="post.description || 'sin texto'"></p>
+						<small>creado {{ post.creationDate | date }}</small>
+					</div>
+				</router-link>
+			</div>
+		</section>
+
 		<div class="phi-card">
 			<router-link :to="{name: 'read', params:{threadId: post.thread}}" v-for="post in posts.items" class="phi-media">
 				<div class="phi-media-figure">
@@ -16,7 +32,7 @@
 				<div class="phi-media-body">
 					<h1 v-text="post.title"></h1>
 					<p v-text="post.description"></p>
-					<small>{{ post.publishDate | date }}</small>
+					<small>publicado {{ post.publishDate | date }}</small>
 				</div>
 			</router-link>
 		</div>
@@ -33,9 +49,10 @@ export default {
 	data () {
 		return {
 			app,
-			type: null,
-			page: 1,
-			posts: app.api.collection(`nodes/${this.$parent.nodeId}/posts/published`)
+			type:   null,
+			page:   1,
+			posts:  app.api.collection(`nodes/${this.$parent.nodeId}/posts/published`),
+			drafts: app.api.collection(`nodes/${this.$parent.nodeId}/posts/drafts`)
 		}
 	},
 
@@ -53,6 +70,11 @@ export default {
 				page: this.page,
 				order: "-publishDate"
 			});
+
+			this.drafts.fetch({
+				type: this.type,
+				order: "-creationDate"
+			});			
 		},
 
 		compose () {
@@ -78,6 +100,24 @@ export default {
 </script>
 
 <style scoped lang="sass">
+
+.drafts {
+	font-size: 0.9em;
+	margin-bottom: 24px;
+
+	.phi-media-figure {
+		opacity: 0.6;
+	}
+
+	label {
+		display: block;
+		text-transform: capitalize;
+		font-size: 0.9em;
+		color: #666;
+		margin-bottom: 8px;
+	}
+}
+
 .adder {
 	margin-bottom: 16px;
 	align-items: center;

@@ -2,7 +2,7 @@
 	<div class="phi-page">
 		<ons-progress-bar indeterminate v-show="app.api.isLoading"></ons-progress-bar>
 		<div class="phi-page-toolbar">
-            <button class="phi-button" @click="$router.push(node.parent ? {} : '/root')"> <i class="fa fa-arrow-left"></i></button>
+			<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
 		</div>
         <div class="phi-page-cover">
             <small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->
