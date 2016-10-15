@@ -28,11 +28,11 @@ app.on("logout", () => {
     window.sessionStorage.removeItem(tokenKey);
 });
 
+// app.on("load", () => {
+//     app.api.cacheIsEnabled = false;
+// });
 
 /* Google Client ID */
 app.options.googleClientId = "890266961007.apps.googleusercontent.com";
-
-
-app.api.cacheIsEnabled = false;
 
 export default app;
