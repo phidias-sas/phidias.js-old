@@ -81,8 +81,11 @@ textarea {
 	.phi-page-cover {
 		background-color: #1C89B8;
 
+		.phi-page-header {
+			padding-top: 48px;
+		}
+
 		.phi-input {
-			margin: 18px 0;
 			font-size: 1.8em;
 			font-weight: 300;
 

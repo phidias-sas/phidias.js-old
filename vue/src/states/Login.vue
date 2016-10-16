@@ -73,9 +73,12 @@ export default {
 		}
 	},
 
+	/*
+	Autofocus is REALLY anoying on mobile because it opens the keyboard unexpectedly
 	mounted () {
 		this.$el.querySelector("input").focus();
 	}
+	*/
 }
 
 </script>

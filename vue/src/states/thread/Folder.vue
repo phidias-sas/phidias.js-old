@@ -52,11 +52,9 @@
 						<i class="fa fa-check"></i>
 					</div>
 					<router-link class="phi-media-body" :to="{name: 'read', params:{threadId: thread.id}}">
-						<h1 v-text="thread.title"></h1>
-						<p>
-							<span v-text="thread.author.firstName + ' ' + thread.author.lastName"></span> -
-							<span v-text="thread.description"></span>
-						</p>
+						<h1 class="thread-title" v-text="thread.title"></h1>
+						<span class="thread-description" v-text="thread.description"></span>
+						<span class="thread-author" v-text="thread.author.firstName + ' ' + thread.author.lastName"></span>
 					</router-link>
 				</div>
 			</div>
@@ -316,6 +314,19 @@ export default {
 		text-align: center;
 		color: #1C89B8;
 	}
+
+	.thread-author {
+		display: inline-block;
+		font-size: 0.85em;
+	}
+
+	.thread-description {
+		display: inline-block;
+		margin-right: 1em;
+		font-weight: 300;
+		color: #222;
+	}
+
 
 	&.unread {
 		h1, p {
