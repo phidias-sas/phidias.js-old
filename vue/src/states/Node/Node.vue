@@ -1,15 +1,18 @@
 <template>
 	<div class="phi-page">
 		<ons-progress-bar indeterminate v-show="app.api.isLoading"></ons-progress-bar>
-		<div class="phi-page-toolbar">
-			<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
-		</div>
-        <div class="phi-page-cover">
-            <small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->
-            <h1 v-html="node.name || '&nbsp;'"></h1>
-        </div>
-		<div class="phi-page-navigation">
-			<router-link v-for="type in types" :to="{name:'node-posts', params:{nodeId, type: type.singular}}" v-text="type.plural"></router-link>
+		<div class="phi-page-cover">
+			<div class="phi-page-toolbar">
+				<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
+			</div>
+			<div class="phi-page-header">
+				<small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->
+				<h1 v-html="node.name || '&nbsp;'"></h1>
+			</div>
+			<div class="phi-page-navigation">
+				<router-link :to="{name:'node-dashboard', params:{nodeId}}">Inicio</router-link>
+				<router-link v-for="type in types" :to="{name:'node-posts', params:{nodeId, type: type.singular}}" v-text="type.plural"></router-link>
+			</div>
 		</div>
 		<div class="phi-page-contents" :class="'moving-'+transitionDirection">
 			<!--
@@ -35,7 +38,7 @@ export default {
 			app,
 			types: [],
             nodeId: this.$route.params.nodeId,
-			transitionDirection: "right",
+			transitionDirection: "left",
             node: {
 				type: {}
 			}
@@ -61,7 +64,7 @@ export default {
 	watch: {
 		'$route' (to, from) {
 			this.initialize(to.params.nodeId);
-			this.transitionDirection = (from.params.type < to.params.type) ? 'left' : 'right';
+			this.transitionDirection = (!from.params.type || from.params.type < to.params.type) ? 'left' : 'right';
 		}
 	}
 
@@ -94,7 +97,7 @@ ons-progress-bar {
 <style lang="sass">
 /* Transition between tabs */
 $transition-duration:     .420s;
-$transition-displacement: 42%;
+$transition-displacement: 210px;
 
 
 .slidetab-enter-active,

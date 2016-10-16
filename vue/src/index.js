@@ -45,14 +45,15 @@ import Dashboard from './states/Dashboard.vue'
 import Folder from './states/thread/Folder.vue'
 import Read from './states/thread/Read.vue'
 
-import Root from './states/Root.vue'
 import Node from './states/Node/Node.vue'
-import People from './states/People.vue'
-import Person from './states/Person.vue'
-
+import NodeDashboard from './states/Node/Dashboard.vue'
 import NodePosts from './states/Node/Posts.vue'
 import NodePeople from './states/Node/People.vue'
 import NodeCompose from './states/Node/Compose.vue'
+
+import Root from './states/Root.vue'
+import People from './states/People.vue'
+import Person from './states/Person.vue'
 
 Vue.use(VueRouter);
 
@@ -72,9 +73,9 @@ const router = new VueRouter({
 				{ path: '/person/:personId', component: Person, meta: {order: 11}, name: 'person' },
 				{ path: '/root',   component: Root,   meta: {order: 12}, name: 'root' },
 
-				{ path: '/nodes/:nodeId', component: Node, meta: {order: 13},
+				{ path: '/nodes/:nodeId', component: Node, meta: {order: 13}, name: 'node',
 					children: [
-						{ path: 'dashboard', component: Root, meta: {order: 14}, name: 'node' }, /// !!! 2DO
+						{ path: 'dashboard', component: NodeDashboard, meta: {order: 14}, name: 'node-dashboard' },
 						{ path: 'posts/:type', component: NodePosts, meta: {order: 15}, name: 'node-posts' },
 						{ path: 'people', component: NodePeople, meta: {order: 16}, name: 'node-people' }
 					]

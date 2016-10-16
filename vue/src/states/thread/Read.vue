@@ -1,26 +1,26 @@
 <template>
-
 	<div class="phi-page">
 		<ons-progress-bar indeterminate v-show="collection.isLoading"></ons-progress-bar>
-		<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
-			<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
-			<h1></h1>
-			<div class="phi-tooltip">
-				<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
-				<ul class="phi-menu _texture-paper">
-					<li>do A</li>
-					<li>do B</li>
-					<li>do C</li>
-				</ul>
+
+		<div class="phi-page-cover">
+			<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
+				<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
+				<h1></h1>
+				<div class="phi-tooltip">
+					<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
+					<ul class="phi-menu _texture-paper">
+						<li>do A</li>
+						<li>do B</li>
+						<li>do C</li>
+					</ul>
+				</div>
+			</div>
+			<div class="phi-page-header">
+				<h1 v-if="thread" v-text="thread.title"></h1>
 			</div>
 		</div>
 
-		<div class="phi-page-cover">
-			<h1 v-if="thread" v-text="thread.title"></h1>
-		</div>
-
 		<div class="phi-page-contents" v-if="thread" >
-
 			<header class="phi-card _z-0">
 				<div class="phi-media">
 					<div class="phi-media-figure phi-avatar">
@@ -133,7 +133,7 @@ export default {
 
 .phi-page-toolbar {
 	color: #fff;
-	background-color: #1C89B8;
+	// background-color: #1C89B8;
 }
 
 .phi-tooltip .phi-menu {

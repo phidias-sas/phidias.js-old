@@ -32,7 +32,7 @@
 				<hr>
 
 				<label class="phi-menu-label">años lectivos</label>
-				<router-link v-for="node in nodes.items" :to="{name:'node-posts', params:{nodeId:node.id, type:'comunicado'}}" v-text="node.name"></router-link>
+				<router-link v-for="node in nodes.items" :to="{name:'node-dashboard', params:{nodeId:node.id}}" v-text="node.name"></router-link>
 				<hr>
 
 				<label class="phi-menu-label">pruebas</label>
@@ -89,9 +89,14 @@ export default {
 			setTimeout(() => {
 				incomingCover && (incomingCover.initialHeight = incomingCover.clientHeight);
 
-				var newCoverHeight = outgoingCover ? outgoingCover.clientHeight : 64; // 64 = default toolbar height
+				var newCoverHeight = outgoingCover ? outgoingCover.clientHeight : 0;
 				incomingCover && (incomingCover.style.height = newCoverHeight + "px");
 				outgoingCover && (outgoingCover.style.height = newCoverHeight + "px");
+
+				if (incomingCover && outgoingCover) {
+					incomingCover.initialbackgroundColor = window.getComputedStyle(incomingCover).backgroundColor;
+					incomingCover.style.backgroundColor  = window.getComputedStyle(outgoingCover).backgroundColor;
+				}
 
 				// force repaint
 				incomingCover && incomingCover.offsetHeight;
@@ -101,9 +106,12 @@ export default {
 
 		enter (el) {
 			setTimeout(() => {
-				var newCoverHeight = incomingCover ? incomingCover.initialHeight : 64;
+				var newCoverHeight = incomingCover ? incomingCover.initialHeight : 0;
 				incomingCover && (incomingCover.style.height = newCoverHeight + "px");
 				outgoingCover && (outgoingCover.style.height = newCoverHeight + "px");
+
+				incomingCover && (incomingCover.style.backgroundColor = incomingCover.initialbackgroundColor);
+	
 			}, 0);
 		},
 
@@ -124,7 +132,7 @@ export default {
 
 <style lang="sass">
 $transition-duration:     .420s;
-$transition-displacement: 420px;
+$transition-displacement: 210px;
 
 ons-splitter-mask {
 	background-color: rgba(0, 0, 0, 0.5);
@@ -164,7 +172,6 @@ ons-splitter-side {
 
 .slide-enter-active,
 .slide-leave-active {
-	transition: opacity $transition-duration;
 
 	position: absolute;
 	top: 0;
@@ -172,32 +179,33 @@ ons-splitter-side {
 	right: 0;
 	width: 100%;
 
+	transition: opacity $transition-duration;
+
 	.phi-page-contents, .phi-page-navigation > * {
 		transition: transform $transition-duration;
 	}
 }
 
+.slide-leave-active {
+	opacity: 0;
+}
+
+
+.slide-enter,
 .slide-enter-active {
 	z-index: 1;
 }
 
+.slide-leave,
 .slide-leave-active {
 	z-index: 2;
-	opacity: 0;
 }
+
 
 /* Page cover transition */
 .phi-page-cover {
 	transition: height $transition-duration, padding $transition-duration;
 }
-
-.slide-enter,
-.slide-leave-active {
-	.phi-page-cover {
-		/*padding: 0;*/
-	}
-}
-
 
 /* Page toolbar transitions */
 .slide-enter-active,

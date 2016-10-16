@@ -1,18 +1,17 @@
 <template>
 	<div class="phi-page">
 		<ons-progress-bar indeterminate v-show="app.api.isLoading"></ons-progress-bar>
-		<div class="phi-page-toolbar">
-			<h1>Personas</h1>
-		</div>
+        <div class="phi-page-cover">
+            <div class="phi-page-toolbar">
+                <h1>Personas</h1>
+            </div>
+        </div>
 		<div class="phi-page-contents">
-
 			<div class="phi-card">
-
                 <div class="_padded phi-media">
                     <i class="phi-media-figure fa fa-search" style="line-height: 2em; text-align: center"></i>
                     <phi-input class="phi-media-body" v-model="search" label="buscar" style="margin:5px; display:block" @input="debounce()"></phi-input>
                 </div>
-
                 <router-link class="phi-media" v-for="person in people.items" :to="{name: 'person', params:{personId: person.id}}">
                     <div class="phi-media-figure phi-avatar">
                         <img :src="person.avatar" :alt="person.firstName">
@@ -23,7 +22,6 @@
                     </div>
                 </router-link>
 			</div>
-
 		</div>
 	</div>
 </template>

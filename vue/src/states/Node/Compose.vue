@@ -1,14 +1,15 @@
 <template>
 	<div class="phi-page" id="compose">
-		<div class="phi-page-toolbar">
-			<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
-			<h1>Redactar</h1>
-		</div>
 		<div class="phi-page-cover">
-			<phi-input label="Título" v-model="post.title" @input="save()"></phi-input>
+			<div class="phi-page-toolbar">
+				<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
+				<h1>Redactar</h1>
+			</div>
+			<div class="phi-page-header">
+				<phi-input label="Título" v-model="post.title" @input="save()"></phi-input>
+			</div>
 		</div>
 		<div class="phi-page-contents">
-
 			<div v-if="post.id">
 				<div class="phi-media" style="align-items:center">
 					<div class="phi-media-figure phi-avatar">
@@ -19,10 +20,8 @@
 					</div>
 				</div>
 				<textarea v-model="post.description" @input="save()"></textarea>
-
 				<phi-post-editor :post="post"></phi-post-editor>
 			</div>
-
 		</div>
 	</div>
 </template>
@@ -53,6 +52,7 @@ export default {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {
 				app.api.put(`posts/${this.postId}`, this.post);
+				app.api.clear(`nodes/${this.nodeId}/posts/drafts`);
             }, 500);
 		}
 	},

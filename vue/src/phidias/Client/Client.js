@@ -22,7 +22,6 @@ export default class Client {
 	}
 
 	fetch (url, options) {
-
 		url        = this.host + "/" + url;
 		var method = options.method ? options.method.toLowerCase(): "get";
 
@@ -41,16 +40,18 @@ export default class Client {
 			request.headers.set("Authorization", "Bearer " + this.token);
 			/* Notice: setting the authorization header makes the chrome network console hide the requests from the network tab
 			(maybe the server should include Authorization in Access-Control-Expose-Headers?  -- doesnt look like it)
+			This seems to be an issue with the fetch API, for chich chrome has native support
 			 */
 		}
 
-		var promise; 
+		var promise;
 		this.isLoading = true;
 		if (method == "get" && this.cacheIsEnabled) {
 			promise = this.cache.fetch(request)
 				.then((response) => response != undefined ? response : fetch(request))
 				.then((response) => this.cache.store(request, response));
 		} else {
+			this.cache.clear(url);
 			promise = fetch(request);
 		}
 
@@ -145,13 +146,11 @@ fetch doesn't support progress events, so we need to implement an upload method 
 var xhr = new XMLHttpRequest()
 xhr.open('POST', '/uploads')
 xhr.onload = function() {
-  console.log(xhr.status, xhr.responseText)
 }
 xhr.onerror = function() {}
 xhr.upload.onprogress = function (event) {
   if (event.lengthComputable) {
     var percent = Math.round((event.loaded / event.total) * 100)
-    console.log(percent)
   }
 }
 

@@ -1,22 +1,19 @@
 <template>
 	<div class="phi-page">
-
 		<ons-progress-bar indeterminate v-show="isLoading"></ons-progress-bar>
-
-		<div class="phi-page-toolbar">
-			<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
-			<h1>Bandeja de entrada</h1>
+		<div class="phi-page-cover">
+			<div class="phi-page-toolbar">
+				<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
+				<h1>Bandeja de entrada</h1>
+			</div>
 		</div>
-
 		<div class="phi-page-contents">
-
 			<section v-if="!!billboard">
 				<router-link class="phi-card" :to="'/threads/all/'+billboard.thread">
 					<h1 v-text="billboard.title"></h1>
 					<div v-text="billboard.description"></div>
 				</router-link>
 			</section>
-
 			<section v-show="!!types">
 				<div class="phi-card _z-0">
 					<router-link class="phi-media" v-for="type in types" :to="{name: 'folder', params:{folder: 'inbox'}, query:{type: type.singular}}">
@@ -28,7 +25,6 @@
 					</router-link>
 				</div>
 			</section>
-
 		</div>
 	</div>
 </template>

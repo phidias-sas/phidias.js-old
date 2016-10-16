@@ -1,48 +1,45 @@
 <template>
-
 	<div class="phi-page">
 		<ons-progress-bar indeterminate v-show="folder.isLoading"></ons-progress-bar>
+		<div class="phi-page-cover">
+			<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
+				
+				<button v-if="$route.params.folder == 'archive'" class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
+				<button v-if="$route.params.folder != 'archive'" class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
 
-		<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
-			
-			<button v-if="$route.params.folder == 'archive'" class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
-			<button v-if="$route.params.folder != 'archive'" class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
+				<h1 v-text="$route.params.folder == 'archive' ? 'archivados' : type.plural"></h1>
 
-			<h1 v-text="$route.params.folder == 'archive' ? 'archivados' : type.plural"></h1>
+				<button v-if="$route.params.folder != 'archive'" @click="moveTo('archive')" class="phi-button selection-count" v-show="selection.length > 0">
+					<span v-text="selection.length"></span>
+					<i class="fa fa-archive"></i>
+				</button>
 
-			<button v-if="$route.params.folder != 'archive'" @click="moveTo('archive')" class="phi-button selection-count" v-show="selection.length > 0">
-				<span v-text="selection.length"></span>
-				<i class="fa fa-archive"></i>
-			</button>
+				<button v-if="$route.params.folder == 'archive'" @click="moveTo('inbox')" class="phi-button selection-count" v-show="selection.length > 0">
+					<span v-text="selection.length"></span>
+					<i class="fa fa-inbox"></i>
+				</button>
 
-			<button v-if="$route.params.folder == 'archive'" @click="moveTo('inbox')" class="phi-button selection-count" v-show="selection.length > 0">
-				<span v-text="selection.length"></span>
-				<i class="fa fa-inbox"></i>
-			</button>
-
-			<div class="phi-tooltip">
-				<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
-				<ul class="phi-menu _texture-paper">
-					<li>
-						<span>seleccionar</span>
-						<ul class="phi-menu">
-							<li @click="select('all')">todos</li>
-							<li @click="select('read')">leídos</li>
-							<li @click="select('unread')">no leídos</li>
-							<li @click="select('none')">ninguno</li>
-						</ul>
-					</li>
-					<li @click="moveTo('archive')" :disabled="!selection.length">archivar</li>
-					<li @click="moveTo('read')" :disabled="!selection.length">marcar leído</li>
-					<li @click="moveTo('unread')" :disabled="!selection.length">marcar no leído</li>
-					<hr>
-					<li @click="refresh()">actualizar</li>
-				</ul>
+				<div class="phi-tooltip">
+					<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
+					<ul class="phi-menu _texture-paper">
+						<li>
+							<span>seleccionar</span>
+							<ul class="phi-menu">
+								<li @click="select('all')">todos</li>
+								<li @click="select('read')">leídos</li>
+								<li @click="select('unread')">no leídos</li>
+								<li @click="select('none')">ninguno</li>
+							</ul>
+						</li>
+						<li @click="moveTo('archive')" :disabled="!selection.length">archivar</li>
+						<li @click="moveTo('read')" :disabled="!selection.length">marcar leído</li>
+						<li @click="moveTo('unread')" :disabled="!selection.length">marcar no leído</li>
+						<hr>
+						<li @click="refresh()">actualizar</li>
+					</ul>
+				</div>
 			</div>
 		</div>
-
-		<div class="phi-page-cover" style="background: transparent"></div>
-
 		<div class="phi-page-contents">
 			<div class="empty" v-show="!folder.threads.length && !folder.isLoading">
 				<p>no hay nada aquí</p>
@@ -256,6 +253,11 @@ export default {
 
 }
 
+
+/* This makes for smooth transitions when entering from states with high cover images */
+/*.phi-page-cover {
+	background-color: #1C89B8;
+}*/
 
 .phi-page-toolbar {
 	background-color: #f3f3f3;
