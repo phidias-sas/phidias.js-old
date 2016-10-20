@@ -58,7 +58,11 @@ export default {
 	},
 
 	mounted () {
-		this.fetch().then(() => this.$el.querySelector("input").focus());
+		this.fetch().then(() => {
+			if (!this.post.title) {
+				this.$el.querySelector("input").focus();
+			}
+		});
 	}
 }
 </script>

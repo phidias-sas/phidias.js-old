@@ -7,28 +7,27 @@
 
 				<ul class="phi-breadcrumbs">
 					<li v-for="crumb in app.breadcrumbs">
-						<router-link :to="{name:'node-dashboard', params:{nodeId:crumb.id}}" v-text="crumb.name"></router-link>
+						<router-link :to="{name:'node-nodes', params:{nodeId:crumb.id}}" v-text="crumb.name"></router-link>
 					</li>
 				</ul>
 
-				<div class="phi-tooltip">
-					<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
-					<ul class="phi-menu _texture-paper">
-						<li>
-							<router-link :to="{name:'node-nodes', params:{nodeId}}">Administración</router-link>
-						</li>
-					</ul>
-				</div>
+				<router-link :to="{name:'node-dashboard', params:{nodeId}}">
+					<h1><i class="fa fa-times"></i></h1>
+				</router-link>
 			</div>
+
 			<div class="phi-page-header">
-				<small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->
+				<small>Administrar {{ node.type.singular }}</small>
 				<h1 v-html="node.name || '&nbsp;'"></h1>
 			</div>
+
 			<div class="phi-page-navigation">
-				<router-link :to="{name:'node-dashboard', params:{nodeId}}">Inicio</router-link>
-				<router-link v-for="type in types" :to="{name:'node-posts', params:{nodeId, type: type.singular}}" v-text="type.plural"></router-link>
+				<router-link :to="{name:'node-nodes', params:{nodeId}}">Grupos</router-link>
+				<router-link :to="{name:'node-people', params:{nodeId}}">Inscripciones</router-link>
+				<router-link :to="{name:'node-import', params:{nodeId}}">Importar</router-link>
 			</div>
 		</div>
+
 		<div class="phi-page-contents" :class="'moving-'+transitionDirection">
 			<!--
 			I wasted HOURS finding this:
@@ -46,17 +45,14 @@
 import app from '../../store/app.js'
 
 export default {
-	name: "node",
+	name: "node-admin",
 
 	data () {
 		return {
 			app,
-			types: [],
             nodeId: this.$route.params.nodeId,
-			transitionDirection: "left",
-            node: {
-				type: {}
-			}
+            node: null,
+			transitionDirection: "right"
 		}
 	},
 
@@ -67,22 +63,21 @@ export default {
 			}
 
 			this.nodeId = nodeId;
-			app.api.get("types/bulletin").then(types => this.types = types);
-            app.api.get("nodes/" + this.nodeId)
+            return app.api.get("nodes/" + this.nodeId)
 				.then(node => this.node = node)
 				.then(node => {
 					app.pushCrumb(node, this.$route.query.reset);
-				});
+				});				
         }
     },
 
 	created () {
-		this.fetch(this.$route.params.nodeId);
+		return this.fetch(this.$route.params.nodeId);
 	},
 
 	watch: {
 		'$route' (to, from) {
-			this.transitionDirection = (!from.params.type || from.params.type < to.params.type) ? 'left' : 'right';
+			this.transitionDirection = (from.meta.order <= to.meta.order) ? 'left' : 'right';
 			this.fetch(to.params.nodeId);
 		}
 	},
@@ -99,15 +94,38 @@ export default {
 }
 </script>
 
-<style scoped lang="sass">
+<style lang="sass">
 
+.phi-breadcrumbs {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+
+	flex: 1; /* works as long as parent is phi-toolbar, which has display:flex */
+	white-space: nowrap;
+
+	& > * {
+		display: inline-block;
+		margin: 0 36px 0 0;
+		height: 48px;
+		line-height: 48px;
+
+		text-shadow: 0 1px 2px #000;
+	}
+}
+
+</style>
+
+
+
+<style scoped lang="sass">
 .phi-page-cover {
 	background: #f9f9f9 url('../../assets/covers/phidias.jpg') no-repeat 0 0;
 	background-size: cover;
-
-	.phi-menu {
-		color: #333;
-	}
 }
 
 .phi-page-toolbar {
@@ -168,6 +186,4 @@ $transition-displacement: 210px;
 		transform: translate3d($transition-displacement, 0, 0);
 	}
 }
-
-
 </style>

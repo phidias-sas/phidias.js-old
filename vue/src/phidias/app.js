@@ -19,7 +19,26 @@ export default class App {
 		this.listeners = {};
 
 		this.load(options);
+
+		this.breadcrumbs = [];
 	}
+
+
+	/* Breadcrumbs stuff */
+	pushCrumb (node, reset) {
+
+		reset && (this.breadcrumbs = []);
+
+		for (var i = 0; i < this.breadcrumbs.length; i++) {
+			if (node.id == this.breadcrumbs[i].id) {
+				this.breadcrumbs.splice(i+1);
+				return;
+			}
+		}
+
+		this.breadcrumbs.push(node);
+	}
+
 
 	/* Option getters */
 	get endpoint () {

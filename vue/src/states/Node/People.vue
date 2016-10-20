@@ -2,7 +2,7 @@
 
     <div>
 
-        <phi-input v-model="search" label="buscar" style="margin:5px; display:block" @input="debounce()"></phi-input>
+        <phi-input v-model="search" label="buscar" style="display:block" @input="debounce()"></phi-input>
 
         <div class="phi-card">
             <router-link class="phi-media" v-for="person in people.items" :to="{name: 'person', params:{personId: person.id}}">

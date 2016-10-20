@@ -88,10 +88,6 @@ export default {
 .phi-page-cover {
 	background: transparent;
 	color: #444;
-
-	h1 {
-		font-size: 24px;
-	}
 }
 
 .phi-media-body {

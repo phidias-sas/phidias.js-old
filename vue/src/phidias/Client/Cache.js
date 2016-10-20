@@ -10,6 +10,10 @@ export default class Cache {
 		});		
 	}
 
+	destroy () {
+		return this.db.delete();
+	}
+
 	fetch (request) {
         var hash = Cache.getHash(request);
 		return this.db.request.get(hash).then((result) => result ? Cache.parse(result.response) : undefined);

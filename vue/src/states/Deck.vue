@@ -32,7 +32,7 @@
 				<hr>
 
 				<label class="phi-menu-label">años lectivos</label>
-				<router-link v-for="node in nodes.items" :to="{name:'node-dashboard', params:{nodeId:node.id}}" v-text="node.name"></router-link>
+				<router-link v-for="node in nodes.items" :to="{name:'node-dashboard', params:{nodeId:node.id}, query:{reset:true}}" v-text="node.name"></router-link>
 				<hr>
 
 				<label class="phi-menu-label">pruebas</label>
@@ -41,6 +41,9 @@
 				<hr>
 
 				<div @click="logout()">Cerrar sesión</div>
+
+				<hr>
+				<div @click="clearCache()">[borrar cache]</div>
 			</div>
 		</ons-splitter-side>
 
@@ -64,7 +67,7 @@ export default {
 		}
 	},
 
-	created () {
+	mounted () {
 		this.nodes = app.api.collection("nodes");
 		this.nodes.fetch();
 	},
@@ -118,6 +121,11 @@ export default {
 		afterLeave (el) {
 			incomingCover && (incomingCover.style.height = "auto");
 			outgoingCover && (outgoingCover.style.height = "auto");
+		},
+
+
+		clearCache () {
+			this.app.api.cache.destroy().then(() => { alert("Cache borrado") });
 		}
 	},
 

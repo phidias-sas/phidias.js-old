@@ -31,7 +31,7 @@ export default class Client {
 			options.body = null;
 		}
 
-		if (options.body && typeof options.body != "string") {
+		if (options.body && typeof options.body != "string" && !(options.body instanceof FormData)) {
 			options.body = JSON.stringify(options.body);
 		}
 

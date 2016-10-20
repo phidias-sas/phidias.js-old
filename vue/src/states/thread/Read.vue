@@ -38,10 +38,10 @@
 					<img :src="post.author.avatar" :alt="post.author.firstName">
 				</div>
 				<div class="phi-media-body">
-					<h1 v-text="post.author.firstName + ' ' + post.author.lastName"></h1>
-					<div class="description" v-text="post.description"></div>
+					<h1 class="post-author" v-text="post.author.firstName + ' ' + post.author.lastName"></h1>
+					<div class="post-date">{{ post.publishDate | date }}</div>
+					<div class="post-description" v-text="post.description"></div>
 					<phi-block v-for="block in post.blocks" :block="block"></phi-block>
-					<div class="date">{{ post.publishDate | date }}</div>
 				</div>
 			</div>
 
@@ -114,16 +114,27 @@ export default {
 
 
 <style lang="sass" scoped>
+$phi-avatar-size: 38px;
+
+.phi-avatar {
+	width: $phi-avatar-size;
+	max-width: $phi-avatar-size;
+	min-width: $phi-avatar-size;
+
+	height: $phi-avatar-size;
+	max-height: $phi-avatar-size;
+	min-height: $phi-avatar-size;	
+}
 
 .thread-author {
-	font-size: 1.2em;
+	font-size: 1em;
 	font-weight: bold;
+	margin-bottom: 4px;
 }
 
 .thread-description {
 	white-space: pre-wrap;
-	padding: 12px 0;
-	margin-top: 12px;
+	font-size: 1.1em;
 }
 
 .phi-page-contents {
@@ -153,7 +164,7 @@ export default {
 	width: 768px;
 	max-width: 100%;
 
-	margin-bottom: 16px;
+	margin-bottom: 8px;
 
 	.phi-media-body {
 		max-width: 100%;
@@ -163,9 +174,25 @@ export default {
 		margin-bottom: 8px;
 	}
 
-	.description {
+	.post-author, .post-date {
+		display: inline-block;
+		font-size: 0.9em;
+		margin: 0 0 3px 0;
+	}
+
+	.post-author {
+		margin: 0 0 3px 0;
+	}
+
+	.post-date {
+		color: #999;
+		font-size: 0.8em;
+		margin-left: 6px;
+	}
+
+	.post-description {
 		margin: 0;
-		padding: 12px 16px;
+		padding: 9px 9px;
 		background: #fff;
 		border-radius: 4px;
 
@@ -174,13 +201,10 @@ export default {
 
 		max-width: 100%;
 		overflow-x: hidden;
+
+		margin-left: -6px;
 	}
 
-	.date {
-		margin-top: 8px;
-		padding: 0 8px;
-		font-size: .8em;
-		color: #999;
-	}
+
 }
 </style>
