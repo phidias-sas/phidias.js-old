@@ -1,5 +1,5 @@
 <template>
-	<div class="phi-page">
+	<div class="phi-page scrollable">
 		<ons-progress-bar indeterminate v-show="collection.isLoading"></ons-progress-bar>
 
 		<div class="phi-page-cover">
@@ -11,7 +11,6 @@
 					<ul class="phi-menu _texture-paper">
 						<li>do A</li>
 						<li>do B</li>
-						<li>do C</li>
 					</ul>
 				</div>
 			</div>
@@ -21,7 +20,8 @@
 		</div>
 
 		<div class="phi-page-contents" v-if="thread" >
-			<header class="phi-card _z-0">
+			
+			<!--<header class="phi-card _z-0">
 				<div class="phi-media">
 					<div class="phi-media-figure phi-avatar">
 						<img :src="thread.author.avatar" alt="thread.author.firstName">
@@ -31,9 +31,9 @@
 						<div class="thread-description" v-text="thread.description"></div>	
 					</div>
 				</div>
-			</header>
+			</header>-->
 
-			<div v-for="post in thread.replies" class="phi-media post">
+			<div v-for="post in thread.replies.slice().reverse()" class="phi-media post">
 				<div class="phi-media-figure phi-avatar">
 					<img :src="post.author.avatar" :alt="post.author.firstName">
 				</div>
@@ -45,6 +45,13 @@
 				</div>
 			</div>
 
+		</div>
+
+		<div class="phi-page-footer" v-if="canReply">
+			<div class="reply">
+				<textarea v-model="replyBody"></textarea>
+				<button class="phi-button" :disabled="!replyBody.trim()" @click="sendReply()">enviar</button>
+			</div>
 		</div>
 
 	</div>
@@ -61,17 +68,74 @@ export default {
 			app,
 			collection,
 			thread: null,
-			toolbarIsHidden: false
+			toolbarIsHidden: false,
+			replyBody: ""
 		}
 	},
 
+	computed: {
+		canReply () {
+            if (!this.thread || !this.thread.tags) {
+                return false;
+            }
+            return this.thread.tags.indexOf("repliable") >= 0;
+		}
+	},
+
+	methods: {
+		refresh () {
+			return this.collection.get(this.$route.params.threadId)
+				.then(thread => this.thread = thread);
+		},
+
+		scrollToBottom () {
+			setTimeout(() => {
+				this.$el.scrollTop = this.$el.scrollHeight;
+			}, 200);
+		},
+
+		sendReply () {
+			var outgoing = {
+				author: this.app.user,
+				description: this.replyBody
+			};
+
+			this.app.api.post(`/threads/${this.thread.id}/replies`, outgoing)
+				.then(post => {
+					this.replyBody = "";
+					this.appendReply(post);
+				});
+		},
+
+		appendReply (post) {
+            if (!post || !post.id) {
+                return;
+            }
+
+            // ignore if the post is already present
+            for (var cont = 0; cont < this.thread.replies.length; cont++) {
+                if (this.thread.replies[cont].id == post.id) {
+                    return;
+                }
+            }
+
+            this.thread.replies.unshift(post);
+            this.scrollToBottom();
+		}
+
+	},
+
 	mounted () {
-		// https://codepen.io/IliaSky/pen/VjgBqQ?editors=0110
+
+		this.scrollToBottom();
+
+		/* 
+		Hide toolbar on scroll
+		https://codepen.io/IliaSky/pen/VjgBqQ?editors=0110
+		*/
 		var page        = this.$el;
 		var scrollValue = 0;
-
-		var toolbar = this.$el.querySelector(".phi-page-toolbar");
-
+		var toolbar     = this.$el.querySelector(".phi-page-toolbar");
 		['scroll', 'touchmove'].forEach((eventName) => {   // apparently 'touchmove' event is also needed for iOS
 			page.addEventListener(eventName, () => {
 				var delta = page.scrollTop - scrollValue;
@@ -79,20 +143,10 @@ export default {
 					this.toolbarIsHidden = delta > 0  && scrollValue > toolbar.clientHeight;
 					scrollValue = page.scrollTop;
 				}
-
-				// toolbar.style.top = page.scrollTop + "px";
 			});
 		});
 	},
 
-	methods: {
-		refresh () {
-			return this.collection.get(this.$route.params.threadId)
-				.then((thread) => {
-					this.thread = thread;
-				});
-		}
-	},
 
 
 	// called before the route that renders this component is confirmed.
@@ -116,6 +170,43 @@ export default {
 <style lang="sass" scoped>
 $phi-avatar-size: 38px;
 
+.phi-page-cover {
+	background-color: #1C89B8;
+	h1 {
+		font-size: 2em;
+		font-weight: 300;
+	}
+}
+
+.phi-page-toolbar {
+	color: #fff;
+	background-color: #1C89B8;
+}
+
+.phi-tooltip .phi-menu {
+	min-width: 156px;
+	color: #333;
+}
+
+.phi-page-contents {
+	padding: 0 0 104px 0; /* Make room for reply at the bottom of the page */
+	position: relative;
+}
+
+.reply {
+	display: flex;
+	padding: 12px;
+	background: #f3f3f3;
+
+	textarea {
+		flex: 1;
+		height: 80px;
+		margin-right: 12px;
+		font-size: 1.1em;
+	}
+}
+
+
 .phi-avatar {
 	width: $phi-avatar-size;
 	max-width: $phi-avatar-size;
@@ -125,6 +216,7 @@ $phi-avatar-size: 38px;
 	max-height: $phi-avatar-size;
 	min-height: $phi-avatar-size;	
 }
+
 
 .thread-author {
 	font-size: 1em;
@@ -137,28 +229,7 @@ $phi-avatar-size: 38px;
 	font-size: 1.1em;
 }
 
-.phi-page-contents {
-	padding: 0;
-	position: relative;
-}
 
-.phi-page-toolbar {
-	color: #fff;
-	// background-color: #1C89B8;
-}
-
-.phi-tooltip .phi-menu {
-	min-width: 156px;
-}
-
-.phi-page-cover {
-	background-color: #1C89B8;
-
-	h1 {
-		font-size: 2em;
-		font-weight: 300;
-	}
-}
 
 .post {
 	width: 768px;
@@ -204,7 +275,7 @@ $phi-avatar-size: 38px;
 
 		margin-left: -6px;
 	}
-
-
 }
+
+
 </style>

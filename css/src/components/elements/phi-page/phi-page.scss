@@ -100,12 +100,6 @@ $phi-page-navigation-height: 46px;
 		color: inherit;
 	}
 
-
-	/* Hidden state */
-	transition: transform 280ms ease-in-out;
-	&._hidden {
-		transform: translateY(-100%);
-	}
 }
 
 
@@ -142,5 +136,41 @@ $phi-page-navigation-height: 46px;
             background-color: rgba(255, 255, 255, 0.2);
         }
     }
+
+}
+
+/* Fixed footer */
+.phi-page-footer {
+	display: block;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+
+
+
+/* Scrollable phi-page */
+.phi-page.scrollable {
+
+	.phi-page-cover {
+		padding-top: $phi-page-toolbar-height;
+	}
+
+	.phi-page-toolbar {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+
+		z-index: 2;
+
+		/* Hidden state */
+		transition: transform 280ms ease-in-out;
+		&._hidden {
+			transform: translateY(-100%);
+		}		
+	}
 
 }

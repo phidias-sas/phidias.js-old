@@ -1,6 +1,5 @@
 <template>
-	<div class="phi-page">
-		<ons-progress-bar indeterminate v-show="folder.isLoading"></ons-progress-bar>
+	<div class="phi-page scrollable">
 		<div class="phi-page-cover">
 			<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
 				
@@ -40,6 +39,9 @@
 				</div>
 			</div>
 		</div>
+
+		<ons-progress-bar indeterminate v-show="folder.isLoading"></ons-progress-bar>
+
 		<div class="phi-page-contents">
 			<div class="empty" v-show="!folder.threads.length && !folder.isLoading">
 				<p>no hay nada aquí</p>
@@ -59,7 +61,7 @@
 				</div>
 			</div>
 
-			<button @click="fetch(page+1)" v-show="hasNextPage">Siguiente pagina</button>
+			<button @click="fetch(page+1)" v-show="hasNextPage" class="loadNext">cargar más</button>
 		</div>
 
 		<div class="phi-toast" :class="{shown: lastAction}">
@@ -121,8 +123,6 @@ export default {
 					this.toolbarIsHidden = delta > 0  && scrollValue > toolbar.clientHeight;
 					scrollValue = page.scrollTop;
 				}
-
-				toolbar.style.top = page.scrollTop + "px";
 			});
 		});
 
@@ -208,6 +208,17 @@ export default {
 </script>
 
 <style scoped lang="sass">
+
+.loadNext {
+	display: block;
+	width: 100%;
+	padding: 12px;
+	margin: 12px 0;
+	background: rgba(0, 0, 0, 0.1);
+	color: #333;
+	border: 0;
+	cursor: pointer;
+}
 
 .phi-toast {
 

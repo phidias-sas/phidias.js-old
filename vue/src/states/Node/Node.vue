@@ -52,7 +52,7 @@ export default {
 		return {
 			app,
 			types: [],
-            nodeId: this.$route.params.nodeId,
+            nodeId: null,
 			transitionDirection: "left",
             node: {
 				type: {}
@@ -88,12 +88,17 @@ export default {
 	},
 
 	beforeRouteEnter (to, from, next) {
-		app.api.get("nodes/" + to.params.nodeId).then(node => {
-			next(vm => {
-				vm.nodeId = to.params.nodeId;
-				vm.node   = node;
+
+		app.api.get("types/bulletin").then(types => {
+			app.api.get("nodes/" + to.params.nodeId).then(node => {
+				next(vm => {
+					vm.nodeId = to.params.nodeId;
+					vm.types  = types;
+					vm.node   = node;
+				});
 			});
 		});
+
 	}
 
 }

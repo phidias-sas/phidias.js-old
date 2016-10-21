@@ -4,10 +4,18 @@ export default class Cache {
 
 	constructor (id) {
 		this.id = id ? id : "phidias.cache-2";
+		this.createDB();
+	}
+
+	createDB () {
 		this.db = new Dexie(this.id);
 		this.db.version(1).stores({
 			request: "hash, url, timestamp"
-		});		
+		});
+	}
+
+	empty () {
+		return this.db.delete().then(() => this.createDB());
 	}
 
 	destroy () {
@@ -15,6 +23,13 @@ export default class Cache {
 	}
 
 	fetch (request) {
+
+		if (!this.db) {
+			return new Dexie.Promise(function(resolve, reject) {
+				resolve();
+			});
+		}
+
         var hash = Cache.getHash(request);
 		return this.db.request.get(hash).then((result) => result ? Cache.parse(result.response) : undefined);
 	}
@@ -44,7 +59,7 @@ export default class Cache {
 			allHeaders[headerName] = value;
 		});
 
-		return response.text().then((text) => 
+		return response.text().then((text) =>
 			JSON.stringify({
 				body: text,
 				options: {

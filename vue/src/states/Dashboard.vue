@@ -1,12 +1,12 @@
 <template>
 	<div class="phi-page">
-		<ons-progress-bar indeterminate v-show="isLoading"></ons-progress-bar>
 		<div class="phi-page-cover">
 			<div class="phi-page-toolbar">
 				<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
 				<h1>Bandeja de entrada</h1>
 			</div>
 		</div>
+		<ons-progress-bar indeterminate v-show="isLoading"></ons-progress-bar>
 		<div class="phi-page-contents">
 			<section v-if="!!billboard">
 				<router-link class="phi-card" :to="'/threads/all/'+billboard.thread">

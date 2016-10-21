@@ -1,0 +1,21 @@
+/*
+Fix toolbar and footer positions when inside an OnsenUI <ons-splitter>
+*/
+
+@media (min-width: 487px) {
+    ons-splitter {
+
+        .phi-page {
+            &.scrollable {
+                .phi-page-toolbar {
+                    left: 260px;
+                }
+            }
+
+            .phi-page-footer {
+                left: 260px;
+            }
+        }
+    }
+
+}

@@ -35,10 +35,10 @@
 				<router-link v-for="node in nodes.items" :to="{name:'node-dashboard', params:{nodeId:node.id}, query:{reset:true}}" v-text="node.name"></router-link>
 				<hr>
 
-				<label class="phi-menu-label">pruebas</label>
+				<!--<label class="phi-menu-label">pruebas</label>
 				<router-link to="/people">Personas</router-link>
 				<router-link to="/root">Grupos</router-link>
-				<hr>
+				<hr>-->
 
 				<div @click="logout()">Cerrar sesión</div>
 
@@ -125,7 +125,7 @@ export default {
 
 
 		clearCache () {
-			this.app.api.cache.destroy().then(() => { alert("Cache borrado") });
+			this.app.api.cache.empty().then(() => { alert("Cache borrado") });
 		}
 	},
 

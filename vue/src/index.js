@@ -10,6 +10,9 @@ moment.locale("es");
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+/* Import filters */
+import './filters/filters.js';
+
 /* Import custom vue components */
 import Quill from './components/Quill.vue';
 import Dropzone from './components/Dropzone/Dropzone.vue';
@@ -23,18 +26,6 @@ Vue.component("dropzone", Dropzone);
 Vue.component("phi-input", PhiInput);
 Vue.component("phi-block", PhiBlock);
 Vue.component("phi-post-editor", PhiPostEditor);
-
-/* Global filters */
-Vue.filter("date", (value) => moment(value * 1000).calendar());
-
-Vue.filter("bytes", (bytes, precision) => {
-	if (isNaN(parseFloat(bytes)) || !isFinite(bytes)) return '-';
-	if (typeof precision === 'undefined') precision = 1;
-	var units = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
-	var	number = Math.floor(Math.log(bytes) / Math.log(1024));
-	return (bytes / Math.pow(1024, Math.floor(number))).toFixed(precision) +  ' ' + units[number];
-});
-
 
 /* Set up routes */
 import Code from './states/Code.vue'

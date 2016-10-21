@@ -7,6 +7,7 @@ var appKey    = "phidias-vue-app";
 var storedApp = window.localStorage[appKey];
 if (storedApp) {
     app.load(JSON.parse(storedApp));
+    // app.api.cacheIsEnabled = false;
 }
 
 app.on("load", () => {
