@@ -111,9 +111,9 @@ export default {
 					if (this.block.id) {
 						app.api.put(blocksUrl + "/" + this.block.id, this.block);
 					} else {
-						app.api.post(blocksUrl, this.block)
-							.then(createdBlock => this.block.id = createdBlock.id);
+						app.api.post(blocksUrl, this.block).then(createdBlock => this.block.id = createdBlock.id);
 					}
+					vm.change();
 				},
 
 				destroy () {
@@ -121,6 +121,7 @@ export default {
 					vm.post.blocks.splice(vm.post.blocks.indexOf(this.block), 1);
 					if (this.block.id) {
 						app.api.delete("/posts/" + vm.post.id + "/blocks/" + this.block.id);
+						vm.change();
 					}
 				}
 			};
@@ -147,6 +148,11 @@ export default {
 					easing: [500, 20]
 				});
 			}
+		},
+
+		change () {
+			this.$emit("change");
+			this.post.id && app.api.clear(`posts/${this.post.id}`);
 		}
 	},
 
@@ -160,6 +166,7 @@ export default {
 			forceFallback: true, // it will not work otherwise.  This took me HOURS to discover :(
 			onUpdate () {
 				app.api.put("/posts/" + vm.post.id + "/blocks", this.toArray());
+				vm.change();
 			}
 		});
 	}
