@@ -1,6 +1,6 @@
 <template>
 
-    <div>
+    <div class="phi-container">
         <!--<phi-input v-model="search" label="buscar" style="display:block" @input="debounce()"></phi-input>-->
 
         <div class="phi-card">
@@ -14,6 +14,31 @@
                 </div>
             </router-link>
         </div>
+
+        <div class="phi-card group-adder">
+            <phi-drawer :open="isOpen">
+                <form @submit.prevent="createGroup()">
+                    <select v-model="newGroup.type">
+                        <option value="materia">materia</option>
+                    </select>
+                    <phi-input label="nombre" v-model="newGroup.name"></phi-input>
+
+                    <footer>
+                        <button class="phi-button" :disabled="!newGroup.name.trim()">guardar</button>
+                        <button type="button" class="phi-button cancel" @click="isOpen = false">cancelar</button>
+                    </footer>
+                </form>
+            </phi-drawer>
+
+            <phi-drawer :open="!isOpen">
+                <div class="phi-media" @click="isOpen = true">
+                    <i class="phi-media-figure fa fa-plus"></i>
+                    <h1 class="phi-media-body">crear grupo</h1>
+                </div>
+            </phi-drawer>
+        </div>
+
+
     </div>
 
 </template>
@@ -30,7 +55,14 @@ export default {
             nodes: app.api.collection(`nodes/${this.$parent.nodeId}/nodes`),
             search: null,
             timer: null,
-            defaultIcon: app.api.host + '/icons/fa-users.png?color=2196F3&size=42'
+            defaultIcon: app.api.host + '/icons/fa-users.png?color=2196F3&size=42',
+
+            /* New group form */
+            isOpen: false,
+            newGroup: {
+                name: "",
+                type: "materia"
+            }
 		}
 	},
 
@@ -43,11 +75,66 @@ export default {
         debounce () {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => this.fetch(true), 500);
+        },
+
+        createGroup () {
+            this.app.api.post(`nodes/${this.$parent.nodeId}/nodes`, this.newGroup)
+                .then(newGroup => {
+                    this.nodes.add(newGroup);
+                    this.newGroup = {name: "", type: "materia"};
+                    this.isOpen   = false;
+                })
         }
     },
 
 	created () {
 		this.fetch();
-	}
+	},
+
+    watch: {
+        isOpen (value) {
+            //value && this.$el.querySelector(".group-adder input").focus(); // does not work (don't really know why)
+            value && setTimeout(() => this.$el.querySelector(".group-adder input").focus(), 140);
+        }
+    }
 }
 </script>
+
+<style scoped lang="sass">
+.group-adder {
+
+    margin-top: 16px;
+    cursor: pointer;
+    opacity: 0.9;
+
+    form {
+        padding: 16px;
+
+        select, .phi-input {
+            display: block;
+        }
+
+        select {
+            margin-bottom: 24px;
+            border: 0;
+            background: transparent;
+        }
+
+        footer {
+            margin-top: 16px;
+        }
+    }
+
+    .phi-media {
+        .phi-media-figure {
+            text-align: center;
+            align-self: center;
+            font-size: 16px;
+        }
+        .phi-media-body {
+            font-size: 1.1em;
+        }
+    }
+
+}
+</style>

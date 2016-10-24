@@ -1,5 +1,5 @@
 <template>
-	<div id="node-import">
+	<div id="node-import" class="phi-container">
 
 		<section class="file-picker">
 

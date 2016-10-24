@@ -12,7 +12,7 @@
 				</ul>
 
 				<router-link :to="{name:'node-dashboard', params:{nodeId}}">
-					<h1><i class="fa fa-times"></i></h1>
+					<i class="fa fa-times"></i>
 				</router-link>
 			</div>
 

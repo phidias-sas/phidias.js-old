@@ -87,6 +87,21 @@ $phi-page-navigation-height: 46px;
 		color: inherit;
 	}
 
+	& > a {
+		display: block;
+		width: 32px;
+		height: 32px;
+		line-height: 32px;
+
+		.fa {
+			display: block;
+			text-align: center;
+			width: 32px;
+			height: 32px;
+			line-height: 32px;
+		}
+	}
+
 	.phi-button {
 		@extend ._z-0;
 		background: transparent;
@@ -170,7 +185,7 @@ $phi-page-navigation-height: 46px;
 		transition: transform 280ms ease-in-out;
 		&._hidden {
 			transform: translateY(-100%);
-		}		
+		}
 	}
 
 }

@@ -11,14 +11,9 @@
 					</li>
 				</ul>
 
-				<div class="phi-tooltip">
-					<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
-					<ul class="phi-menu _texture-paper">
-						<li>
-							<router-link :to="{name:'node-nodes', params:{nodeId}}">Administración</router-link>
-						</li>
-					</ul>
-				</div>
+				<router-link :to="{name:'node-nodes', params:{nodeId}}">
+					<i class="fa fa-cog"></i>
+				</router-link>
 			</div>
 			<div class="phi-page-header">
 				<small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->

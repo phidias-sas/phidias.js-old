@@ -16,17 +16,17 @@ app.on("load", () => {
 
 /* Load session from localStorage */
 var tokenKey    = appKey+":token";
-var storedToken = window.sessionStorage[tokenKey];
+var storedToken = window.localStorage[tokenKey];
 if (storedToken) {
     app.setToken(storedToken);
 }
 
 app.on("login", () => {
-    window.sessionStorage[tokenKey] = app.token;
+    window.localStorage[tokenKey] = app.token;
 });
 
 app.on("logout", () => {
-    window.sessionStorage.removeItem(tokenKey);
+    window.localStorage.removeItem(tokenKey);
 });
 
 /* Google Client ID */
