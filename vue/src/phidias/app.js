@@ -91,7 +91,7 @@ export default class App {
 	loadCode (code, rackUrl) {
 
 		if (rackUrl == undefined) {
-			rackUrl = "http://phidias.io/";
+			rackUrl = "https://phidias.io/";
 		}
 
 		return new Client(rackUrl)
