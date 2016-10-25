@@ -152,7 +152,13 @@ export default {
             display: inline-block;
         }
 
-        .role {
+        select {
+            color: inherit;
+            padding: 8px 12px;
+        }
+
+        .role,
+        select {
             border-radius: 4px;
             background: rgba(0, 0, 0, 0.1);
             

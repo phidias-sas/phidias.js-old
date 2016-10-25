@@ -19,7 +19,7 @@
 
                     <footer>
                         <button class="phi-button" :disabled="!inscriptions.length">inscribir</button>
-                        <button type="button" class="phi-button cancel" @click="isOpen = false">cancelar</button>
+                        <button type="button" class="phi-button cancel" @click="isOpen = false; inscriptions = []">cancelar</button>
                     </footer>
                 </form>
             </phi-drawer>
@@ -142,22 +142,18 @@ export default {
 }
 </script>
 
+
 <style lang="sass">
+/* Omitir la "X" de borrar rol cuando solo hay uno (no funciona dentro de un script "scoped") */
 .person {
     .phi-role-picker {
-        select {
-            float: right; /* Esta regla no funciona en "scoped" (?) */
-        }
-
-        /* Omitir la "X" de borrar rol cuando solo hay uno */
         .role:only-of-type i {
             display: none !important;
         }
     }
 }
-
-
 </style>
+
 
 <style scoped lang="sass">
 
