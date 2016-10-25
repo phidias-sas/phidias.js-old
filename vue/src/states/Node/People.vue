@@ -3,19 +3,31 @@
 
         <div class="phi-card inscription-adder">
             <phi-drawer :open="isOpen">
-                <form @submit.prevent="createInscription()">
-                    <phi-person-picker label="persona" v-model="newInscription.person"></phi-person-picker>
+                <form @submit.prevent="saveInscriptions()">
+
+                    <div class="inscription phi-media" v-for="inscription in inscriptions">
+                        <div class="phi-media-figure phi-avatar">
+                            <img :src="inscription.avatar" :alt="inscription.firstName">
+                        </div>
+                        <div class="phi-media-body">
+                            <h1>{{inscription.firstName}} {{inscription.lastName}}</h1>
+                            <phi-role-picker v-model="inscription.roles" :gender="inscription.gender" label="escoger rol"></phi-role-picker>
+                        </div>
+                    </div>
+
+                    <phi-person-picker label="persona" @select="appendPerson(arguments[0])"></phi-person-picker>
+
                     <footer>
-                        <button class="phi-button" :disabled="!newInscription.person">inscribir</button>
-                        <button type="button" class="phi-button cancel" @click="isOpen = false; newInscription.person = null">cancelar</button>
+                        <button class="phi-button" :disabled="!inscriptions.length">inscribir</button>
+                        <button type="button" class="phi-button cancel" @click="isOpen = false">cancelar</button>
                     </footer>
                 </form>
             </phi-drawer>
 
             <phi-drawer :open="!isOpen">
-                <div class="phi-media" @click="isOpen = true">
+                <div class="phi-media handle" @click="isOpen = true">
                     <i class="phi-media-figure fa fa-plus"></i>
-                    <h1 class="phi-media-body">inscribir persona</h1>
+                    <h1 class="phi-media-body">inscribir</h1>
                 </div>
             </phi-drawer>
         </div>
@@ -23,15 +35,23 @@
         <phi-input class="search" v-model="search" label="buscar" style="display:block" @input="debounce()"></phi-input>
 
         <div class="phi-card">
-            <router-link class="person phi-media" v-for="person in people.items" :to="{name: 'person', params:{personId: person.id}}">
-                <div class="phi-media-figure phi-avatar">
+            <div class="person phi-media" v-for="person in people.items">
+                <router-link class="phi-media-figure phi-avatar" :to="{name: 'person', params:{personId: person.id}}">
                     <img :src="person.avatar" :alt="person.firstName">
-                </div>
+                </router-link>
                 <div class="phi-media-body">
                     <h1 v-text="person.firstName + ' ' + person.lastName"></h1>
-                    <small v-text="person.email"></small>
+                    <phi-role-picker 
+                        label="agregar rol"
+                        v-model="person.roles"
+                        :gender="person.gender"
+                        @select="addRole(person, arguments[0])"
+                        @deselect="removeRole(person, arguments[0])"
+                    >
+                    </phi-role-picker>
                 </div>
-            </router-link>
+                <i class="phi-media-right fa fa-times" @click="deleteInscription(person)"></i>
+            </div>
         </div>
 
     </div>
@@ -53,10 +73,7 @@ export default {
 
             /* New group form */
             isOpen: false,
-            newInscription: {
-                person: null,
-                roles: ["estudiante"]
-            }
+            inscriptions: []
 		}
 	},
 
@@ -71,26 +88,45 @@ export default {
             this.timer = setTimeout(() => this.fetch(true), 500);
         },
 
-        createInscription () {
-            if (!this.newInscription.person) {
+        appendPerson (person) {
+            person.roles = [];
+            this.inscriptions.push(person);
+        },
+
+        saveInscriptions () {
+            if (!this.inscriptions.length) {
                 return;
             }
 
-            app.api.post(`nodes/${this.$parent.nodeId}/people`, {
-                id:    this.newInscription.person.id,
-                roles: this.newInscription.roles
-            }).then( addedPeople => {
-                var newPerson   = this.newInscription.person;
-                newPerson.roles = this.newInscription.roles;
+            app.api.post(`nodes/${this.$parent.nodeId}/people`, this.inscriptions)
+                .then( addedPeople => {
+                    addedPeople.forEach(person => this.people.add(person));
+                    this.isOpen       = false;
+                    this.inscriptions = [];
+                });
+        },
 
-                this.people.add(newPerson);
+        addRole (person, role) {
+            app.api.put(`nodes/${this.$parent.nodeId}/people/${person.id}/roles/${role.maleNoun.singular}`)
+                .then(() => app.api.clear(`nodes/${this.$parent.nodeId}/people`));
+        },
 
-                this.isOpen = false;
-                this.newInscription = {
-                    person: null,
-                    roles: ["estudiante"]
-                };
-            });
+        removeRole (person, role) {
+            app.api.delete(`nodes/${this.$parent.nodeId}/people/${person.id}/roles/${role.maleNoun.singular}`)
+                .then(() => app.api.clear(`nodes/${this.$parent.nodeId}/people`));
+        },
+
+        deleteInscription (person) {
+
+            if (!confirm(`Retirar a ${person.firstName} de ${this.$parent.node.type.gender == 1 ? 'el' : 'la'} ${this.$parent.node.type.singular} ?`)) {
+                return;
+            }
+
+            app.api.delete(`nodes/${this.$parent.nodeId}/people/${person.id}`)
+                .then(() => {
+                    app.api.clear(`nodes/${this.$parent.nodeId}/people`);
+                    this.people.remove(person);
+                });
         }
     },
 
@@ -106,19 +142,34 @@ export default {
 }
 </script>
 
-<style scoped lang="sass">
-
+<style lang="sass">
 .person {
-    .phi-media-body {
-        align-self: center;
+    .phi-role-picker {
+        select {
+            float: right; /* Esta regla no funciona en "scoped" (?) */
+        }
+
+        /* Omitir la "X" de borrar rol cuando solo hay uno */
+        .role:only-of-type i {
+            display: none !important;
+        }
     }
 }
+
+
+</style>
+
+<style scoped lang="sass">
 
 .inscription-adder {
 
     margin-bottom: 16px;
     cursor: pointer;
     opacity: 0.9;
+
+    .phi-person-picker {
+        margin-top: 16px;
+    }
 
     form {
         padding: 16px;
@@ -138,16 +189,20 @@ export default {
         }
     }
 
-    .phi-media {
+    .handle {
+
+        align-items: center;
+
         .phi-media-figure {
             text-align: center;
-            align-self: center;
             font-size: 16px;
         }
         .phi-media-body {
             font-size: 1.1em;
         }
     }
+
+
 
 }
 

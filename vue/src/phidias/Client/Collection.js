@@ -35,7 +35,20 @@ export default class Collection {
             }
         }
         this.items.push(incoming);
-        return incoming;        
+        return incoming;
+    }
+
+    indexOf (target) {
+        for (var i = 0; i < this.items.length; i++) {
+            if (Collection.areEqual(target, this.items[i])) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    remove (outgoing) {
+        this.items.splice(this.indexOf(outgoing), 1);
     }
 
     addItems (items) {
@@ -43,9 +56,9 @@ export default class Collection {
         return items;
     }
 
+    //  Adds new properties from sourceObject into targetObject. Keeps all targetObject properties intact.
     static merge (targetObject, sourceObject) {
-        // return Object.assign(targetObject, sourceObject);  // override all targetObject properties with sourceObject
-        return Object.assign(sourceObject, targetObject); // keep all targetObject properties intact.  only add properties from sourceObject
+        return Object.assign(sourceObject, targetObject);
     }
 
     static areEqual (item1, item2) {

@@ -6,13 +6,13 @@
 			<div class="phi-page-toolbar" :class="{_hidden: toolbarIsHidden}">
 				<button class="phi-button" @click="$router.go(-1)"> <i class="fa fa-arrow-left"></i></button>
 				<h1></h1>
-				<div class="phi-tooltip">
+				<!--<div class="phi-tooltip">
 					<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
 					<ul class="phi-menu _texture-paper">
 						<li>do A</li>
 						<li>do B</li>
 					</ul>
-				</div>
+				</div>-->
 			</div>
 			<div class="phi-page-header">
 				<h1 v-if="thread" v-text="thread.title"></h1>

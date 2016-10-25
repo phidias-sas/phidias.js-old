@@ -22,6 +22,8 @@ import PhiInput from './components/Phi/Input.vue';
 import PhiBlock from './components/Phi/Block.vue';
 import PhiPostEditor from './components/Phi/Post/Editor.vue';
 import PhiPersonPicker from './components/Phi/Person/Picker.vue';
+import PhiTypePicker from './components/Phi/Type/Picker.vue';
+import PhiRolePicker from './components/Phi/Role/Picker.vue';
 
 Vue.component("quill", Quill);
 Vue.component("dropzone", Dropzone);
@@ -30,6 +32,8 @@ Vue.component("phi-input", PhiInput);
 Vue.component("phi-block", PhiBlock);
 Vue.component("phi-post-editor", PhiPostEditor);
 Vue.component("phi-person-picker", PhiPersonPicker);
+Vue.component("phi-type-picker", PhiTypePicker);
+Vue.component("phi-role-picker", PhiRolePicker);
 
 /* Set up routes */
 import Code from './states/Code.vue'
