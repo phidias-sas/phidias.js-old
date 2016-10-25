@@ -118,7 +118,7 @@ export default {
 
         deleteInscription (person) {
 
-            if (!confirm(`Retirar a ${person.firstName} de ${this.$parent.node.type.gender == 1 ? 'el' : 'la'} ${this.$parent.node.type.singular} ?`)) {
+            if (!confirm(`Retirar a ${person.firstName} ${this.$parent.node.type.gender == 1 ? 'del' : 'de la'} ${this.$parent.node.type.singular} ?`)) {
                 return;
             }
 

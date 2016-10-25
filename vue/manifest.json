@@ -2,6 +2,8 @@
   "short_name": "Phidias",
   "name": "Phidias Académico",
   "display": "standalone",
+  "start_url": "index.html?launcher=true",
+  "gcm_sender_id": "890266961007",
   "icons": [
     {
       "src": "icons/drawable-mdpi-icon.png",
@@ -18,6 +20,5 @@
       "type": "image/png",
       "sizes": "192x192"
     }
-  ],
-  "start_url": "index.html?launcher=true"
+  ]
 }
