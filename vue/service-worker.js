@@ -29,11 +29,6 @@ self.addEventListener('push', function(event) {
 
 				var stub = stubs[stubs.length - 1];  // !! only show the last one
 
-				if (stub.post.author.id == app.userId) {
-					// return;
-				}
-
-
 				/*
 				Broadcast the event to all clients and show a notification if none of the clients is reading the thread
 				i.e. thread id is not on the url
@@ -42,7 +37,7 @@ self.addEventListener('push', function(event) {
 					type: 'window'
 				}).then(clientList => {
 
-					var displayNotification = true;
+					var displayNotification = stub.post.author.id != app.userId;
 
 					clientList.map(client => {
 						client.postMessage(stub); // see https://ponyfoo.com/articles/serviceworker-messagechannel-postmessage#broadcasting-from-a-serviceworker-to-every-client
