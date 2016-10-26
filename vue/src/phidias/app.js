@@ -1,5 +1,6 @@
 import Client from './Client/Client.js';
 import JWT from './JWT.js';
+import Push from './Push.js';
 
 export default class App {
 
@@ -114,6 +115,8 @@ export default class App {
 		this.user  = JWT.decode(this.token);
 		this.api.setToken(this.token);
 
+		this.registerPushNotifications();
+
 		this.emit("login", this.user);
 
 		return this.user;
@@ -139,7 +142,7 @@ export default class App {
 		})
 		.then((response) => {
 			return this.setToken(response.access_token);
-		});		
+		});
 	}
 
 	googleLogin () {
@@ -246,7 +249,27 @@ export default class App {
 
 	registerPushNotifications (googleClientId) {
 
+		console.log("registering push notifications");
+
+		/*
+		PushNotification is phonegap's push notification plugin
+		When it is not present, the service worker methods are used (via the encapsulating Push class)
+		*/
+
 		if (typeof PushNotification == "undefined") {
+
+			Push.subscribe()
+				.then(subscription => {
+					var subscriptionId = Push.getSubscriptionId(subscription);
+
+					this.api.post(`people/${this.user.id}/devices`, {
+						token:    subscriptionId,
+						platform: "gcm",
+						model:    "browser version here soon",
+						uuid:     subscriptionId
+					});
+				});
+
 			return;
 		}
 
@@ -268,7 +291,7 @@ export default class App {
 				return;
 			}
 
-			phiApi.post("people/" + this.user.id + "/devices/", {
+			this.api.post(`people/${this.user.id}/devices`, {
 				token:    data.registrationId,
 				platform: window.device.platform,
 				model:    window.device.model,
