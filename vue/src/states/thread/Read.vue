@@ -61,6 +61,7 @@
 import app from '../../store/app.js'
 
 var collection;
+var destroyListener;
 
 export default {
 	data () {
@@ -83,11 +84,6 @@ export default {
 	},
 
 	methods: {
-		refresh () {
-			return this.collection.get(this.$route.params.threadId)
-				.then(thread => this.thread = thread);
-		},
-
 		scrollToBottom () {
 			setTimeout(() => {
 				this.$el.scrollTop = this.$el.scrollHeight;
@@ -112,6 +108,9 @@ export default {
                 return;
             }
 
+			// clear the cache
+			this.app.api.clear(`/people/${app.user.id}/threads/inbox/${this.thread.id}`);
+
             // ignore if the post is already present
             for (var cont = 0; cont < this.thread.replies.length; cont++) {
                 if (this.thread.replies[cont].id == post.id) {
@@ -126,6 +125,10 @@ export default {
 	},
 
 	mounted () {
+
+		destroyListener = app.on("notification", stub => {
+			this.appendReply(stub.post);
+		});
 
 		this.scrollToBottom();
 
@@ -153,15 +156,18 @@ export default {
 	// does NOT have access to `this` component instance,
 	// because it has not been created yet when this guard is called!
 	beforeRouteEnter (to, from, next) {
-
 		collection = app.api.collection(`/people/${app.user.id}/threads/inbox`);
-
 		collection.get(to.params.threadId)
 			.then(thread => {
 				next(vm => {
 					vm.thread = thread;
 				});
 			});
+	},
+
+	beforeRouteLeave (to, from, next) {
+		destroyListener();
+		next();
 	}
 }
 </script>

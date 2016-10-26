@@ -1,6 +1,7 @@
 import Client from './Client/Client.js';
 import JWT from './JWT.js';
 import Push from './Push.js';
+import Dexie from 'dexie';
 
 export default class App {
 
@@ -75,6 +76,10 @@ export default class App {
 			this.listeners[eventName] = [];
 		}
 		this.listeners[eventName].push(callback);
+
+		return () => {
+			this.listeners[eventName].splice(this.listeners[eventName].indexOf(callback), 1);
+		};
 	}
 
 	emit (eventName, args) {
@@ -111,14 +116,11 @@ export default class App {
 	}
 
 	setToken (tokenString) {
-		console.log("setting token", tokenString);
-
 		this.token = tokenString;
 		this.user  = JWT.decode(this.token);
+
 		this.api.setToken(this.token);
-
 		this.registerPushNotifications();
-
 		this.emit("login", this.user);
 
 		return this.user;
@@ -249,27 +251,64 @@ export default class App {
 	}
 
 
-	registerPushNotifications (googleClientId) {
+	/* Display a notification. takes same arguments as registration.showNotification */
+	displayNotification (title, options) {
+		if (!'serviceWorker' in navigator) {
+			console.warn("serviceworker not supported");
+			return;
+		}
 
-		console.log("registering push notifications");
+		navigator.serviceWorker.getRegistration().then(registration => {
+			registration.showNotification(title, options);
+		});
+	}
+
+
+	registerPushNotifications (googleClientId) {
 
 		/*
 		PushNotification is phonegap's push notification plugin
 		When it is not present, the service worker methods are used (via the encapsulating Push class)
 		*/
-
 		if (typeof PushNotification == "undefined") {
 
 			Push.subscribe()
 				.then(subscription => {
 					var subscriptionId = Push.getSubscriptionId(subscription);
 
-					this.api.post(`people/${this.user.id}/devices`, {
-						token:    subscriptionId,
-						platform: "gcm",
-						model:    "browser version here soon",
-						uuid:     subscriptionId
+					/* Save endpoint data */
+					var db = new Dexie("service-worker-data");
+					db.version(1).stores({settings: "name"});
+
+					db.settings.put({
+						name: "app",
+						value: {
+							endpoint:       this.api.host,
+							authentication: this.token,
+							subscriptionId: subscriptionId,
+							userId:         this.user.id
+						}
+					})
+					.then(() => {
+						/* Register the device with the endpoint */
+						this.api.post(`people/${this.user.id}/devices`, {
+							token:    subscriptionId,
+							platform: "gcm",
+							model:    "browser version here soon",
+							uuid:     subscriptionId
+						});
+
+						/*
+						Listen for messages from service worker
+						see https://ponyfoo.com/articles/serviceworker-messagechannel-postmessage#broadcasting-from-a-serviceworker-to-every-client
+						*/
+						if ('serviceWorker' in navigator) {
+							navigator.serviceWorker.addEventListener('message', (event) => {
+								this.emit("notification", event.data);
+							});
+						}
 					});
+
 				});
 
 			return;
@@ -302,7 +341,7 @@ export default class App {
 
 		});
 
-		push.on('notification', function(data) {
+		push.on('notification', (data) => {
 			// data.message,
 			// data.title,
 			// data.count,
@@ -310,7 +349,8 @@ export default class App {
 			// data.image,
 			// data.additionalData
 
-			window.dispatchEvent(new CustomEvent("phiNotification", {detail:data}));
+			// window.dispatchEvent(new CustomEvent("phiNotification", {detail:data}));
+			this.emit("notification", data);
 		});
 
 		push.on('error', function(e) {

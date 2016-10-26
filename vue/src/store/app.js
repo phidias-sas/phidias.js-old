@@ -2,9 +2,6 @@ import {App} from "../phidias/Phidias.js";
 
 var app = new App;
 
-console.log("store app initialized", app);
-window.$phidiasApp = app;
-
 /* Manage local storage persistense */
 var appKey    = "phidias-vue-app";
 var storedApp = window.localStorage[appKey];

@@ -38,10 +38,6 @@ export default class Client {
 		var request = new Request(url, options);
 		if (this.token) {
 			request.headers.set("Authorization", "Bearer " + this.token);
-			/* Notice: setting the authorization header makes the chrome network console hide the requests from the network tab
-			(maybe the server should include Authorization in Access-Control-Expose-Headers?  -- doesnt look like it)
-			This seems to be an issue with the fetch API, for chich chrome has native support
-			 */
 		}
 
 		var promise;
