@@ -111,6 +111,8 @@ export default class App {
 	}
 
 	setToken (tokenString) {
+		console.log("setting token", tokenString);
+
 		this.token = tokenString;
 		this.user  = JWT.decode(this.token);
 		this.api.setToken(this.token);
