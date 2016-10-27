@@ -62,7 +62,7 @@ export default {
 	data () {
 		return {
 			app,
-			nodes: null,
+			nodes: app.api.collection("nodes"),
 			transitionDirection: 'left'
 		}
 	},

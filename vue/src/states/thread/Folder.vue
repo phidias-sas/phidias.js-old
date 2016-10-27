@@ -21,14 +21,16 @@
 				<div class="phi-tooltip">
 					<button class="phi-button"> <i class="fa fa-ellipsis-v"></i></button>
 					<ul class="phi-menu _texture-paper">
-						<li>
+						<li @click="tpl.drawerIsOpen = !tpl.drawerIsOpen">
 							<span>seleccionar</span>
-							<ul class="phi-menu">
-								<li @click="select('all')">todos</li>
-								<li @click="select('read')">leídos</li>
-								<li @click="select('unread')">no leídos</li>
-								<li @click="select('none')">ninguno</li>
-							</ul>
+							<phi-drawer :open="tpl.drawerIsOpen">
+								<ul class="phi-menu">
+									<li @click="select('all')">todos</li>
+									<li @click="select('read')">leídos</li>
+									<li @click="select('unread')">no leídos</li>
+									<li @click="select('none')">ninguno</li>
+								</ul>
+							</phi-drawer>
 						</li>
 						<li @click="moveTo('archive')" :disabled="!selection.length">archivar</li>
 						<li @click="moveTo('read')" :disabled="!selection.length">marcar leído</li>
@@ -101,7 +103,11 @@ export default {
 
 			lastAction: null,
 
-			toolbarIsHidden: false
+			toolbarIsHidden: false,
+
+			tpl: {
+				drawerIsOpen: false
+			}
 		}
 	},
 
