@@ -19,8 +19,8 @@
 			</div>
 		</div>
 
-		<div class="phi-page-contents" v-if="thread" >
-			
+		<div class="phi-page-contents phi-container" v-if="thread" >
+
 			<!--<header class="phi-card _z-0">
 				<div class="phi-media">
 					<div class="phi-media-figure phi-avatar">
@@ -28,20 +28,25 @@
 					</div>
 					<div class="phi-media-body">
 						<div class="thread-author" v-text="`${thread.author.firstName} ${thread.author.lastName}`"></div>
-						<div class="thread-description" v-text="thread.description"></div>	
+						<div class="thread-description" v-text="thread.description"></div>
 					</div>
 				</div>
 			</header>-->
 
-			<div v-for="post in thread.replies.slice().reverse()" class="phi-media post">
+			<div v-for="post in thread.replies.slice().reverse()" class="post phi-media">
 				<div class="phi-media-figure phi-avatar">
 					<img :src="post.author.avatar" :alt="post.author.firstName">
 				</div>
 				<div class="phi-media-body">
 					<h1 class="post-author" v-text="post.author.firstName + ' ' + post.author.lastName"></h1>
-					<div class="post-date">{{ post.publishDate | date }}</div>
-					<div class="post-description" v-text="post.description"></div>
-					<phi-block v-for="block in post.blocks" :block="block"></phi-block>
+					<div class="post-date">
+						<span v-if="post.publishDate">{{ post.publishDate | date }}</span>
+						<span v-if="!post.publishDate">enviando ...</span>
+					</div>
+					<div class="post-body">
+						<div class="post-description" v-text="post.description"></div>
+						<phi-block v-for="block in post.blocks" :block="block"></phi-block>
+					</div>
 				</div>
 			</div>
 
@@ -49,7 +54,7 @@
 
 		<div class="phi-page-footer" v-if="canReply">
 			<div class="reply">
-				<textarea v-model="replyBody"></textarea>
+				<textarea v-model="replyBody" @keydown.enter="sendReply()"></textarea>
 				<button class="phi-button" :disabled="!replyBody.trim()" @click="sendReply()">enviar</button>
 			</div>
 		</div>
@@ -96,8 +101,12 @@ export default {
 				description: this.replyBody
 			};
 
+			this.thread.replies.unshift(outgoing);
+			this.scrollToBottom();
+
 			this.app.api.post(`/threads/${this.thread.id}/replies`, outgoing)
 				.then(post => {
+					this.thread.replies.splice(this.thread.replies.indexOf(outgoing), 1);
 					this.replyBody = "";
 					this.appendReply(post);
 				});
@@ -132,7 +141,7 @@ export default {
 
 		this.scrollToBottom();
 
-		/* 
+		/*
 		Hide toolbar on scroll
 		https://codepen.io/IliaSky/pen/VjgBqQ?editors=0110
 		*/
@@ -172,9 +181,8 @@ export default {
 }
 </script>
 
-
 <style lang="sass" scoped>
-$phi-avatar-size: 38px;
+$phi-avatar-size: 32px;
 
 .phi-page-cover {
 	background-color: #1C89B8;
@@ -195,7 +203,8 @@ $phi-avatar-size: 38px;
 }
 
 .phi-page-contents {
-	padding: 0 0 104px 0; /* Make room for reply at the bottom of the page */
+	padding: 16px;
+	padding-bottom: 104px;
 	position: relative;
 }
 
@@ -206,7 +215,7 @@ $phi-avatar-size: 38px;
 
 	textarea {
 		flex: 1;
-		height: 80px;
+		height: 48px;
 		margin-right: 12px;
 		font-size: 1.1em;
 	}
@@ -220,7 +229,7 @@ $phi-avatar-size: 38px;
 
 	height: $phi-avatar-size;
 	max-height: $phi-avatar-size;
-	min-height: $phi-avatar-size;	
+	min-height: $phi-avatar-size;
 }
 
 
@@ -238,10 +247,8 @@ $phi-avatar-size: 38px;
 
 
 .post {
-	width: 768px;
-	max-width: 100%;
-
-	margin-bottom: 8px;
+	margin-bottom: 22px;
+	padding: 0;
 
 	.phi-media-body {
 		max-width: 100%;
@@ -251,6 +258,10 @@ $phi-avatar-size: 38px;
 		margin-bottom: 8px;
 	}
 
+	.phi-avatar {
+		margin-top: 3px;
+	}
+
 	.post-author, .post-date {
 		display: inline-block;
 		font-size: 0.9em;
@@ -258,28 +269,28 @@ $phi-avatar-size: 38px;
 	}
 
 	.post-author {
+		color: #444;
 		margin: 0 0 3px 0;
 	}
 
 	.post-date {
-		color: #999;
+		color: #000;
+		opacity: 0.4;
 		font-size: 0.8em;
 		margin-left: 6px;
 	}
 
 	.post-description {
 		margin: 0;
-		padding: 9px 9px;
-		background: #fff;
-		border-radius: 4px;
-
 		font-size: 1.1em;
 		font-weight: 300;
 
 		max-width: 100%;
 		overflow-x: hidden;
+	}
 
-		margin-left: -6px;
+	.phi-block {
+		margin: 6px 0;
 	}
 }
 

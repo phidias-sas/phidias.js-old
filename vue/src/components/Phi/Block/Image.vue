@@ -1,6 +1,6 @@
 <template>
     <div class="phi-block-image">
-        <img :src="block.url" style="width: 100%">
+        <img :src="block.url" style="max-width: 100%">
     </div>
 </template>
 
