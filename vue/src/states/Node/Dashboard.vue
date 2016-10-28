@@ -7,7 +7,7 @@
         <section v-for="typeData in types" class="type">
             <h1 v-text="typeData.nodes.length == 1 ? typeData.type.singular : typeData.type.plural"></h1>
             <div class="phi-card">
-                <router-link class="phi-media" v-for="node in typeData.nodes" :to="{name: 'node-dashboard', params:{nodeId: node.id}}">
+                <router-link class="phi-media" v-for="node in typeData.nodes" :to="{name: 'node', params:{nodeId: node.id}}">
                     <div class="phi-media-figure">
                         <img :src="app.api.host + '/icons/fa-users.png?color=2196F3&size=42'" :alt="node.type">
                     </div>

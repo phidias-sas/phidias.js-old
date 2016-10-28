@@ -54,7 +54,7 @@
 
 		<div class="phi-page-footer" v-if="canReply">
 			<div class="reply">
-				<textarea v-model="replyBody" @keydown.enter="sendReply()"></textarea>
+				<textarea v-model="replyBody" @keydown.enter.prevent="sendReply()"></textarea>
 				<button class="phi-button" :disabled="!replyBody.trim()" @click="sendReply()">enviar</button>
 			</div>
 		</div>
@@ -101,13 +101,13 @@ export default {
 				description: this.replyBody
 			};
 
+			this.replyBody = "";
 			this.thread.replies.unshift(outgoing);
 			this.scrollToBottom();
 
 			this.app.api.post(`/threads/${this.thread.id}/replies`, outgoing)
 				.then(post => {
 					this.thread.replies.splice(this.thread.replies.indexOf(outgoing), 1);
-					this.replyBody = "";
 					this.appendReply(post);
 				});
 		},
@@ -282,7 +282,6 @@ $phi-avatar-size: 32px;
 
 	.post-description {
 		margin: 0;
-		font-size: 1.1em;
 		font-weight: 300;
 
 		max-width: 100%;

@@ -57,13 +57,13 @@
 					</div>
 					<router-link class="phi-media-body" :to="{name: 'read', params:{threadId: thread.id}}">
 						<h1 class="thread-title" v-text="thread.title"></h1>
-						<span class="thread-description" v-text="thread.description"></span>
 						<span class="thread-author" v-text="thread.author.firstName + ' ' + thread.author.lastName"></span>
+						<span class="thread-description" v-text="thread.description"></span>
 					</router-link>
 				</div>
 			</div>
 
-			<button @click="fetch(page+1)" v-show="hasNextPage" class="loadNext">cargar más</button>
+			<button @click="fetch(page+1)" v-show="hasNextPage" class="loadNext">{{ app.api.isLoading ? 'cargando ...' : 'cargar más' }}</button>
 		</div>
 
 		<div class="phi-toast" :class="{shown: lastAction}">
@@ -157,7 +157,10 @@ export default {
 
 		refresh () {
 			return this.app.api.clear(this.folder.url)
-				.then(() => this.fetch());
+				.then(() => {
+					this.folder.collection.items = []; // !!! implement a folder.clear() and/or collection.clear() instead
+					return this.fetch()
+				});
 		},
 
 		moveTo (targetFolder) {
@@ -332,14 +335,19 @@ export default {
 		color: #1C89B8;
 	}
 
+	.thread-title {
+		font-weight: 400;
+		font-size: 1.1em;
+	}
+
 	.thread-author {
-		display: inline-block;
+		display: block;
 		font-size: 0.85em;
+		font-weight: 300;
 	}
 
 	.thread-description {
-		display: inline-block;
-		margin-right: 1em;
+		display: block;
 		font-weight: 300;
 		color: #222;
 	}

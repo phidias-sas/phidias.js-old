@@ -20,6 +20,10 @@
                     <footer>
                         <button class="phi-button" :disabled="!inscriptions.length">inscribir</button>
                         <button type="button" class="phi-button cancel" @click="isOpen = false; inscriptions = []">cancelar</button>
+                        <router-link class="import phi-media" :to="{name:'node-import', params:{nodeId: $parent.nodeId}}">
+                            <i class="fa fa-upload phi-media-figure"></i>
+                            <span class="phi-media-body">importar archivo</span>
+                        </router-link>
                     </footer>
                 </form>
             </phi-drawer>
@@ -154,8 +158,19 @@ export default {
 }
 </style>
 
-
 <style scoped lang="sass">
+.import {
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.1);
+    color: #333;
+    margin-bottom: 12px;
+    float: right;
+
+    .phi-media-figure {
+        text-align: center;
+    }
+}
+
 
 .inscription-adder {
 

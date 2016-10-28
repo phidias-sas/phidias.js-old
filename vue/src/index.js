@@ -44,12 +44,11 @@ import Dashboard from './states/Dashboard.vue'
 import Folder from './states/thread/Folder.vue'
 import Read from './states/thread/Read.vue'
 
-import Node from './states/Node/Node.vue'
+import NodeContainer from './states/Node/Container.vue'
 import NodeDashboard from './states/Node/Dashboard.vue'
 import NodePosts from './states/Node/Posts.vue'
 import NodeCompose from './states/Node/Compose.vue'
 
-import NodeAdmin from './states/Node/Admin.vue'
 import NodePeople from './states/Node/People.vue'
 import NodeNodes from './states/Node/Nodes.vue'
 import NodeImport from './states/Node/Import.vue'
@@ -76,22 +75,17 @@ const router = new VueRouter({
 				{ path: '/person/:personId', component: Person, meta: {order: 11}, name: 'person' },
 				{ path: '/root',   component: Root,   meta: {order: 12}, name: 'root' },
 
-				{ path: '/nodes/:nodeId', component: Node, meta: {order: 13}, name: 'node',
+				{ path: '/nodes/:nodeId', component: NodeContainer, meta: {order: 13},
 					children: [
-						{ path: 'dashboard', component: NodeDashboard, meta: {order: 14}, name: 'node-dashboard' },
-						{ path: 'posts/:type', component: NodePosts, meta: {order: 15}, name: 'node-posts' }
-					]
-				},
-
-				{ path: '/nodes/:nodeId/manage', component: NodeAdmin, meta: {order: 16}, name: 'node-admin',
-					children: [
+						{ path: '', component: NodeDashboard, meta: {order: 14}, name: 'node' },
+						{ path: 'posts/:type', component: NodePosts, meta: {order: 15}, name: 'node-posts' },
+						{ path: 'people', component: NodePeople, meta: {order: 16}, name: 'node-people' },
 						{ path: 'nodes',  component: NodeNodes, meta: {order: 17}, name: 'node-nodes' },
-						{ path: 'people', component: NodePeople, meta: {order: 18}, name: 'node-people' },
-						{ path: 'import', component: NodeImport, meta: {order: 19}, name: 'node-import' }
+						{ path: 'import', component: NodeImport, meta: {order: 18}, name: 'node-import' }
 					]
 				},
 
-				{ path: '/nodes/:nodeId/posts/compose/:postId', component: NodeCompose, meta: {order: 20}, name: 'node-compose' },
+				{ path: '/nodes/:nodeId/posts/compose/:postId', component: NodeCompose, meta: {order: 20}, name: 'node-compose' }
 
 			]
 		},

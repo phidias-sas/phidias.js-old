@@ -27,17 +27,17 @@ export default class App {
 
 
 	/* Breadcrumbs stuff */
-	pushCrumb (node, reset) {
+	clearCrumbs () {
+		this.breadcrumbs = [];
+	}
 
-		reset && (this.breadcrumbs = []);
-
+	pushCrumb (node) {
 		for (var i = 0; i < this.breadcrumbs.length; i++) {
 			if (node.id == this.breadcrumbs[i].id) {
 				this.breadcrumbs.splice(i+1);
 				return;
 			}
 		}
-
 		this.breadcrumbs.push(node);
 	}
 

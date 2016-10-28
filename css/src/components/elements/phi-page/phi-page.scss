@@ -76,6 +76,10 @@ $phi-page-navigation-height: 46px;
 	display: flex;
 	align-items: center;
 
+	.phi-page-toolbar-wide {
+		flex: 1;
+	}
+
 	& > *:first-child {
 		margin-right: 18px;
 	}

@@ -9,7 +9,7 @@
 				@enter="enter"
 				@after-leave="afterLeave"
 				>
-				<router-view></router-view>
+				<router-view :key="$route.params.nodeId"></router-view>
 			</transition>
 		</ons-splitter-content>
 
@@ -32,7 +32,7 @@
 				<hr>
 
 				<label class="phi-menu-label">años lectivos</label>
-				<router-link v-for="node in nodes.items" :to="{name:'node-dashboard', params:{nodeId:node.id}, query:{reset:true}}" v-text="node.name"></router-link>
+				<router-link v-for="node in nodes.items" :to="{name:'node', params:{nodeId:node.id}}" v-text="node.name" @click.native="app.clearCrumbs()"></router-link>
 				<hr>
 
 				<!--<label class="phi-menu-label">pruebas</label>
@@ -131,7 +131,13 @@ export default {
 
 	watch: {
 		$route (to, from) {
-			this.transitionDirection = (to.meta.order - from.meta.order) > 0 ? 'left' : 'right';
+
+			if (to.params.nodeId) {
+				this.transitionDirection = from.params.nodeId < to.params.nodeId ? 'left' : 'right';
+			} else {
+				this.transitionDirection = (to.meta.order - from.meta.order) > 0 ? 'left' : 'right';
+			}
+
 		}
 	}
 

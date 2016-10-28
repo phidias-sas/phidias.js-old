@@ -4,24 +4,21 @@
 		<div class="phi-page-cover">
 			<div class="phi-page-toolbar">
 				<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
-
-				<ul class="phi-breadcrumbs">
+				<ul class="phi-breadcrumbs phi-page-toolbar-wide">
 					<li v-for="crumb in app.breadcrumbs">
-						<router-link :to="{name:'node-dashboard', params:{nodeId:crumb.id}}" v-text="crumb.name"></router-link>
+						<router-link :to="{name:'node', params:{nodeId:crumb.id}}" v-text="crumb.name"></router-link>
 					</li>
 				</ul>
-
-				<router-link :to="{name:'node-nodes', params:{nodeId}}">
-					<i class="fa fa-cog"></i>
-				</router-link>
 			</div>
 			<div class="phi-page-header">
 				<small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->
 				<h1 v-html="node.name || '&nbsp;'"></h1>
 			</div>
 			<div class="phi-page-navigation">
-				<router-link :to="{name:'node-dashboard', params:{nodeId}}">Inicio</router-link>
+				<router-link :to="{name:'node', params:{nodeId}}" exact>Inicio</router-link>
 				<router-link v-for="type in types" :to="{name:'node-posts', params:{nodeId, type: type.singular}}" v-text="type.plural"></router-link>
+				<router-link :to="{name:'node-people', params:{nodeId}}">Personas</router-link>
+				<router-link :to="{name:'node-nodes', params:{nodeId}}">Grupos</router-link>
 			</div>
 		</div>
 		<div class="phi-page-contents" :class="'moving-'+transitionDirection">
@@ -41,59 +38,54 @@
 import app from '../../store/app.js'
 
 export default {
-	name: "node",
+	name: "node-container",
 
 	data () {
 		return {
 			app,
 			types: [],
-            nodeId: null,
+            nodeId: this.$route.params.nodeId,
 			transitionDirection: "left",
             node: {
+				id: null,
 				type: {}
 			}
 		}
 	},
 
     methods: {
-        fetch (nodeId) {
-			if (this.nodeId == nodeId) {
-				return;
-			}
-
-			this.nodeId = nodeId;
+        fetch () {
 			app.api.get("types/bulletin").then(types => this.types = types);
-            app.api.get("nodes/" + this.nodeId)
-				.then(node => this.node = node)
-				.then(node => {
-					app.pushCrumb(node, this.$route.query.reset);
-				});
+            return app.api.get("nodes/" + this.nodeId).then(node => this.node = node);
         }
     },
 
 	created () {
-		this.fetch(this.$route.params.nodeId);
+		this.fetch()
+			.then(node => {
+				app.pushCrumb(node);
+			});
 	},
 
 	watch: {
 		'$route' (to, from) {
-			this.transitionDirection = (!from.params.type || from.params.type < to.params.type) ? 'left' : 'right';
-			this.fetch(to.params.nodeId);
+			if (from.meta.order && to.meta.order) {
+				this.transitionDirection = (from.meta.order < to.meta.order) ? 'left' : 'right';
+			} else {
+				this.transitionDirection = (from.params.type < to.params.type) ? 'left' : 'right';
+			}
 		}
 	},
 
 	beforeRouteEnter (to, from, next) {
-
 		app.api.get("types/bulletin").then(types => {
 			app.api.get("nodes/" + to.params.nodeId).then(node => {
 				next(vm => {
-					vm.nodeId = to.params.nodeId;
-					vm.types  = types;
-					vm.node   = node;
+					vm.types = types;
+					vm.node  = node;
 				});
 			});
 		});
-
 	}
 
 }
@@ -119,6 +111,15 @@ ons-progress-bar {
 	top: 0;
 	left: 0;
 	right: 0;
+}
+
+
+.phi-page-navigation {
+	text-transform: uppercase;
+	& > * {
+		/*color: rgba(255, 255, 255, 0.8);*/
+		font-weight: 300;
+	}
 }
 
 .phi-page-contents {

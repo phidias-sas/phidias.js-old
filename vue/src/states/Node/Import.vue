@@ -1,6 +1,10 @@
 <template>
 	<div id="node-import" class="phi-container">
 
+		<router-link :to="{name:'node-people', params:{nodeId}}" class="go-back">
+			<i class="fa fa-arrow-left"></i>
+		</router-link>
+
 		<section class="file-picker">
 
 			<div v-show="!file">
