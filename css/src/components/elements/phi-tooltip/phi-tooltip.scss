@@ -20,6 +20,15 @@
     transform: translate(0, -12px) scaleX(0.9) scaleY(0.6);
   }
 
+  &.open {
+    & > :last-child {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(0, 0) scaleX(1) scaleY(1);
+    }
+  }
+
+  /* iPad safari *//*
   &:hover {
     & > :last-child {
       visibility: visible;
@@ -27,4 +36,11 @@
       transform: translate(0, 0) scaleX(1) scaleY(1);
     }
   }
+
+  :focus + :last-child {
+      visibility: visible;
+      opacity: 1;
+      transform: translate(0, 0) scaleX(1) scaleY(1);    
+  }*/
+
 }

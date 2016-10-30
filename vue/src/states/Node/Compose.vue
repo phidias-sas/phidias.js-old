@@ -11,14 +11,6 @@
 		</div>
 		<div class="phi-page-contents">
 			<div v-if="post.id">
-				<div class="phi-media" style="align-items:center">
-					<div class="phi-media-figure phi-avatar">
-						<img :src="post.author.avatar" :alt="post.author.firstName">
-					</div>
-					<div class="phi-media-body">
-						<h3>{{post.author.firstName}} {{post.author.lastName}}</h3>
-					</div>
-				</div>
 				<textarea v-model="post.description" @input="save()"></textarea>
 				<phi-post-editor :post="post"></phi-post-editor>
 			</div>
@@ -69,8 +61,8 @@ export default {
 
 <style scoped lang="sass">
 textarea {
-	border-radius: 4px;
-	margin-top: 6px;
+	border: 0;
+	margin-bottom: 24px;
 }
 </style>
 

@@ -25,11 +25,8 @@ export default {
     props: ["block", "action"],
 
     'phi-actions': {
-        default: {
-            title: "ver HTML"
-        },
         edit: {
-            title: "editar HTML"
+            title: "editar"
         },
         delete: {
             title: "eliminar"

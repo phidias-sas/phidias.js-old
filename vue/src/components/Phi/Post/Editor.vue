@@ -9,10 +9,23 @@
 					<div class="phi-block-toolbar phi-media">
 						<div class="phi-media-body sortable-handle"></div>
 						<div class="phi-media-right">
-							<div class="phi-tooltip">
-								<button> <i class="fa fa-ellipsis-v"></i></button>
+							<div class="phi-tooltip" :class="{open: editable.menuIsOpen}">
+								<button
+									@focus="editable.menuIsOpen = true"
+									@blur="editable.menuIsOpen = false"
+									@click="editable.menuIsOpen = true"
+									>
+										<i class="fa fa-ellipsis-v"></i>
+								</button>
+
 								<ul class="phi-menu _texture-paper">
-									<li v-for="(action, actionName) in editable.actions" v-text="action.title" @click="editable.setAction(actionName)"></li>
+									<li v-for="(action, actionName) in editable.actions"
+										v-text="action.title"
+										@mousedown="editable.setAction(actionName); editable.menuIsOpen = false"
+										@touchstart="editable.setAction(actionName); editable.menuIsOpen = false"
+										>
+										<!-- must be mousedown because click will cause the tooltip to lose focus and hide beforehand -->
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -101,6 +114,7 @@ export default {
 				actions: Block.getActions(block.type),
 				currentAction: initialAction,
 				deleted: false,
+				menuIsOpen: false,
 
 				setAction (actionName) {
 					this.currentAction = actionName == 'default' ? null : actionName;

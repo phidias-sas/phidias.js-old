@@ -309,6 +309,9 @@ export default class App {
 						}
 					});
 
+				})
+				.catch(err => {
+					// serviceWorker not supported
 				});
 
 			return;

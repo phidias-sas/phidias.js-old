@@ -6,6 +6,13 @@ https://github.com/GoogleChrome/samples/tree/gh-pages/push-messaging-and-notific
 var Push = {
 
 	subscribe () {
+
+		if (!('serviceWorker' in navigator)) {
+			return new Promise((resolve, reject) => {
+				reject("serviceWorker is not supported");
+			});
+		}
+
 		return navigator.serviceWorker.ready
 			.then(serviceWorkerRegistration => {
 				return serviceWorkerRegistration.pushManager
@@ -37,7 +44,14 @@ var Push = {
 	},
 
 	unsubscribe () {
-		navigator.serviceWorker.ready
+
+		if (!('serviceWorker' in navigator)) {
+			return new Promise((resolve, reject) => {
+				reject("serviceWorker is not supported");
+			});
+		}
+
+		return navigator.serviceWorker.ready
 			.then(serviceWorkerRegistration => {
 				// To unsubscribe from push messaging, you need get the
 				// subcription object, which you can call unsubscribe() on.

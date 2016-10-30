@@ -1,7 +1,7 @@
 <template>
 	<div class="phi-page">
 		<ons-progress-bar indeterminate v-show="app.api.isLoading"></ons-progress-bar>
-		<div class="phi-page-cover">
+		<div class="phi-page-cover" :style="{'background-image': `url(${coverImage})`}">
 			<div class="phi-page-toolbar">
 				<button class="phi-button" @click="$parent.$el.left.toggle()"> <i class="fa fa-bars"></i></button>
 				<ul class="phi-breadcrumbs phi-page-toolbar-wide">
@@ -10,10 +10,14 @@
 					</li>
 				</ul>
 			</div>
-			<div class="phi-page-header">
-				<small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->
-				<h1 v-html="node.name || '&nbsp;'"></h1>
-			</div>
+
+			<phi-drawer :open="!pageIsCollapsed">
+				<div class="phi-page-header">
+					<small v-html="node.type.singular || '&nbsp;'"></small> <!-- nbsp helps set the default cover height, which aides the transition animation-->
+					<h1 v-html="node.name || '&nbsp;'"></h1>
+				</div>
+			</phi-drawer>
+
 			<div class="phi-page-navigation">
 				<router-link :to="{name:'node', params:{nodeId}}" exact>Inicio</router-link>
 				<router-link v-for="type in types" :to="{name:'node-posts', params:{nodeId, type: type.singular}}" v-text="type.plural"></router-link>
@@ -37,10 +41,22 @@
 <script>
 import app from '../../store/app.js'
 
+function base_convert(number, initial_base, change_base) {
+	if ((initial_base && change_base) <2 || (initial_base && change_base)>36) {
+		return null; // Base must be between 2 and 36
+	}
+    return parseInt(number + '', initial_base).toString(change_base);
+}
+
 export default {
 	name: "node-container",
 
 	data () {
+
+		var nodeId    = this.$route.params.nodeId;
+		var nodeNum   = base_convert(nodeId, 36, 10).toString();
+		var lastDigit = nodeNum.substring(nodeNum.length-1);
+
 		return {
 			app,
 			types: [],
@@ -49,7 +65,10 @@ export default {
             node: {
 				id: null,
 				type: {}
-			}
+			},
+
+			pageIsCollapsed: this.$route.name != 'node',
+			coverImage: '/img/covers/random/' + lastDigit + '.jpg'
 		}
 	},
 
@@ -69,10 +88,11 @@ export default {
 
 	watch: {
 		'$route' (to, from) {
-			if (from.meta.order && to.meta.order) {
-				this.transitionDirection = (from.meta.order < to.meta.order) ? 'left' : 'right';
-			} else {
+			this.pageIsCollapsed = to.name != 'node'
+			if (from.params.type && to.params.type) {
 				this.transitionDirection = (from.params.type < to.params.type) ? 'left' : 'right';
+			} else {
+				this.transitionDirection = (from.meta.order < to.meta.order) ? 'left' : 'right';
 			}
 		}
 	},

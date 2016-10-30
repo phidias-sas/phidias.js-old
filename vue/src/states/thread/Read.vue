@@ -34,15 +34,22 @@
 			</header>-->
 
 			<div v-for="post in thread.replies.slice().reverse()" class="post phi-media">
-				<div class="phi-media-figure phi-avatar">
+
+				<div class="phi-media-figure phi-avatar" @click="toggleUserInfo(post)">
 					<img :src="post.author.avatar" :alt="post.author.firstName">
 				</div>
+
 				<div class="phi-media-body">
 					<h1 class="post-author" v-text="post.author.firstName + ' ' + post.author.lastName"></h1>
 					<div class="post-date">
 						<span v-if="post.publishDate">{{ post.publishDate | date }}</span>
 						<span v-if="!post.publishDate">enviando ...</span>
 					</div>
+
+					<phi-drawer :open="post.isExpanded" v-if="thread.node">
+						<phi-person-inscriptions v-if="post.isInfoLoaded" :person="post.author" :node="thread.node" @ready="post.isExpanded = true"></phi-person-inscriptions>
+					</phi-drawer>
+
 					<div class="post-body">
 						<div class="post-description" v-text="post.description"></div>
 						<phi-block v-for="block in post.blocks" :block="block"></phi-block>
@@ -89,6 +96,15 @@ export default {
 	},
 
 	methods: {
+
+		toggleUserInfo (post) {
+			if (!post.isInfoLoaded) {
+				post.isInfoLoaded = true;
+				return;
+			}
+			post.isExpanded = !post.isExpanded;
+		},
+
 		scrollToBottom () {
 			setTimeout(() => {
 				this.$el.scrollTop = this.$el.scrollHeight;
@@ -168,6 +184,13 @@ export default {
 		collection = app.api.collection(`/people/${app.user.id}/threads/inbox`);
 		collection.get(to.params.threadId)
 			.then(thread => {
+
+				// Additional properties to be tracked
+				thread.replies.forEach(post => {
+					post.isInfoLoaded = false;
+					post.isExpanded   = false;
+				});
+
 				next(vm => {
 					vm.thread = thread;
 				});
@@ -260,6 +283,7 @@ $phi-avatar-size: 32px;
 
 	.phi-avatar {
 		margin-top: 3px;
+		cursor: pointer;
 	}
 
 	.post-author, .post-date {
@@ -293,5 +317,9 @@ $phi-avatar-size: 32px;
 	}
 }
 
+.phi-person-inscriptions {
+	padding: 4px 0 12px 0;
+	font-size: 0.8em;
+}
 
 </style>
