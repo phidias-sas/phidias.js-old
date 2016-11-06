@@ -1,6 +1,6 @@
 {
-  "name": "vue-test",
-  "description": "A Vue.js project",
+  "name": "phidias.vue",
+  "description": "Phidias Vue client",
   "author": "Santiago Cortes <santiago.cortes@phidias.com.co>",
   "private": true,
   "scripts": {
@@ -23,6 +23,7 @@
     "moment": "^2.15.1",
     "node-sass": "^3.10.0",
     "onsenui": "^2.0.0",
+    "phidias.css": "^0.1.0",
     "quill": "^1.0.6",
     "sass-loader": "^4.0.2",
     "sortablejs": "^1.4.2",
